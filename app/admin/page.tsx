@@ -22,6 +22,12 @@ import SnackBar from "@/components/SnackBar";
 
 // api
 import { sendTestJson } from "@/apis/sendTestJson";
+import {
+  loadResultsWithoutImages,
+  loadResultsWithImages,
+  uploadResultImageToSupabase,
+} from "@/lib/supabase/adminResults";
+
 // Supabase 클라이언트 임포트
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"; // 클라이언트 컴포넌트용
 
@@ -32,7 +38,7 @@ interface TestResult {
   test_id: string; // test 테이블의 id
   test_name: string; // test_translations.title
   result_title: string; // result_translations.title
-  image_url?: string | null; // results.result_image_url
+  result_image_url?: string | null; // results.result_image_url
   image_prompt: string; // results.image_prompt
 }
 
@@ -53,9 +59,6 @@ export default function AdminPage() {
   const [snackBarMessage, setSnackBarMessage] = useState<string | null>(null);
   const [testsWithImages, setTestsWithImages] = useState<TestResult[]>([]);
 
-  // Supabase 클라이언트 초기화 (클라이언트 컴포넌트용)
-  const supabase = createClientComponentClient();
-
   useEffect(() => {
     loadTestsWithoutImages();
     loadTestsWithImages();
@@ -64,66 +67,9 @@ export default function AdminPage() {
   // 이미지 없는 테스트 결과 로드
   const loadTestsWithoutImages = async () => {
     setIsLoadingTests(true);
-
     try {
-      // 1. result_image_url이 없는 결과만 가져오기
-      const { data: resultsData, error: resultsError } = await supabase
-        .from("results")
-        .select("id, test_id, result_image_url, image_prompt")
-        .is("result_image_url", null);
-
-      if (resultsError || !resultsData) {
-        throw resultsError || new Error("결과 데이터 불러오기 실패");
-      }
-
-      // 2. 관련된 test_id만 추출
-      const uniqueTestIds = [...new Set(resultsData.map((r) => r.test_id))];
-      const uniqueResultIds = resultsData.map((r) => r.id);
-
-      // 3. result_translations 불러오기
-      const { data: resultTranslations, error: resultTranslationsError } =
-        await supabase
-          .from("result_translations")
-          .select("result_id, title")
-          .eq("language", "ko")
-          .in("result_id", uniqueResultIds);
-
-      if (resultTranslationsError) {
-        throw resultTranslationsError;
-      }
-
-      // 4. test_translations 불러오기
-      const { data: testTranslations, error: testTranslationsError } =
-        await supabase
-          .from("test_translations")
-          .select("test_id, title")
-          .eq("language", "ko")
-          .in("test_id", uniqueTestIds);
-
-      if (testTranslationsError) {
-        throw testTranslationsError;
-      }
-
-      // 5. 맵핑 테이블 생성
-      const testTitleMap = Object.fromEntries(
-        testTranslations.map((t) => [t.test_id, t.title])
-      );
-
-      const resultTitleMap = Object.fromEntries(
-        resultTranslations.map((r) => [r.result_id, r.title])
-      );
-
-      // 6. 최종 데이터 포맷 구성
-      const formattedData: TestResult[] = resultsData.map((item) => ({
-        id: item.id,
-        test_id: item.test_id,
-        test_name: testTitleMap[item.test_id],
-        result_title: resultTitleMap[item.id],
-        image_url: item.result_image_url,
-        image_prompt: item.image_prompt,
-      }));
-
-      setTestsWithoutImages(formattedData);
+      const results = await loadResultsWithoutImages();
+      setTestsWithoutImages(results);
     } catch (error: any) {
       console.error("loadTestsWithoutImages 에러:", error);
       setUploadStatus({
@@ -133,50 +79,14 @@ export default function AdminPage() {
           (error.message || "알 수 없는 오류"),
       });
     } finally {
-      setIsLoadingTests(false); // ✅ 꼭 호출
+      setIsLoadingTests(false);
     }
   };
 
-  // 등록된 이미지
+  // 등록된 이미지 리스트
   const loadTestsWithImages = async () => {
     try {
-      const { data: resultsData, error: resultsError } = await supabase
-        .from("results")
-        .select("id, test_id, result_image_url, image_prompt")
-        .not("result_image_url", "is", null);
-
-      if (resultsError || !resultsData) throw resultsError;
-
-      const uniqueTestIds = [...new Set(resultsData.map((r) => r.test_id))];
-      const uniqueResultIds = resultsData.map((r) => r.id);
-
-      const { data: resultTranslations } = await supabase
-        .from("result_translations")
-        .select("result_id, title")
-        .eq("language", "ko")
-        .in("result_id", uniqueResultIds);
-
-      const { data: testTranslations } = await supabase
-        .from("test_translations")
-        .select("test_id, title")
-        .eq("language", "ko")
-        .in("test_id", uniqueTestIds);
-
-      const testTitleMap = Object.fromEntries(
-        testTranslations!.map((t) => [t.test_id, t.title])
-      );
-      const resultTitleMap = Object.fromEntries(
-        resultTranslations!.map((r) => [r.result_id, r.title])
-      );
-      const formattedData: TestResult[] = resultsData.map((item) => ({
-        id: item.id,
-        test_id: item.test_id,
-        test_name: testTitleMap[item.test_id],
-        result_title: resultTitleMap[item.id],
-        image_url: item.result_image_url,
-        image_prompt: item.image_prompt,
-      }));
-
+      const formattedData = await loadResultsWithImages();
       setTestsWithImages(formattedData);
     } catch (err) {
       console.error("loadTestsWithImages 에러:", err);
@@ -275,50 +185,37 @@ export default function AdminPage() {
     }
   };
 
+  /**
+   * 결과 ID에 해당하는 이미지를 Supabase에 업로드하고 DB를 갱신한 뒤
+   * 이미지 리스트를 다시 로드하여 UI 상태를 업데이트
+   *
+   * @param resultId - 업로드 대상 결과(result)의 ID
+   * @param file - 업로드할 이미지 파일 객체
+   */
   const handleImageUpload = async (resultId: string, file: File) => {
+    // 1. 업로드 중인 결과 ID를 상태에 추가하여 로딩 표시
     setUploadingImages((prev) => new Set(prev).add(resultId));
 
     try {
-      // 1. 업로드
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("result-images")
-        .upload(`${resultId}/${file.name}`, file, {
-          cacheControl: "3600",
-          upsert: true,
-        });
+      // 2. 이미지 업로드 및 DB 업데이트 (Storage 업로드 + 공개 URL + DB 반영 포함)
+      const publicUrl = await uploadResultImageToSupabase(resultId, file);
 
-      if (uploadError) throw uploadError;
+      // 3. 이미지가 등록된/등록되지 않은 결과 모두 최신 상태로 다시 불러오기
+      await Promise.all([
+        loadTestsWithoutImages(), // 미등록 목록 새로고침
+        loadTestsWithImages(), // 등록된 목록 새로고침
+      ]);
 
-      // 2. 공개 URL 가져오기
-      const { data: publicUrlData } = supabase.storage
-        .from("result-images")
-        .getPublicUrl(uploadData.path);
-
-      if (!publicUrlData?.publicUrl) {
-        throw new Error("Failed to get public URL for image.");
-      }
-
-      // 3. DB 업데이트
-      const { error: updateError } = await supabase
-        .from("results")
-        .update({ result_image_url: publicUrlData.publicUrl })
-        .eq("id", resultId);
-
-      if (updateError) throw updateError;
-
-      // ✅ 4. 목록 동기화 (업로드 성공 후)
-      await loadTestsWithoutImages(); // 대기 목록 갱신
-      await loadTestsWithImages(); // 등록된 목록 갱신
-
-      // ✅ 5. 스낵바 알림
-      setSnackBarMessage(`결과 ID ${resultId}의 이미지가 업로드되었습니다!`);
+      // 4. 성공 메시지 스낵바 표시
+      setSnackBarMessage(`✅ 결과 ID ${resultId}의 이미지가 업로드되었습니다.`);
     } catch (error: any) {
+      // 5. 업로드 또는 DB 처리 중 오류 발생 시 에러 메시지 표시
       console.error("Image upload failed:", error);
-      setUploadStatus({
-        type: "error",
-        message: `이미지 업로드 실패: ${error.message || "알 수 없는 오류"}`,
-      });
+      setSnackBarMessage(
+        `❌ 이미지 업로드 실패: ${error.message || "알 수 없는 오류"}`
+      );
     } finally {
+      // 6. 로딩 상태에서 해당 결과 ID 제거
       setUploadingImages((prev) => {
         const newSet = new Set(prev);
         newSet.delete(resultId);
@@ -560,11 +457,14 @@ export default function AdminPage() {
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                         {result.image_prompt}
                       </p>
-                      <img
-                        src={result.image_url || ""}
-                        alt="이미지"
-                        className="w-full h-auto max-w-xs border rounded"
-                      />
+                      {typeof result.result_image_url === "string" &&
+                        result.result_image_url.trim() !== "" && (
+                          <img
+                            src={result.result_image_url}
+                            alt="이미지"
+                            className="w-full h-auto max-w-xs border rounded"
+                          />
+                        )}
                     </div>
                     <div>
                       <Label className="text-sm text-gray-700 dark:text-gray-300">
