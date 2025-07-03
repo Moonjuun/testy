@@ -18,6 +18,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Upload, CheckCircle, XCircle, ImageIcon, Eye } from "lucide-react";
 import type { TestData } from "@/types/test";
+import SnackBar from "@/components/SnackBar";
 
 // api
 import { sendTestJson } from "@/apis/sendTestJson";
@@ -49,15 +50,18 @@ export default function AdminPage() {
   const [uploadingImages, setUploadingImages] = useState<Set<string>>(
     new Set()
   );
+  const [snackBarMessage, setSnackBarMessage] = useState<string | null>(null);
+  const [testsWithImages, setTestsWithImages] = useState<TestResult[]>([]);
 
   // Supabase 클라이언트 초기화 (클라이언트 컴포넌트용)
   const supabase = createClientComponentClient();
 
-  // 이미지 없는 테스트 결과 로드
   useEffect(() => {
     loadTestsWithoutImages();
+    loadTestsWithImages();
   }, []);
 
+  // 이미지 없는 테스트 결과 로드
   const loadTestsWithoutImages = async () => {
     setIsLoadingTests(true);
 
@@ -130,6 +134,52 @@ export default function AdminPage() {
       });
     } finally {
       setIsLoadingTests(false); // ✅ 꼭 호출
+    }
+  };
+
+  // 등록된 이미지
+  const loadTestsWithImages = async () => {
+    try {
+      const { data: resultsData, error: resultsError } = await supabase
+        .from("results")
+        .select("id, test_id, result_image_url, image_prompt")
+        .not("result_image_url", "is", null);
+
+      if (resultsError || !resultsData) throw resultsError;
+
+      const uniqueTestIds = [...new Set(resultsData.map((r) => r.test_id))];
+      const uniqueResultIds = resultsData.map((r) => r.id);
+
+      const { data: resultTranslations } = await supabase
+        .from("result_translations")
+        .select("result_id, title")
+        .eq("language", "ko")
+        .in("result_id", uniqueResultIds);
+
+      const { data: testTranslations } = await supabase
+        .from("test_translations")
+        .select("test_id, title")
+        .eq("language", "ko")
+        .in("test_id", uniqueTestIds);
+
+      const testTitleMap = Object.fromEntries(
+        testTranslations!.map((t) => [t.test_id, t.title])
+      );
+      const resultTitleMap = Object.fromEntries(
+        resultTranslations!.map((r) => [r.result_id, r.title])
+      );
+      const formattedData: TestResult[] = resultsData.map((item) => ({
+        id: item.id,
+        test_id: item.test_id,
+        test_name: testTitleMap[item.test_id],
+        result_title: resultTitleMap[item.id],
+        image_url: item.result_image_url,
+        image_prompt: item.image_prompt,
+      }));
+
+      setTestsWithImages(formattedData);
+    } catch (err) {
+      console.error("loadTestsWithImages 에러:", err);
     }
   };
 
@@ -229,46 +279,39 @@ export default function AdminPage() {
     setUploadingImages((prev) => new Set(prev).add(resultId));
 
     try {
-      // Supabase Storage에 이미지 업로드
+      // 1. 업로드
       const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("result_images") // Supabase Storage 버킷 이름
+        .from("result-images")
         .upload(`${resultId}/${file.name}`, file, {
           cacheControl: "3600",
-          upsert: true, // 동일한 파일 이름이 있을 경우 덮어쓰기
+          upsert: true,
         });
 
-      if (uploadError) {
-        throw uploadError;
-      }
+      if (uploadError) throw uploadError;
 
-      // 업로드된 이미지의 공개 URL 가져오기
+      // 2. 공개 URL 가져오기
       const { data: publicUrlData } = supabase.storage
-        .from("result_images")
+        .from("result-images")
         .getPublicUrl(uploadData.path);
 
-      if (!publicUrlData || !publicUrlData.publicUrl) {
+      if (!publicUrlData?.publicUrl) {
         throw new Error("Failed to get public URL for image.");
       }
 
-      // results 테이블의 result_image_url 업데이트
+      // 3. DB 업데이트
       const { error: updateError } = await supabase
         .from("results")
         .update({ result_image_url: publicUrlData.publicUrl })
         .eq("id", resultId);
 
-      if (updateError) {
-        throw updateError;
-      }
+      if (updateError) throw updateError;
 
-      // 성공 시 해당 항목을 목록에서 제거 (또는 새로고침)
-      setTestsWithoutImages((prev) =>
-        prev.filter((test) => test.id !== resultId)
-      );
+      // ✅ 4. 목록 동기화 (업로드 성공 후)
+      await loadTestsWithoutImages(); // 대기 목록 갱신
+      await loadTestsWithImages(); // 등록된 목록 갱신
 
-      setUploadStatus({
-        type: "success",
-        message: `결과 ID ${resultId}의 이미지가 성공적으로 업로드되었습니다!`,
-      });
+      // ✅ 5. 스낵바 알림
+      setSnackBarMessage(`결과 ID ${resultId}의 이미지가 업로드되었습니다!`);
     } catch (error: any) {
       console.error("Image upload failed:", error);
       setUploadStatus({
@@ -493,8 +536,61 @@ export default function AdminPage() {
               )}
             </CardContent>
           </Card>
+
+          <Card className="bg-white dark:bg-gray-800 shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                ✅ 등록된 이미지 관리
+                <Badge variant="secondary" className="ml-2">
+                  {testsWithImages.length}개
+                </Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {testsWithImages.map((result) => (
+                <div
+                  key={result.id}
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-700"
+                >
+                  <div className="grid md:grid-cols-2 gap-4 items-center">
+                    <div>
+                      <h4 className="font-medium text-gray-900 dark:text-white mb-2">
+                        {result.test_name} - {result.result_title}
+                      </h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        {result.image_prompt}
+                      </p>
+                      <img
+                        src={result.image_url || ""}
+                        alt="이미지"
+                        className="w-full h-auto max-w-xs border rounded"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-sm text-gray-700 dark:text-gray-300">
+                        이미지 수정 업로드
+                      </Label>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleFileSelect(result.id, e)}
+                        className="mt-2 bg-white dark:bg-gray-600 border-gray-300 dark:border-gray-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
         </div>
       </div>
+      {snackBarMessage && (
+        <SnackBar
+          key={snackBarMessage} // 👈 key로 강제 리렌더링 유도
+          message={snackBarMessage}
+          duration={3000}
+        />
+      )}
     </div>
   );
 }
