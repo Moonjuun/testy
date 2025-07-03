@@ -59,52 +59,77 @@ export default function AdminPage() {
   }, []);
 
   const loadTestsWithoutImages = async () => {
+    setIsLoadingTests(true);
+
     try {
-      const { data, error } = await supabase
+      // 1. result_image_url이 없는 결과만 가져오기
+      const { data: resultsData, error: resultsError } = await supabase
         .from("results")
-        .select(
-          `
-            id,
-            test_id,
-            result_image_url,
-            image_prompt,
-            result_translations(title) // test_translations 대신 result_translations만 사용
-          `
-        )
+        .select("id, test_id, result_image_url, image_prompt")
         .is("result_image_url", null);
 
-      if (error) {
-        console.error(
-          "Error loading tests without images:",
-          error.message,
-          error.details,
-          error.hint,
-          error.code,
-          error // 전체 에러 객체 로깅
-        );
-        throw error;
+      if (resultsError || !resultsData) {
+        throw resultsError || new Error("결과 데이터 불러오기 실패");
       }
 
-      const formattedData: TestResult[] = data.map((item: any) => ({
+      // 2. 관련된 test_id만 추출
+      const uniqueTestIds = [...new Set(resultsData.map((r) => r.test_id))];
+      const uniqueResultIds = resultsData.map((r) => r.id);
+
+      // 3. result_translations 불러오기
+      const { data: resultTranslations, error: resultTranslationsError } =
+        await supabase
+          .from("result_translations")
+          .select("result_id, title")
+          .eq("language", "ko")
+          .in("result_id", uniqueResultIds);
+
+      if (resultTranslationsError) {
+        throw resultTranslationsError;
+      }
+
+      // 4. test_translations 불러오기
+      const { data: testTranslations, error: testTranslationsError } =
+        await supabase
+          .from("test_translations")
+          .select("test_id, title")
+          .eq("language", "ko")
+          .in("test_id", uniqueTestIds);
+
+      if (testTranslationsError) {
+        throw testTranslationsError;
+      }
+
+      // 5. 맵핑 테이블 생성
+      const testTitleMap = Object.fromEntries(
+        testTranslations.map((t) => [t.test_id, t.title])
+      );
+
+      const resultTitleMap = Object.fromEntries(
+        resultTranslations.map((r) => [r.result_id, r.title])
+      );
+
+      // 6. 최종 데이터 포맷 구성
+      const formattedData: TestResult[] = resultsData.map((item) => ({
         id: item.id,
-        test_id: item.test_id, // 현재는 BIGINT 타입일 수 있으므로 그대로 둡니다.
-        test_name: "Test Name Not Available Directly", // test_translations를 가져오지 않으므로 임시로
-        result_title: item.result_translations?.title || "Unknown Result",
+        test_id: item.test_id,
+        test_name: testTitleMap[item.test_id],
+        result_title: resultTitleMap[item.id],
         image_url: item.result_image_url,
         image_prompt: item.image_prompt,
       }));
 
       setTestsWithoutImages(formattedData);
     } catch (error: any) {
-      console.error(
-        "Failed to load tests (catch block):",
-        error.message || error
-      );
+      console.error("loadTestsWithoutImages 에러:", error);
       setUploadStatus({
         type: "error",
         message:
-          "테스트 목록 로드 실패: " + (error.message || "알 수 없는 오류"),
+          "결과 이미지 없는 테스트 불러오기 실패: " +
+          (error.message || "알 수 없는 오류"),
       });
+    } finally {
+      setIsLoadingTests(false); // ✅ 꼭 호출
     }
   };
 

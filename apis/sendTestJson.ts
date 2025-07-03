@@ -1,3 +1,4 @@
+//apis/sendTestJson.ts
 export const sendTestJson = async (jsonData: any) => {
   // Supabase Edge Function 대신 Next.js API Route를 호출합니다.
   // 이 경로는 여러분이 API Route 파일을 생성할 경로입니다.
