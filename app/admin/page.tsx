@@ -444,42 +444,64 @@ export default function AdminPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {testsWithImages.map((result) => (
-                <div
-                  key={result.id}
-                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-700"
-                >
-                  <div className="grid md:grid-cols-2 gap-4 items-center">
-                    <div>
-                      <h4 className="font-medium text-gray-900 dark:text-white mb-2">
-                        {result.test_name} - {result.result_title}
-                      </h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                        {result.image_prompt}
-                      </p>
-                      {typeof result.result_image_url === "string" &&
-                        result.result_image_url.trim() !== "" && (
+              {/* Add defaultValue={[]} here */}
+              <Accordion
+                type="multiple"
+                defaultValue={[]}
+                className="space-y-4"
+              >
+                {testsWithImages.map((result) => (
+                  <AccordionItem
+                    key={result.id}
+                    value={result.id} // Each item needs a unique value
+                    className="border border-gray-200 dark:border-gray-700 rounded-lg"
+                  >
+                    <AccordionTrigger className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-t-lg">
+                      <div className="flex items-center gap-3">
+                        <span className="font-medium text-gray-900 dark:text-white">
+                          {result.test_name} - {result.result_title}
+                        </span>
+                        {/* Optionally show an image preview or status here */}
+                        {result.result_image_url && (
                           <img
                             src={result.result_image_url}
-                            alt="이미지"
-                            className="w-full h-auto max-w-xs border rounded"
+                            alt="Preview"
+                            className="w-8 h-8 object-cover rounded-sm ml-2"
                           />
                         )}
-                    </div>
-                    <div>
-                      <Label className="text-sm text-gray-700 dark:text-gray-300">
-                        이미지 수정 업로드
-                      </Label>
-                      <Input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleFileSelect(result.id, e)}
-                        className="mt-2 bg-white dark:bg-gray-600 border-gray-300 dark:border-gray-500"
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-4 pb-4">
+                      <div className="grid md:grid-cols-2 gap-4 items-center">
+                        <div>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                            {result.image_prompt}
+                          </p>
+                          {typeof result.result_image_url === "string" &&
+                            result.result_image_url.trim() !== "" && (
+                              <img
+                                src={result.result_image_url}
+                                alt="등록된 이미지"
+                                className="w-full h-auto max-w-xs border rounded"
+                              />
+                            )}
+                        </div>
+                        <div>
+                          <Label className="text-sm text-gray-700 dark:text-gray-300">
+                            이미지 수정 업로드
+                          </Label>
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleFileSelect(result.id, e)}
+                            className="mt-2 bg-white dark:bg-gray-600 border-gray-300 dark:border-gray-500"
+                          />
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             </CardContent>
           </Card>
         </div>
