@@ -16,7 +16,15 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Upload, CheckCircle, XCircle, ImageIcon, Eye } from "lucide-react";
+import {
+  Upload,
+  CheckCircle,
+  XCircle,
+  ImageIcon,
+  Eye,
+  Copy,
+  Check,
+} from "lucide-react";
 import type { TestData } from "@/types/test";
 import SnackBar from "@/components/SnackBar";
 
@@ -27,6 +35,9 @@ import {
   loadResultsWithImages,
   uploadResultImageToSupabase,
 } from "@/lib/supabase/adminResults";
+
+// constatns
+import { promptText } from "@/constants/AdminResult";
 
 // Supabase 클라이언트 임포트
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"; // 클라이언트 컴포넌트용
@@ -58,6 +69,18 @@ export default function AdminPage() {
   );
   const [snackBarMessage, setSnackBarMessage] = useState<string | null>(null);
   const [testsWithImages, setTestsWithImages] = useState<TestResult[]>([]);
+  const [copied, setCopied] = useState(false);
+
+  const [copiedPromptId, setCopiedPromptId] = useState<string | null>(null);
+  const handleCopyImagePrompt = async (resultId: string, prompt: string) => {
+    try {
+      await navigator.clipboard.writeText(prompt);
+      setCopiedPromptId(resultId);
+      setTimeout(() => setCopiedPromptId(null), 2000);
+    } catch (err) {
+      console.error("클립보드 복사 실패:", err);
+    }
+  };
 
   useEffect(() => {
     loadTestsWithoutImages();
@@ -245,6 +268,12 @@ export default function AdminPage() {
     return groups;
   };
 
+  const handleCopyPrompt = async () => {
+    await navigator.clipboard.writeText(promptText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
       <div className="container mx-auto px-4 py-8">
@@ -264,6 +293,22 @@ export default function AdminPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
                 🧪 테스트 JSON 업로드
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="ml-2 px-2 py-1 text-xs"
+                  onClick={handleCopyPrompt}
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-4 h-4 mr-1 text-green-500" /> 복사됨
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4 mr-1" /> 프롬프트 복사
+                    </>
+                  )}
+                </Button>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -390,15 +435,28 @@ export default function AdminPage() {
                                   <h4 className="font-medium text-gray-900 dark:text-white mb-2">
                                     {result.result_title}
                                   </h4>
-                                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                  <p
+                                    className={`text-sm mb-3 cursor-pointer transition-colors duration-200 break-words ${
+                                      copiedPromptId === result.id
+                                        ? "text-green-600 dark:text-green-400 font-semibold"
+                                        : "text-gray-600 dark:text-gray-400"
+                                    }`}
+                                    onClick={() =>
+                                      handleCopyImagePrompt(
+                                        result.id,
+                                        result.image_prompt
+                                      )
+                                    }
+                                    title="클릭하여 복사"
+                                  >
                                     {result.image_prompt}
                                   </p>
-                                  <div className="flex items-center gap-2">
+                                  {/* <div className="flex items-center gap-2">
                                     <Eye className="w-4 h-4 text-gray-500" />
                                     <span className="text-xs text-gray-500">
                                       이미지 없음
                                     </span>
-                                  </div>
+                                  </div> */}
                                 </div>
                                 <div className="space-y-3">
                                   <div>
@@ -412,7 +470,7 @@ export default function AdminPage() {
                                         handleFileSelect(result.id, e)
                                       }
                                       disabled={uploadingImages.has(result.id)}
-                                      className="mt-1 bg-white dark:bg-gray-600 border-gray-300 dark:border-gray-500"
+                                      className="mt-1 cursor-pointer bg-white dark:bg-gray-600 border-gray-300 dark:border-gray-500"
                                     />
                                   </div>
                                   {uploadingImages.has(result.id) && (
