@@ -14,7 +14,8 @@ export function MobileAdBanner({
   className = "",
 }: MobileAdBannerProps) {
   const [isVisible, setIsVisible] = useState(true);
-  const [containerWidth, setContainerWidth] = useState(0); // New state for dynamic width
+  // Initialize with the default width for SSR, will be updated on client
+  const [currentWidth, setCurrentWidth] = useState(0);
 
   const dimensions = {
     "320x50": { width: 320, height: 50 },
@@ -22,22 +23,24 @@ export function MobileAdBanner({
     "300x250": { width: 300, height: 250 },
   };
 
-  const { width, height } = dimensions[size];
+  const { width: defaultWidth, height } = dimensions[size];
 
-  // Set containerWidth after component mounts on the client
+  // Set the actual width on the client side after hydration
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      // Check if window is defined (client-side)
-      setContainerWidth(Math.min(width, window.innerWidth - 32) || width);
+    // This code only runs in the browser
+    setCurrentWidth(
+      Math.min(defaultWidth, window.innerWidth - 32) || defaultWidth
+    );
 
-      const handleResize = () => {
-        setContainerWidth(Math.min(width, window.innerWidth - 32) || width);
-      };
+    const handleResize = () => {
+      setCurrentWidth(
+        Math.min(defaultWidth, window.innerWidth - 32) || defaultWidth
+      );
+    };
 
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
-    }
-  }, [width]); // Re-run if the base width changes
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [defaultWidth]); // Dependency on defaultWidth is important
 
   // 스티키 광고의 경우 스크롤에 따른 표시/숨김 처리
   useEffect(() => {
@@ -47,15 +50,13 @@ export function MobileAdBanner({
         if (!footer) return;
 
         const footerRect = footer.getBoundingClientRect();
-        // Ensure window is defined before accessing innerHeight
-        const windowHeight =
-          typeof window !== "undefined" ? window.innerHeight : 0;
+        // window.innerHeight is safe here as this useEffect only runs on client
+        const windowHeight = window.innerHeight;
 
-        // 푸터가 화면에 나타나면 하단 광고 숨김
         setIsVisible(footerRect.top > windowHeight - 100);
       };
 
-      // Only add event listener if window is defined
+      // Only add event listener if window is defined (on client)
       if (typeof window !== "undefined") {
         window.addEventListener("scroll", handleScroll);
         handleScroll(); // Initial call to set visibility
@@ -85,16 +86,16 @@ export function MobileAdBanner({
     }
   };
 
-  // Render null on the server or until containerWidth is set on the client
-  if (typeof window === "undefined" && containerWidth === 0) {
-    return null;
-  }
-
+  // On the server, render with the defaultWidth.
+  // On the client, it will hydrate with defaultWidth, then useEffect will update currentWidth.
   return (
     <div className={`xl:hidden ${className}`}>
       <div
         className={getContainerClasses()}
-        style={{ width: containerWidth, height }} // Use containerWidth from state
+        style={{
+          width: currentWidth === 0 ? defaultWidth : currentWidth,
+          height,
+        }}
       >
         <div className="text-center text-gray-500 dark:text-gray-400">
           <div className="text-xs font-medium">모바일 광고</div>
