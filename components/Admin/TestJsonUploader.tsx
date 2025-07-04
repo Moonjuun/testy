@@ -129,7 +129,7 @@ export default function TestJsonUploader({ onUploadSuccess }: Props) {
             value={jsonInput}
             onChange={(e) => setJsonInput(e.target.value)}
             placeholder={`{\n  \"title\": \"테스트 제목\",\n  \"description\": \"테스트 설명\",\n  \"questions\": [...],\n  \"results\": [...]\n}`}
-            className="mt-2 min-h-[200px] font-mono text-sm bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
+            className="mt-2 min-h-[400px] font-mono text-sm bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
           />
         </div>
 
