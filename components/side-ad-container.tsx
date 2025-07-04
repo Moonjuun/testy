@@ -1,39 +1,44 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { AdBanner } from "@/components/ad-banner"
+import { useEffect, useState } from "react";
+import { AdBanner } from "@/components/Banner/ad-banner";
 
 interface SideAdContainerProps {
-  position: "left" | "right"
+  position: "left" | "right";
 }
 
 export function SideAdContainer({ position }: SideAdContainerProps) {
-  const [isVisible, setIsVisible] = useState(true)
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
-      const footer = document.querySelector("footer")
-      const adContainer = document.querySelector(`[data-ad-position="${position}"]`)
+      const footer = document.querySelector("footer");
+      const adContainer = document.querySelector(
+        `[data-ad-position="${position}"]`
+      );
 
-      if (!footer || !adContainer) return
+      if (!footer || !adContainer) return;
 
-      const footerRect = footer.getBoundingClientRect()
-      const adRect = adContainer.getBoundingClientRect()
-      const windowHeight = window.innerHeight
+      const footerRect = footer.getBoundingClientRect();
+      const adRect = adContainer.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
 
       // 푸터가 화면에 나타나기 시작하면 광고를 숨김
-      if (footerRect.top < windowHeight && footerRect.top < adRect.bottom + 20) {
-        setIsVisible(false)
+      if (
+        footerRect.top < windowHeight &&
+        footerRect.top < adRect.bottom + 20
+      ) {
+        setIsVisible(false);
       } else {
-        setIsVisible(true)
+        setIsVisible(true);
       }
-    }
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    handleScroll() // 초기 실행
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // 초기 실행
 
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [position])
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [position]);
 
   return (
     <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20 min-h-screen">
@@ -46,5 +51,5 @@ export function SideAdContainer({ position }: SideAdContainerProps) {
         <AdBanner type="side" size="300x600" />
       </div>
     </div>
-  )
+  );
 }
