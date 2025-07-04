@@ -1,12 +1,6 @@
-import Image from "next/image"
-import Link from "next/link"
-import { Users, Clock } from "lucide-react"
-import type { TestCard as TestCardType } from "@/types/test"
-
-interface TestCardProps {
-  test: TestCardType
-  featured?: boolean
-}
+import Image from "next/image";
+import Link from "next/link";
+import { TestCardProps } from "@/types/test";
 
 export function TestCard({ test, featured = false }: TestCardProps) {
   return (
@@ -18,19 +12,19 @@ export function TestCard({ test, featured = false }: TestCardProps) {
       >
         <div className="relative">
           <Image
-            src={test.thumbnail || "/placeholder.svg"}
+            src={test.thumbnail_url || "/placeholder.svg"}
             alt={test.title}
             width={featured ? 300 : 200}
             height={featured ? 200 : 150}
             className="w-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
           <div
-            className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold text-white ${test.color}`}
+            className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold text-white bg-indigo-500 dark:bg-indigo-600`}
           >
-            {test.category}
+            {test.category?.name}
           </div>
           {featured && (
-            <div className="absolute top-3 right-3 bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-bold">
+            <div className="absolute top-3 right-3 bg-yellow-400 tㅁext-yellow-900 px-2 py-1 rounded-full text-xs font-bold">
               인기
             </div>
           )}
@@ -40,13 +34,15 @@ export function TestCard({ test, featured = false }: TestCardProps) {
           <h3
             className={`font-bold text-gray-900 dark:text-white mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors ${
               featured ? "text-xl" : "text-lg"
-            }`}
+            } truncate`}
           >
-            {test.title}
+            {test.test_translations.title}
           </h3>
-          <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">{test.description}</p>
+          <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+            {test.test_translations.description}
+          </p>
 
-          <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+          {/* <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
             <div className="flex items-center gap-1">
               <Users className="w-3 h-3" />
               <span>{test.participants} 참여</span>
@@ -55,9 +51,9 @@ export function TestCard({ test, featured = false }: TestCardProps) {
               <Clock className="w-3 h-3" />
               <span>{test.duration} 소요</span>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </Link>
-  )
+  );
 }

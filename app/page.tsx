@@ -8,16 +8,25 @@ import { testCards } from "@/data/tests";
 import CenterBanner from "@/components/Banner/CenterBanner";
 import { CategoryFilter } from "@/components/Category/CategoryFilter";
 import { useLanguageStore } from "@/store/useLanguageStore";
-
+import { getNewTests } from "@/lib/supabase/getNewTests";
+import { NewTest } from "@/types/test";
 //hooks
 import { useActiveCategories } from "@/hooks/useActiveCategories";
-
-const featuredTests = testCards.slice(0, 3);
-const popularTests = testCards.slice(3);
 
 export default function HomePage() {
   const currentLanguage = useLanguageStore((state) => state.currentLanguage);
   const { categories, loading } = useActiveCategories(currentLanguage);
+
+  const [newTestList, setnewTestList] = useState<NewTest[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getNewTests(currentLanguage);
+      setnewTestList(data);
+    };
+
+    fetchData();
+  }, [currentLanguage]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
@@ -53,8 +62,8 @@ export default function HomePage() {
               최신 테스트
             </h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {featuredTests.map((test) => (
+          <div className="grid sm:grid-cols-2 gap-6 mb-12">
+            {newTestList.map((test) => (
               <div key={test.id}>
                 <TestCard test={test} featured />
               </div>
@@ -83,8 +92,8 @@ export default function HomePage() {
             loading={loading}
           />
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {popularTests.map((test) => (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-6">
+            {newTestList.map((test) => (
               <div key={test.id}>
                 <TestCard test={test} />
               </div>
@@ -92,7 +101,7 @@ export default function HomePage() {
           </div>
 
           {/* Load More */}
-          <div className="text-center mt-12">
+          {/* <div className="text-center mt-12">
             <Button
               variant="outline"
               size="lg"
@@ -100,7 +109,7 @@ export default function HomePage() {
             >
               더 많은 테스트 보기
             </Button>
-          </div>
+          </div> */}
         </div>
       </section>
     </div>
