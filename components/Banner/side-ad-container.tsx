@@ -23,29 +23,31 @@ export function SideAdContainer({ position }: SideAdContainerProps) {
       const adRect = adContainer.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      // 푸터가 화면에 나타나기 시작하면 광고를 숨김
       if (
         footerRect.top < windowHeight &&
         footerRect.top < adRect.bottom + 20
       ) {
-        setIsVisible(false);
+        setIsVisible(false); // 여기서 "사라지지 않고 반투명"으로
       } else {
         setIsVisible(true);
       }
     };
 
     window.addEventListener("scroll", handleScroll);
-    handleScroll(); // 초기 실행
+    handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, [position]);
 
   return (
-    <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20 min-h-screen">
+    <div
+      className="relative h-full bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20"
+      style={{ minHeight: "100vh" }}
+    >
       <div
         data-ad-position={position}
         className={`sticky top-20 p-4 transition-opacity duration-300 ${
-          isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
+          isVisible ? "opacity-100" : "opacity-50"
         }`}
       >
         <AdBanner type="side" size="300x600" />
