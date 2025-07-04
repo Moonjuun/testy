@@ -57,3 +57,12 @@ export interface TestCardProps {
   test: NewTest;
   featured?: boolean;
 }
+
+export interface TestResult {
+  id: string; // result_id
+  test_id: string; // test 테이블의 id
+  test_name: string; // test_translations.title
+  result_title: string; // result_translations.title
+  result_image_url?: string | null; // results.result_image_url
+  image_prompt: string; // results.image_prompt
+}
