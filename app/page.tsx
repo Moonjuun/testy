@@ -6,20 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Sparkles, TrendingUp, Brain, Clock } from "lucide-react";
 import { testCards } from "@/data/tests";
 import CenterBanner from "@/components/Banner/CenterBanner";
-import { Skeleton } from "@/components/ui/skeleton";
 import { CategoryFilter } from "@/components/Category/CategoryFilter";
-
-// api
-import { getActiveCategories } from "@/lib/supabase/getActiveCategories";
+import { useLanguageStore } from "@/store/useLanguageStore";
 
 //hooks
 import { useActiveCategories } from "@/hooks/useActiveCategories";
 
 const featuredTests = testCards.slice(0, 3);
 const popularTests = testCards.slice(3);
-const currentLanguage: "ko" | "en" | "ja" | "vi" = "ko"; // 추후 i18n 연동 가능
 
 export default function HomePage() {
+  const currentLanguage = useLanguageStore((state) => state.currentLanguage);
   const { categories, loading } = useActiveCategories(currentLanguage);
 
   return (

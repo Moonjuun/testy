@@ -8,15 +8,17 @@ import { useTheme } from "@/contexts/theme-context";
 import { User, Menu, X, Moon, Sun, Globe } from "lucide-react";
 import { useActiveCategories } from "@/hooks/useActiveCategories";
 import { Skeleton } from "./ui/skeleton";
+import { useLanguageStore } from "@/store/useLanguageStore";
 
 export function Header() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
-  const [currentLangCode, setCurrentLangCode] = useState<
-    "ko" | "en" | "ja" | "vi"
-  >("ko");
+
+  const currentLangCode = useLanguageStore((state) => state.currentLanguage);
+  const setCurrentLangCode = useLanguageStore((state) => state.setLanguage);
+
   const { theme, toggleTheme } = useTheme();
 
   const { categories, loading } = useActiveCategories(currentLangCode);
