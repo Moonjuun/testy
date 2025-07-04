@@ -1,25 +1,25 @@
-"use client"
+"use client";
 
-import { useTestEngine } from "@/hooks/useTestEngine"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { AdBanner } from "@/components/ad-banner"
-import { MobileAdBanner } from "@/components/mobile-ad-banner"
-import { ArrowLeft, ArrowRight } from "lucide-react"
-import Link from "next/link"
-import { testData } from "@/data/tests"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useTestEngine } from "@/hooks/useTestEngine";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { AdBanner } from "@/components/Banner/ad-banner";
+import { MobileAdBanner } from "@/components/Banner/mobile-ad-banner";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { testData } from "@/data/tests";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function TestPage({ params }: { params: { id: string } }) {
-  const router = useRouter()
-  const currentTestData = testData[params.id]
+  const router = useRouter();
+  const currentTestData = testData[params.id];
 
   useEffect(() => {
     if (!currentTestData) {
-      router.push("/")
+      router.push("/");
     }
-  }, [currentTestData, router])
+  }, [currentTestData, router]);
 
   const {
     currentQuestion,
@@ -33,16 +33,16 @@ export default function TestPage({ params }: { params: { id: string } }) {
     handlePrevious,
     canGoNext,
     canGoPrevious,
-  } = useTestEngine(currentTestData)
+  } = useTestEngine(currentTestData);
 
   useEffect(() => {
     if (isCompleted) {
-      router.push(`/test/${params.id}/result`)
+      router.push(`/test/${params.id}/result`);
     }
-  }, [isCompleted, params.id, router])
+  }, [isCompleted, params.id, router]);
 
   if (!currentTestData) {
-    return <div>테스트를 찾을 수 없습니다.</div>
+    return <div>테스트를 찾을 수 없습니다.</div>;
   }
 
   return (
@@ -62,7 +62,9 @@ export default function TestPage({ params }: { params: { id: string } }) {
           </Link>
 
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{currentTestData.title}</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              {currentTestData.title}
+            </h1>
             <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-4">
               <span>
                 질문 {currentQuestion + 1} / {totalQuestions}
@@ -107,7 +109,9 @@ export default function TestPage({ params }: { params: { id: string } }) {
                           <div className="w-full h-full rounded-full bg-white scale-50"></div>
                         )}
                       </div>
-                      <span className="font-medium text-gray-900 dark:text-white">{option.text}</span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {option.text}
+                      </span>
                     </div>
                   </button>
                 ))}
@@ -130,8 +134,12 @@ export default function TestPage({ params }: { params: { id: string } }) {
                   disabled={!canGoNext}
                   className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-full px-6"
                 >
-                  {currentQuestion === totalQuestions - 1 ? "결과 보기" : "다음"}
-                  {currentQuestion !== totalQuestions - 1 && <ArrowRight className="w-4 h-4 ml-2" />}
+                  {currentQuestion === totalQuestions - 1
+                    ? "결과 보기"
+                    : "다음"}
+                  {currentQuestion !== totalQuestions - 1 && (
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  )}
                 </Button>
               </div>
             </div>
@@ -157,5 +165,5 @@ export default function TestPage({ params }: { params: { id: string } }) {
       {/* Mobile Bottom Sticky Ad */}
       <MobileAdBanner type="sticky-bottom" size="320x50" />
     </div>
-  )
+  );
 }

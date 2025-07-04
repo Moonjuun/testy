@@ -1,51 +1,55 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { AdBanner } from "@/components/ad-banner"
-import { MobileAdBanner } from "@/components/mobile-ad-banner"
-import { Share2, Download, RotateCcw, Home } from "lucide-react"
-import Link from "next/link"
-import { testData } from "@/data/tests"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
-import type { TestResult } from "@/types/test"
+import { Button } from "@/components/ui/button";
+import { AdBanner } from "@/components/Banner/ad-banner";
+import { MobileAdBanner } from "@/components/Banner/mobile-ad-banner";
+import { Share2, Download, RotateCcw, Home } from "lucide-react";
+import Link from "next/link";
+import { testData } from "@/data/tests";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import type { TestResult } from "@/types/test";
 
 export default function ResultPage({ params }: { params: { id: string } }) {
-  const router = useRouter()
-  const [result, setResult] = useState<TestResult | null>(null)
-  const currentTestData = testData[params.id]
+  const router = useRouter();
+  const [result, setResult] = useState<TestResult | null>(null);
+  const currentTestData = testData[params.id];
 
   useEffect(() => {
     if (!currentTestData) {
-      router.push("/")
-      return
+      router.push("/");
+      return;
     }
 
     // 실제로는 테스트 결과를 localStorage나 상태에서 가져와야 하지만
     // 데모를 위해 첫 번째 결과를 사용
-    setResult(currentTestData.results[0])
-  }, [currentTestData, router])
+    setResult(currentTestData.results[0]);
+  }, [currentTestData, router]);
 
   const handleShare = (platform: string) => {
-    const url = window.location.href
-    const text = `나의 테스트 결과는 "${result?.title}"! 당신도 테스트해보세요!`
+    const url = window.location.href;
+    const text = `나의 테스트 결과는 "${result?.title}"! 당신도 테스트해보세요!`;
 
     switch (platform) {
       case "kakao":
-        console.log("카카오톡 공유")
-        break
+        console.log("카카오톡 공유");
+        break;
       case "twitter":
-        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`)
-        break
+        window.open(
+          `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+            text
+          )}&url=${encodeURIComponent(url)}`
+        );
+        break;
       case "copy":
-        navigator.clipboard.writeText(url)
-        alert("링크가 복사되었습니다!")
-        break
+        navigator.clipboard.writeText(url);
+        alert("링크가 복사되었습니다!");
+        break;
     }
-  }
+  };
 
   if (!currentTestData || !result) {
-    return <div>결과를 찾을 수 없습니다.</div>
+    return <div>결과를 찾을 수 없습니다.</div>;
   }
 
   return (
@@ -63,12 +67,17 @@ export default function ResultPage({ params }: { params: { id: string } }) {
                 <div className="w-48 h-48 mx-auto bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-full flex items-center justify-center border-4 border-purple-200 dark:border-purple-700">
                   <div className="text-center">
                     <div className="text-4xl mb-2">🌟</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400 px-4">{result.image_prompt}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400 px-4">
+                      {result.image_prompt}
+                    </div>
                   </div>
                 </div>
               </div>
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                당신은 <span className="text-purple-600 dark:text-purple-400">"{result.title}"</span>
+                당신은{" "}
+                <span className="text-purple-600 dark:text-purple-400">
+                  "{result.title}"
+                </span>
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl mx-auto">
                 {result.description}
@@ -80,15 +89,21 @@ export default function ResultPage({ params }: { params: { id: string } }) {
 
             {/* Recommendation */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">추천 활동</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                추천 활동
+              </h2>
               <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6">
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{result.recommendation}</p>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {result.recommendation}
+                </p>
               </div>
             </div>
 
             {/* Share Buttons */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">결과 공유하기</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+                결과 공유하기
+              </h2>
               <div className="flex flex-wrap justify-center gap-4">
                 <Button
                   onClick={() => handleShare("kakao")}
@@ -164,5 +179,5 @@ export default function ResultPage({ params }: { params: { id: string } }) {
       {/* Mobile Bottom Sticky Ad */}
       <MobileAdBanner type="sticky-bottom" size="320x50" />
     </div>
-  )
+  );
 }
