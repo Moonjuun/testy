@@ -1,15 +1,27 @@
+"use client";
+import { useRef, useEffect, useState } from "react";
 import { TestCard } from "@/components/test-card";
-import { AdBanner } from "@/components/Banner/ad-banner";
 import { MobileAdBanner } from "@/components/Banner/mobile-ad-banner";
 import { Button } from "@/components/ui/button";
 import { Sparkles, TrendingUp, Brain, Clock } from "lucide-react";
 import { testCards } from "@/data/tests";
 import CenterBanner from "@/components/Banner/CenterBanner";
+import { Skeleton } from "@/components/ui/skeleton";
+import { CategoryFilter } from "@/components/Category/CategoryFilter";
+
+// api
+import { getActiveCategories } from "@/lib/supabase/getActiveCategories";
+
+//hooks
+import { useActiveCategories } from "@/hooks/useActiveCategories";
 
 const featuredTests = testCards.slice(0, 3);
 const popularTests = testCards.slice(3);
+const currentLanguage: "ko" | "en" | "ja" | "vi" = "ko"; // 추후 i18n 연동 가능
 
 export default function HomePage() {
+  const { categories, loading } = useActiveCategories(currentLanguage);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
       {/* Mobile Top Sticky Ad */}
@@ -25,22 +37,13 @@ export default function HomePage() {
             </span>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-            {/* 나는 */}
             <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              {" "}
               나는 누구일까?
             </span>
           </h1>
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
             간단한 질문들로 알아보는 나의 진짜 모습
-            {/* 이미 100만 명이 참여했어요! */}
           </p>
-          {/* <Button
-            size="lg"
-            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            테스트 시작하기
-          </Button> */}
         </div>
       </section>
 
@@ -54,7 +57,7 @@ export default function HomePage() {
             </h2>
           </div>
           <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {featuredTests.map((test, index) => (
+            {featuredTests.map((test) => (
               <div key={test.id}>
                 <TestCard test={test} featured />
               </div>
@@ -64,9 +67,7 @@ export default function HomePage() {
       </section>
 
       {/* Center Banner Ad */}
-      <div>
-        <CenterBanner size="large" />
-      </div>
+      <CenterBanner size="large" />
 
       {/* All Tests */}
       <section className="py-8 px-4 bg-white/50 dark:bg-gray-800/30 backdrop-blur-sm">
@@ -79,34 +80,14 @@ export default function HomePage() {
           </div>
 
           {/* Category Filter */}
-          <div className="flex flex-wrap gap-2 mb-8">
-            {[
-              "전체",
-              "성격",
-              "연애",
-              "진로",
-              "재미",
-              "심리",
-              "관계",
-              "라이프",
-            ].map((category) => (
-              <Button
-                key={category}
-                variant={category === "전체" ? "default" : "outline"}
-                size="sm"
-                className={`rounded-full ${
-                  category === "전체"
-                    ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                    : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 bg-transparent"
-                }`}
-              >
-                {category}
-              </Button>
-            ))}
-          </div>
+          <CategoryFilter
+            categories={categories.map((cat) => cat.name)}
+            currentLanguage={currentLanguage}
+            loading={loading}
+          />
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {popularTests.map((test, index) => (
+            {popularTests.map((test) => (
               <div key={test.id}>
                 <TestCard test={test} />
               </div>
@@ -125,9 +106,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Mobile Bottom Sticky Ad */}
-      {/* <MobileAdBanner type="sticky-bottom" size="320x50" /> */}
     </div>
   );
 }
