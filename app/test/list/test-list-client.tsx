@@ -11,6 +11,7 @@ import { TestCard } from "@/components/test-card";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { useActiveCategories } from "@/hooks/useActiveCategories";
 import { getAllTests } from "@/lib/supabase/getAllTests";
+import { TestCardSkeleton } from "@/components/TestCardSkeleton";
 
 export function TestListClient() {
   // 서버에서 받아오던 데이터를 저장할 상태(state)를 만듭니다.
@@ -74,8 +75,12 @@ export function TestListClient() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <p className="text-lg">테스트 목록을 불러오는 중입니다...</p>
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-[repeat(auto-fit,_minmax(220px,_1fr))] gap-4 md:gap-6 xl:gap-8">
+          {Array.from({ length: 12 }).map((_, index) => (
+            <TestCardSkeleton key={index} />
+          ))}
+        </div>
       </div>
     );
   }
