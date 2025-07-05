@@ -1,3 +1,4 @@
+// api/test/[id].page.tsx
 import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import TestView from "@/components/test/TestView";
@@ -5,9 +6,19 @@ import type { TestData } from "@/types/test";
 
 export const dynamic = "force-dynamic";
 
-export default async function TestPage(props: { params: { id: string } }) {
-  // props.params를 await으로 처리하여 id를 가져옵니다.
-  const { id } = await props.params;
+export default async function TestPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const { id } = await params; // params 비동기 처리
+  const resolvedSearchParams = await searchParams; // searchParams 비동기 처리
+  const language =
+    resolvedSearchParams.lang && typeof resolvedSearchParams.lang === "string"
+      ? resolvedSearchParams.lang
+      : "ko";
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -16,7 +27,7 @@ export default async function TestPage(props: { params: { id: string } }) {
 
   const { data, error } = await supabase.rpc("get_test_data", {
     test_id_param: Number(id),
-    language_param: "ko",
+    language_param: language,
   });
 
   if (error || !data?.questions || !data?.results) {
@@ -24,5 +35,11 @@ export default async function TestPage(props: { params: { id: string } }) {
     notFound();
   }
 
-  return <TestView initialTestData={data as TestData} testId={id} />;
+  return (
+    <TestView
+      initialTestData={data as TestData}
+      testId={id}
+      language={language}
+    />
+  );
 }
