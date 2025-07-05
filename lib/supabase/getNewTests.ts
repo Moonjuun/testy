@@ -3,7 +3,7 @@ import { NewTest } from "@/types/test";
 
 export async function getNewTests(
   language: "ko" | "en" | "ja" | "vi" = "ko",
-  limit: number = 4
+  limit: number = 20
 ): Promise<NewTest[]> {
   const supabase = createClientComponentClient();
   const nameField = `name_${language}`;

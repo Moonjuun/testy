@@ -44,19 +44,19 @@ export default function HomePage() {
               새로운 테스트가 매주 업데이트!
             </span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
             <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              나는 누구일까?
+              가볍게 해보는 성향 테스트
             </span>
           </h1>
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
-            간단한 질문들로 알아보는 나의 진짜 모습
+            심심할 때 가볍게, 생각보다 잘 맞는 테스트
           </p>
         </div>
       </section>
 
       {/* Featured Tests */}
-      <section className="px-4">
+      <section className="px-4 pb-20">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-3 mb-8">
             <Clock className="w-6 h-6 text-purple-600" />
@@ -64,25 +64,24 @@ export default function HomePage() {
               최신 테스트
             </h2>
           </div>
-          <div className="grid sm:grid-cols-2 gap-6 mb-12">
+
+          <div className="grid [grid-template-columns:repeat(auto-fit,minmax(250px,1fr))] gap-6 mb-12">
             {newTestList.length === 0
-              ? Array.from({ length: 4 }).map((_, i) => (
+              ? Array.from({ length: 10 }).map((_, i) => (
                   <TestCardSkeleton key={i} />
                 ))
               : newTestList.map((test) => (
-                  <div key={test.id}>
-                    <TestCard test={test} featured />
-                  </div>
+                  <TestCard key={test.id} test={test} featured />
                 ))}
           </div>
+
+          {/* Center Banner Ad */}
+          <CenterBanner size="large" />
         </div>
       </section>
 
-      {/* Center Banner Ad */}
-      <CenterBanner size="large" />
-
       {/* All Tests */}
-      <section className="py-8 px-4 bg-white/50 dark:bg-gray-800/30 backdrop-blur-sm">
+      {/* <section className="py-8 px-4 bg-white/50 dark:bg-gray-800/30 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-3 mb-8">
             <Brain className="w-6 h-6 text-blue-600" />
@@ -91,7 +90,6 @@ export default function HomePage() {
             </h2>
           </div>
 
-          {/* Category Filter */}
           <CategoryFilter
             categories={categories.map((cat) => cat.name)}
             currentLanguage={currentLanguage}
@@ -109,19 +107,8 @@ export default function HomePage() {
                   </div>
                 ))}
           </div>
-
-          {/* Load More */}
-          {/* <div className="text-center mt-12">
-            <Button
-              variant="outline"
-              size="lg"
-              className="rounded-full px-8 bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-            >
-              더 많은 테스트 보기
-            </Button>
-          </div> */}
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }
