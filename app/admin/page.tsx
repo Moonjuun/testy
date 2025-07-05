@@ -2,14 +2,21 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { Loader2 } from "lucide-react";
+
+// 컴포넌트
+import AdminSidebar from "@/components/admin/AdminSidebar";
 import TestJsonUploader from "@/components/admin/TestJsonUploader";
+import TestThumbnailUploader from "@/components/admin/TestThumbnailUploader";
 import ResultImageUploader from "@/components/admin/ResultImageUploader";
+import TestThumbnailManager from "@/components/admin/TestThumbnailManager";
 import UploadedImageManager from "@/components/admin/UploadedImageManager";
 import SnackBar from "@/components/SnackBar";
-import AdminSidebar from "@/components/admin/AdminSidebar";
-import { Loader2 } from "lucide-react";
-import TestThumbnailUploader from "@/components/admin/TestThumbnailUploader";
+
+// 타입
 import type { TestResult, TestForUpload } from "@/types/test";
+
+// Supabase 함수
 import {
   loadResultsWithoutImages,
   loadResultsWithImages,
@@ -19,21 +26,24 @@ import {
   loadTestsWithThumbnails,
 } from "@/lib/supabase/adminTest";
 
+type AdminTab =
+  | "json"
+  | "thumbnail-upload"
+  | "result-upload"
+  | "thumbnail-manage"
+  | "result-manage";
+
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<
-    "json" | "upload" | "manage" | "thumbnail"
-  >("json");
+  const [activeTab, setActiveTab] = useState<AdminTab>("json");
   const [snackBarMessage, setSnackBarMessage] = useState<string | null>(null);
   const [snackBarKey, setSnackBarKey] = useState<number>(0);
   const [loading, setLoading] = useState(true);
 
-  // 결과 이미지 상태
+  // 상태 변수
   const [testsWithoutImages, setTestsWithoutImages] = useState<TestResult[]>(
     []
   );
   const [testsWithImages, setTestsWithImages] = useState<TestResult[]>([]);
-
-  // 테스트 썸네일 상태
   const [testsWithoutThumbnails, setTestsWithoutThumbnails] = useState<
     TestForUpload[]
   >([]);
@@ -46,12 +56,12 @@ export default function AdminPage() {
     setSnackBarKey(Date.now());
   };
 
-  // 데이터 로딩 함수들
+  // 데이터 로딩 함수
   const reloadTestsWithoutImages = useCallback(async () => {
     try {
       setTestsWithoutImages(await loadResultsWithoutImages());
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      console.error(e);
       showSnackBar("❌ 이미지 없는 결과 로딩 실패");
     }
   }, []);
@@ -59,8 +69,8 @@ export default function AdminPage() {
   const reloadTestsWithImages = useCallback(async () => {
     try {
       setTestsWithImages(await loadResultsWithImages());
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      console.error(e);
       showSnackBar("❌ 등록된 결과 이미지 로딩 실패");
     }
   }, []);
@@ -68,8 +78,8 @@ export default function AdminPage() {
   const reloadTestsWithoutThumbnails = useCallback(async () => {
     try {
       setTestsWithoutThumbnails(await loadTestsWithoutThumbnails());
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      console.error(e);
       showSnackBar("❌ 썸네일 없는 테스트 로딩 실패");
     }
   }, []);
@@ -77,8 +87,8 @@ export default function AdminPage() {
   const reloadTestsWithThumbnails = useCallback(async () => {
     try {
       setTestsWithThumbnails(await loadTestsWithThumbnails());
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      console.error(e);
       showSnackBar("❌ 등록된 테스트 썸네일 로딩 실패");
     }
   }, []);
@@ -102,7 +112,6 @@ export default function AdminPage() {
     reloadTestsWithThumbnails,
   ]);
 
-  // 탭에 따라 다른 컴포넌트를 보여주는 함수
   const renderContent = () => {
     if (loading) {
       return (
@@ -127,7 +136,7 @@ export default function AdminPage() {
             }
           />
         );
-      case "thumbnail":
+      case "thumbnail-upload":
         return (
           <TestThumbnailUploader
             setSnackBarMessage={showSnackBar}
@@ -136,7 +145,7 @@ export default function AdminPage() {
             reloadTestsWithThumbnails={reloadTestsWithThumbnails}
           />
         );
-      case "upload":
+      case "result-upload":
         return (
           <ResultImageUploader
             setSnackBarMessage={showSnackBar}
@@ -145,7 +154,15 @@ export default function AdminPage() {
             reloadTestsWithImages={reloadTestsWithImages}
           />
         );
-      case "manage":
+      case "thumbnail-manage":
+        return (
+          <TestThumbnailManager
+            setSnackBarMessage={showSnackBar}
+            testsWithThumbnails={testsWithThumbnails}
+            reloadTestsWithThumbnails={reloadTestsWithThumbnails}
+          />
+        );
+      case "result-manage":
         return (
           <UploadedImageManager
             setSnackBarMessage={showSnackBar}

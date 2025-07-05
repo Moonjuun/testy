@@ -1,10 +1,21 @@
 // components/admin/AdminSidebar.tsx
 "use client";
 
-import { UploadCloud, ImageIcon, ListChecks, FileImage } from "lucide-react";
+import {
+  UploadCloud,
+  FileImage,
+  ImageIcon,
+  ListChecks,
+  GalleryHorizontal,
+} from "lucide-react";
 
-// ✅ 타입에 'thumbnail' 추가
-type AdminTab = "json" | "upload" | "manage" | "thumbnail";
+// ✅ 5개 탭을 위한 타입 정의
+type AdminTab =
+  | "json"
+  | "thumbnail-upload"
+  | "result-upload"
+  | "thumbnail-manage"
+  | "result-manage";
 
 interface Props {
   activeTab: AdminTab;
@@ -13,26 +24,27 @@ interface Props {
 
 export default function AdminSidebar({ activeTab, setActiveTab }: Props) {
   const menuItems = [
+    { key: "json" as const, label: "1. JSON 업로드", icon: <UploadCloud /> },
     {
-      key: "json" as const,
-      label: "1. 테스트 JSON 업로드",
-      icon: <UploadCloud className="w-5 h-5 mr-3" />,
-    },
-    // ✅ 새로운 메뉴 아이템 추가
-    {
-      key: "thumbnail" as const,
+      key: "thumbnail-upload" as const,
       label: "2. 테스트 썸네일 등록",
-      icon: <FileImage className="w-5 h-5 mr-3" />,
+      icon: <FileImage />,
+    },
+
+    {
+      key: "thumbnail-manage" as const,
+      label: "3. 등록된 테스트 썸네일 관리",
+      icon: <GalleryHorizontal />,
     },
     {
-      key: "upload" as const,
-      label: "3. 결과 이미지 등록",
-      icon: <ImageIcon className="w-5 h-5 mr-3" />,
+      key: "result-upload" as const,
+      label: "4. 결과 이미지 등록",
+      icon: <ImageIcon />,
     },
     {
-      key: "manage" as const,
-      label: "4. 등록 이미지 관리",
-      icon: <ListChecks className="w-5 h-5 mr-3" />,
+      key: "result-manage" as const,
+      label: "5. 등록된 결과 이미지 관리",
+      icon: <ListChecks />,
     },
   ];
 
@@ -46,7 +58,7 @@ export default function AdminSidebar({ activeTab, setActiveTab }: Props) {
           <button
             key={item.key}
             onClick={() => setActiveTab(item.key)}
-            className={`w-full flex items-center text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+            className={`w-full flex items-center gap-3 text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
               activeTab === item.key
                 ? "bg-purple-600 text-white shadow-md"
                 : "text-gray-600 dark:text-gray-300 hover:bg-purple-100 dark:hover:bg-gray-700"
