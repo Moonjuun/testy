@@ -1,46 +1,12 @@
+// lib/supabase/adminResult.ts
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-
-// 결과 원본 타입
-export interface RawResult {
-  id: string;
-  test_id: string;
-  result_image_url: string | null;
-  image_prompt: string;
-}
-
-// 결과 변환 타입
-export interface TranslatedResult {
-  id: string;
-  test_id: string;
-  test_name: string;
-  result_title: string;
-  result_image_url: string;
-  image_prompt: string;
-}
-
-/**
- * [1] Supabase에서 이미지가 아직 없는 결과만 단순 조회 (translation 없음)
- */
-export async function fetchRawResultsWithoutImages(): Promise<RawResult[]> {
-  const supabase = createClientComponentClient();
-
-  const { data, error } = await supabase
-    .from("results")
-    .select("id, test_id, result_image_url, image_prompt")
-    .is("result_image_url", null);
-
-  if (error || !data) {
-    throw error || new Error("결과 데이터 불러오기 실패");
-  }
-
-  return data;
-}
+import { TestResult } from "@/types/test";
 
 /**
  * [2] Supabase에서 이미지가 등록된 테스트 결과를 불러와
  * 한글 번역 제목과 함께 매핑된 결과를 반환
  */
-export async function loadResultsWithImages(): Promise<TranslatedResult[]> {
+export async function loadResultsWithImages(): Promise<TestResult[]> {
   const supabase = createClientComponentClient();
 
   const { data: resultsData, error: resultsError } = await supabase
@@ -86,7 +52,7 @@ export async function loadResultsWithImages(): Promise<TranslatedResult[]> {
  * [3] Supabase에서 이미지가 아직 등록되지 않은 테스트 결과를 불러와
  * 한글 번역 제목과 함께 매핑된 결과를 반환
  */
-export async function loadResultsWithoutImages(): Promise<TranslatedResult[]> {
+export async function loadResultsWithoutImages(): Promise<TestResult[]> {
   const supabase = createClientComponentClient();
 
   const { data: resultsData, error: resultsError } = await supabase
