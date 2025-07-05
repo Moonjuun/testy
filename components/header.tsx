@@ -77,7 +77,10 @@ export function Header() {
             </Link>
 
             <nav className="hidden lg:flex items-center space-x-1">
-              <Link href="/" className="px-3 py-2 text-sm font-medium ...">
+              <Link
+                href="/test/list"
+                className="px-3 py-2 text-sm font-medium ..."
+              >
                 {getAllLabel()}
               </Link>
               {loading
@@ -181,7 +184,7 @@ export function Header() {
             <div className="lg:hidden py-4 border-t border-gray-200 dark:border-gray-700">
               <nav className="grid grid-cols-2 gap-2 px-3">
                 <Link
-                  href="/"
+                  href="/test/list"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="px-3 py-2 text-sm font-medium ..."
                 >

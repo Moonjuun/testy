@@ -32,7 +32,6 @@ export default function ClientLayout({
 
           {/* Main Content */}
           <main className="flex-1 min-w-0">{children}</main>
-
           {/* Right Side Ad */}
           {!isAdminPage && (
             <div className="hidden xl:block w-80 flex-shrink-0">

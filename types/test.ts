@@ -48,7 +48,11 @@ export interface NewTest {
     code: string;
     name: string;
   } | null;
-  // ... 기타 속성
+  test_translations: {
+    title: string;
+    language: string;
+    description: string;
+  };
 }
 
 export interface TestCardProps {
