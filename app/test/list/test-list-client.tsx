@@ -44,8 +44,6 @@ export function TestListClient() {
   const [selectedCategory, setSelectedCategory] = useState<number | "all">(
     "all"
   );
-  const [sortBy, setSortBy] = useState("popular");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
 
   const itemsPerPage = 12;
@@ -84,112 +82,109 @@ export function TestListClient() {
 
   return (
     <>
-      {/* 검색 + 필터 */}
+      <div className="px-4 sm:px-6 lg:px-8">
+        {/* 검색 + 필터 */}
 
-      <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg mb-8">
-        <div className="flex flex-col lg:flex-row justify-between gap-4">
-          {/* 검색어 */}
-          <div className="relative w-full max-w-md">
-            <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-            <Input
-              placeholder="테스트 검색..."
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="pl-10 h-12"
-            />
-          </div>
-
-          {/* 보기 전환 */}
-          <div className="flex items-center space-x-2">
-            <Button
-              size="sm"
-              variant={viewMode === "grid" ? "default" : "ghost"}
-              onClick={() => setViewMode("grid")}
-            >
-              <Grid className="w-4 h-4" />
-            </Button>
-            <Button
-              size="sm"
-              variant={viewMode === "list" ? "default" : "ghost"}
-              onClick={() => setViewMode("list")}
-            >
-              <List className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-
-        {/* 카테고리 */}
-        <div className="mt-4 flex flex-wrap gap-2">
-          {/* '전체' 버튼 추가 */}
-          <Button
-            key="all"
-            size="sm"
-            variant={selectedCategory === "all" ? "default" : "outline"}
-            onClick={() => {
-              setSelectedCategory("all");
-              setCurrentPage(1);
-            }}
-            className="rounded-full"
-          >
-            전체
-            <Badge variant="secondary" className="ml-2">
-              {initialTests.length}
-            </Badge>
-          </Button>
-
-          {/* 기존 카테고리 목록 */}
-          {categories.map((category) => {
-            const isSelected = selectedCategory === category.id;
-
-            const testCount = initialTests.filter(
-              (test) => test.category?.name === category.name
-            ).length;
-
-            return (
-              <Button
-                key={category.id}
-                size="sm"
-                onClick={() => {
-                  setSelectedCategory(category.id);
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg mb-8 ">
+          <div className="flex flex-col lg:flex-row justify-between gap-4">
+            {/* 검색어 */}
+            <div className="relative w-full max-w-md">
+              <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+              <Input
+                placeholder="테스트 검색..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
                   setCurrentPage(1);
                 }}
-                className={`rounded-full transition-colors duration-200 ${
-                  isSelected
-                    ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md ring-1 ring-purple-300 dark:ring-pink-300"
-                    : "border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 bg-transparent"
-                }`}
-              >
-                {category.name}
-                <Badge
-                  variant="secondary"
-                  className={`ml-2 ${
+                className="pl-10 h-12"
+              />
+            </div>
+          </div>
+
+          {/* 카테고리 */}
+          <div className="mt-4 flex flex-wrap gap-2">
+            {/* '전체' 버튼 추가 */}
+            {(() => {
+              const isSelected = selectedCategory === "all";
+              return (
+                <Button
+                  key="all"
+                  size="sm"
+                  onClick={() => {
+                    setSelectedCategory("all");
+                    setCurrentPage(1);
+                  }}
+                  className={`rounded-full transition-colors duration-200 ${
                     isSelected
-                      ? "bg-white text-purple-600 dark:text-pink-600"
-                      : ""
+                      ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md ring-1 ring-purple-300 dark:ring-pink-300"
+                      : "border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 bg-transparent"
                   }`}
                 >
-                  {testCount}
-                </Badge>
-              </Button>
-            );
-          })}
-        </div>
-      </div>
+                  전체
+                  <Badge
+                    variant="secondary"
+                    className={`ml-2 ${
+                      isSelected
+                        ? "bg-white text-purple-600 dark:text-pink-600"
+                        : ""
+                    }`}
+                  >
+                    {initialTests.length}
+                  </Badge>
+                </Button>
+              );
+            })()}
 
-      {/* 테스트 카드 */}
-      <div
-        className={`${
-          viewMode === "grid"
-            ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 xl:gap-8"
-            : "space-y-4"
-        } mb-16`}
-      >
-        {paginatedTests.map((test) => (
-          <TestCard key={test.id} test={test} />
-        ))}
+            {/* 기존 카테고리 목록 */}
+            {categories.map((category) => {
+              const isSelected = selectedCategory === category.id;
+
+              const testCount = initialTests.filter(
+                (test) => test.category?.name === category.name
+              ).length;
+
+              return (
+                <Button
+                  key={category.id}
+                  size="sm"
+                  onClick={() => {
+                    setSelectedCategory(category.id);
+                    setCurrentPage(1);
+                  }}
+                  className={`rounded-full transition-colors duration-200 ${
+                    isSelected
+                      ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md ring-1 ring-purple-300 dark:ring-pink-300"
+                      : "border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 bg-transparent"
+                  }`}
+                >
+                  {category.name}
+                  <Badge
+                    variant="secondary"
+                    className={`ml-2 ${
+                      isSelected
+                        ? "bg-white text-purple-600 dark:text-pink-600"
+                        : ""
+                    }`}
+                  >
+                    {testCount}
+                  </Badge>
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 테스트 카드 */}
+        <div
+          className={
+            "grid grid-cols-[repeat(auto-fit,_minmax(220px,_1fr))] gap-4 md:gap-6 xl:gap-8"
+          }
+        >
+          {paginatedTests.map((test) => (
+            <TestCard key={test.id} test={test} />
+          ))}
+        </div>
       </div>
     </>
   );
