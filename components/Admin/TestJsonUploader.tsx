@@ -11,11 +11,13 @@ import { Upload, CheckCircle, XCircle, Copy, Check } from "lucide-react";
 import { sendTestJson } from "@/apis/sendTestJson";
 import { promptText } from "@/constants/AdminResult";
 import type { TestData } from "@/types/test";
+import { Input } from "@/components/ui/input"; // ✅ test_id 입력용
 
 interface UploadStatus {
   type: "success" | "error" | null;
   message: string;
 }
+
 interface Props {
   onUploadSuccess: () => void;
 }
@@ -28,6 +30,9 @@ export default function TestJsonUploader({ onUploadSuccess }: Props) {
   });
   const [isUploading, setIsUploading] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const [language, setLanguage] = useState<"ko" | "ja" | "en" | "vi">("ko");
+  const [testId, setTestId] = useState<number | null>(null); // ✅ 저장용 testId
 
   const handleCopyPrompt = async () => {
     await navigator.clipboard.writeText(promptText);
@@ -73,16 +78,34 @@ export default function TestJsonUploader({ onUploadSuccess }: Props) {
       });
       return;
     }
+
+    if (language !== "ko" && !testId) {
+      setUploadStatus({
+        type: "error",
+        message: "번역 업로드 시 testId가 필요합니다.",
+      });
+      return;
+    }
+
     setIsUploading(true);
     setUploadStatus({ type: null, message: "" });
+
     try {
-      const result = await sendTestJson(validation.data!);
+      const result = await sendTestJson(validation.data!, {
+        language,
+        testId: language === "ko" ? undefined : testId!,
+      });
+
+      const uploadedTestId = result.testId;
+      if (language === "ko") setTestId(uploadedTestId); // ✅ 처음 업로드 시 자동 저장
+
       setUploadStatus({
         type: "success",
-        message: `테스트 \"${validation.data?.title}\" 업로드 완료! (ID: ${result.testId})`,
+        message: `✅ ${language.toUpperCase()} 테스트 업로드 완료! (ID: ${uploadedTestId})`,
       });
-      setJsonInput("");
-      onUploadSuccess(); // ✅ 업로드 성공 후 리스트 갱신!
+
+      setJsonInput(""); // 입력 초기화
+      onUploadSuccess();
     } catch (error: any) {
       setUploadStatus({
         type: "error",
@@ -117,18 +140,61 @@ export default function TestJsonUploader({ onUploadSuccess }: Props) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div>
-          <Label
-            htmlFor="json-input"
-            className="text-gray-700 dark:text-gray-300"
+        <div className="flex gap-4 items-center">
+          <Label className="text-sm">언어 선택:</Label>
+          <select
+            className="border rounded px-2 py-1 bg-white dark:bg-gray-700 text-sm"
+            value={language}
+            onChange={(e) => setLanguage(e.target.value as any)}
           >
-            테스트 JSON 붙여넣기
-          </Label>
+            <option value="ko">한국어 (기본)</option>
+            <option value="ja">일본어</option>
+            <option value="en">영어</option>
+            <option value="vi">베트남어</option>
+          </select>
+        </div>
+
+        {language !== "ko" && (
+          <div>
+            <Label>업로드할 테스트 ID</Label>
+            <Input
+              type="number"
+              value={testId ?? ""}
+              onChange={(e) => setTestId(Number(e.target.value))}
+              placeholder="기존에 등록한 테스트 ID를 입력하세요"
+            />
+          </div>
+        )}
+
+        {testId && (
+          <div className="text-sm text-gray-500">
+            현재 선택된 test_id:{" "}
+            <span className="font-mono font-semibold">{testId}</span>{" "}
+            <Button
+              variant="outline"
+              onClick={() => {
+                navigator.clipboard.writeText(String(testId));
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              }}
+              className="ml-2"
+            >
+              {copied ? (
+                <Check className="w-3 h-3 mr-1 text-green-500" />
+              ) : (
+                <Copy className="w-3 h-3 mr-1" />
+              )}
+              복사
+            </Button>
+          </div>
+        )}
+
+        <div>
+          <Label htmlFor="json-input">테스트 JSON</Label>
           <Textarea
             id="json-input"
             value={jsonInput}
             onChange={(e) => setJsonInput(e.target.value)}
-            placeholder={`{\n  \"title\": \"테스트 제목\",\n  \"description\": \"테스트 설명\",\n  \"questions\": [...],\n  \"results\": [...]\n}`}
             className="mt-2 min-h-[400px] font-mono text-sm bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
           />
         </div>
@@ -167,12 +233,13 @@ export default function TestJsonUploader({ onUploadSuccess }: Props) {
         >
           {isUploading ? (
             <>
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />{" "}
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
               업로드 중...
             </>
           ) : (
             <>
-              <Upload className="w-4 h-4 mr-2" /> 업로드
+              <Upload className="w-4 h-4 mr-2" />
+              업로드
             </>
           )}
         </Button>

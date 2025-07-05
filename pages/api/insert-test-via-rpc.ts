@@ -18,59 +18,46 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // POST 요청만 허용합니다.
-  if (req.method !== "POST") {
-    // 405 Method Not Allowed 응답
-    return res
-      .status(405)
-      .json({ message: "Method Not Allowed - POST 요청만 허용됩니다." });
-  }
+  if (req.method !== "POST")
+    return res.status(405).json({ message: "POST only" });
 
-  const testData = req.body; // 프론트엔드에서 받은 JSON 데이터
+  const { data, language = "ko", test_id } = req.body;
 
-  // 필수 필드에 대한 기본적인 유효성 검사
-  // 데이터베이스 함수에서도 더욱 상세한 검사 가능
-  if (
-    !testData ||
-    !testData.title ||
-    !testData.questions ||
-    !testData.results
-  ) {
-    // 400 Bad Request 응답
+  if (!data || !data.title || !data.questions || !data.results) {
     return res
       .status(400)
-      .json({
-        error:
-          "Invalid test data provided. Missing title, questions, or results.",
-      });
+      .json({ error: "JSON 누락 (title/questions/results)" });
   }
 
   try {
-    // Supabase 데이터베이스 함수 'insert_test_data' 호출
-    // 'supabaseAdmin' 클라이언트를 사용하여 RLS를 우회하고 함수를 실행합니다.
-    const { data: testId, error } = await supabaseAdmin.rpc(
-      "insert_test_data",
-      { p_test_data: testData }
-    );
-
-    // Supabase RPC 호출 중 오류 발생 시
-    if (error) {
-      console.error("Error calling insert_test_data function:", error);
-      // 500 Internal Server Error 응답
+    if (language === "ko") {
+      const { data: testId, error } = await supabaseAdmin.rpc(
+        "insert_test_data",
+        {
+          p_test_data: data,
+        }
+      );
+      if (error) throw error;
       return res
-        .status(500)
-        .json({ error: error.message || "Database function error" });
-    }
+        .status(200)
+        .json({ message: "기본 테스트 업로드 완료", testId });
+    } else {
+      if (!test_id) return res.status(400).json({ error: "test_id 누락" });
 
-    // 성공 시 응답 (삽입된 테스트의 ID 반환)
-    // 200 OK 응답
-    return res
-      .status(200)
-      .json({ message: "Data inserted successfully via RPC.", testId: testId });
-  } catch (err) {
-    // 예상치 못한 서버 측 예외 발생 시
-    console.error("Unexpected error in API route:", err);
-    // 500 Internal Server Error 응답
-    return res.status(500).json({ error: "Internal Server Error" });
+      const { error } = await supabaseAdmin.rpc("insert_test_translation", {
+        p_translation_data: data,
+        p_language: language,
+        p_test_id: test_id,
+      });
+
+      if (error) throw error;
+
+      return res
+        .status(200)
+        .json({ message: "번역 업로드 완료", testId: test_id });
+    }
+  } catch (error: any) {
+    console.error(error);
+    return res.status(500).json({ error: error.message || "Server Error" });
   }
 }
