@@ -10,6 +10,8 @@ import { CategoryFilter } from "@/components/Category/CategoryFilter";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { getNewTests } from "@/lib/supabase/getNewTests";
 import { NewTest } from "@/types/test";
+import { TestCardSkeleton } from "@/components/TestCardSkeleton";
+
 //hooks
 import { useActiveCategories } from "@/hooks/useActiveCategories";
 
@@ -63,11 +65,15 @@ export default function HomePage() {
             </h2>
           </div>
           <div className="grid sm:grid-cols-2 gap-6 mb-12">
-            {newTestList.map((test) => (
-              <div key={test.id}>
-                <TestCard test={test} featured />
-              </div>
-            ))}
+            {newTestList.length === 0
+              ? Array.from({ length: 4 }).map((_, i) => (
+                  <TestCardSkeleton key={i} />
+                ))
+              : newTestList.map((test) => (
+                  <div key={test.id}>
+                    <TestCard test={test} featured />
+                  </div>
+                ))}
           </div>
         </div>
       </section>
@@ -92,12 +98,16 @@ export default function HomePage() {
             loading={loading}
           />
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-6">
-            {newTestList.map((test) => (
-              <div key={test.id}>
-                <TestCard test={test} />
-              </div>
-            ))}
+          <div className="grid sm:grid-cols-2 gap-6 mb-12">
+            {newTestList.length === 0
+              ? Array.from({ length: 4 }).map((_, i) => (
+                  <TestCardSkeleton key={i} />
+                ))
+              : newTestList.map((test) => (
+                  <div key={test.id}>
+                    <TestCard test={test} featured />
+                  </div>
+                ))}
           </div>
 
           {/* Load More */}
