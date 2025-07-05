@@ -1,4 +1,3 @@
-// lib/supabase/adminTest.ts
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { TestForUpload } from "@/types/test";
 
@@ -10,12 +9,15 @@ const supabase = createClientComponentClient();
 export async function loadTestsWithoutThumbnails(): Promise<TestForUpload[]> {
   const { data: tests, error } = await supabase
     .from("tests")
-    .select("id, thumbnail_url")
-    .is("thumbnail_url", null);
+    .select("id, thumbnail_url, tone, theme, palette, character")
+    .is("thumbnail_url", null)
+    .eq("is_visible", true);
 
   if (error) throw error;
+  if (!tests) return [];
 
   const testIds = tests.map((t) => t.id);
+  if (testIds.length === 0) return [];
 
   const { data: translations } = await supabase
     .from("test_translations")
@@ -29,6 +31,10 @@ export async function loadTestsWithoutThumbnails(): Promise<TestForUpload[]> {
     id: test.id,
     title: titleMap.get(test.id) || "제목 없음",
     thumbnail_url: test.thumbnail_url,
+    tone: test.tone,
+    theme: test.theme,
+    palette: test.palette,
+    character: test.character,
   }));
 }
 
@@ -38,12 +44,17 @@ export async function loadTestsWithoutThumbnails(): Promise<TestForUpload[]> {
 export async function loadTestsWithThumbnails(): Promise<TestForUpload[]> {
   const { data: tests, error } = await supabase
     .from("tests")
-    .select("id, thumbnail_url")
-    .not("thumbnail_url", "is", null);
+    // ✅ 조회할 컬럼 추가
+    .select("id, thumbnail_url, tone, theme, palette, character")
+    .not("thumbnail_url", "is", null)
+    .eq("is_visible", true);
 
   if (error) throw error;
+  if (!tests) return [];
 
   const testIds = tests.map((t) => t.id);
+  if (testIds.length === 0) return [];
+
   const { data: translations } = await supabase
     .from("test_translations")
     .select("test_id, title")
@@ -52,10 +63,15 @@ export async function loadTestsWithThumbnails(): Promise<TestForUpload[]> {
 
   const titleMap = new Map(translations?.map((t) => [t.test_id, t.title]));
 
+  // ✅ 반환 객체에 새로운 속성들 추가
   return tests.map((test) => ({
     id: test.id,
     title: titleMap.get(test.id) || "제목 없음",
     thumbnail_url: test.thumbnail_url,
+    tone: test.tone,
+    theme: test.theme,
+    palette: test.palette,
+    character: test.character,
   }));
 }
 
@@ -66,6 +82,7 @@ export async function uploadTestThumbnailToSupabase(
   testId: string,
   file: File
 ): Promise<string> {
+  // 참고: 'thumbnail-image'는 Supabase에 생성한 버킷 이름과 일치해야 합니다.
   const uploadPath = `test-thumbnails/${testId}/${Date.now()}-${file.name}`;
   const { data: uploadData, error: uploadError } = await supabase.storage
     .from("thumbnail-image")

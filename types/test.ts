@@ -73,4 +73,9 @@ export interface TestForUpload {
   id: string;
   title: string;
   thumbnail_url: string | null;
+  // ✅ 아래 4개 속성 추가
+  tone: any; // 실제 타입에 맞게 수정 가능
+  theme: string | null;
+  palette: any;
+  character: any;
 }
