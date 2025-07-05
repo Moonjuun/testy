@@ -14,8 +14,10 @@ import {
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { ImageIcon } from "lucide-react";
-import { uploadResultImageToSupabase } from "@/lib/supabase/adminResults";
 import type { TestResult } from "@/types/test";
+
+// api
+import { uploadResultImageToSupabase } from "@/lib/supabase/adminResults";
 
 interface Props {
   setSnackBarMessage: (msg: string) => void;
