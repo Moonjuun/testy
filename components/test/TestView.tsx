@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useTestResultStore } from "@/store/testResultStore";
 
-import { MobileAdBanner } from "@/components/Banner/mobile-ad-banner";
+import { MobileAdBanner } from "@/components/banner/mobile-ad-banner";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { TestData } from "@/types/test";

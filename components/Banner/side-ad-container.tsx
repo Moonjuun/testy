@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AdBanner } from "@/components/Banner/ad-banner";
+import { AdBanner } from "@/components/banner/ad-banner";
 
 interface SideAdContainerProps {
   position: "left" | "right";

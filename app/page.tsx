@@ -1,12 +1,9 @@
 "use client";
 import { useRef, useEffect, useState } from "react";
 import { TestCard } from "@/components/test-card";
-import { MobileAdBanner } from "@/components/Banner/mobile-ad-banner";
-import { Button } from "@/components/ui/button";
+import { MobileAdBanner } from "@/components/banner/mobile-ad-banner";
 import { Sparkles, TrendingUp, Brain, Clock } from "lucide-react";
-import { testCards } from "@/data/tests";
-import CenterBanner from "@/components/Banner/CenterBanner";
-import { CategoryFilter } from "@/components/Category/CategoryFilter";
+import CenterBanner from "@/components/banner/CenterBanner";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { getNewTests } from "@/lib/supabase/getNewTests";
 import { NewTest } from "@/types/test";

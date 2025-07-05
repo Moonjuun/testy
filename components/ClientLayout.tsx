@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { ThemeProvider } from "@/contexts/theme-context";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { SideAdContainer } from "@/components/Banner/side-ad-container";
+import { SideAdContainer } from "@/components/banner/side-ad-container";
 
 export default function ClientLayout({
   children,
