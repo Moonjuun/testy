@@ -22,6 +22,7 @@ export function Header() {
   const { theme, toggleTheme } = useTheme();
 
   const { categories, loading } = useActiveCategories(currentLangCode);
+  const [mounted, setMounted] = useState(false);
 
   const languages = [
     { code: "ko", name: "한국어" },
@@ -55,6 +56,10 @@ export function Header() {
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    setMounted(true); // ✅ 2. 클라이언트 마운트 후 true 설정
   }, []);
 
   return (
@@ -128,10 +133,14 @@ export function Header() {
                 onClick={toggleTheme}
                 className="rounded-full p-2 bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
               >
-                {theme === "dark" ? (
-                  <Sun className="w-4 h-4" />
+                {mounted ? (
+                  theme === "dark" ? (
+                    <Sun className="w-4 h-4" />
+                  ) : (
+                    <Moon className="w-4 h-4" />
+                  )
                 ) : (
-                  <Moon className="w-4 h-4" />
+                  <div className="w-4 h-4" /> // placeholder: 깜빡임 방지용
                 )}
               </Button>
 
