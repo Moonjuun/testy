@@ -73,7 +73,7 @@ export default function TestView({ initialTestData, testId }: Props) {
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto grid lg:grid-cols-4 gap-8">
+        <div className="max-w-2xl mx-auto">
           <div className="lg:col-span-3">
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
               <h2 className="text-xl md:text-2xl font-semibold text-gray-900 dark:text-white mb-8 leading-relaxed">
