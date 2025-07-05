@@ -1,72 +1,56 @@
-import type { TestData, TestCard } from "@/types/test"
+import type { TestData, TestCard } from "@/types/test";
 
 export const testCards: TestCard[] = [
   {
     id: "summer-vacation-style",
     title: "나에게 어울리는 여름 휴가 스타일",
-    description: "무더운 여름, 당신에게 가장 잘 어울리는 휴가 스타일은 무엇일까요?",
-    thumbnail: "/placeholder.svg?height=200&width=300",
+    description:
+      "무더운 여름, 당신에게 가장 잘 어울리는 휴가 스타일은 무엇일까요?",
+    thumbnail_url: "/placeholder.svg?height=200&width=300",
     category: "라이프",
-    participants: "12.3만명",
-    color: "bg-orange-500",
-    duration: "3분",
   },
   {
     id: "love-style",
     title: "나의 연애 스타일은?",
     description: "12가지 질문으로 알아보는 나만의 연애 패턴",
-    thumbnail: "/placeholder.svg?height=200&width=300",
+    thumbnail_url: "/placeholder.svg?height=200&width=300",
     category: "연애",
-    participants: "2.3만명",
-    color: "bg-pink-500",
-    duration: "5분",
   },
   {
     id: "mbti-accuracy",
     title: "MBTI 정확도 테스트",
     description: "진짜 내 성격은 무엇일까? 정밀 분석",
-    thumbnail: "/placeholder.svg?height=200&width=300",
+    thumbnail_url: "/placeholder.svg?height=200&width=300",
     category: "성격",
-    participants: "15.7만명",
-    color: "bg-purple-500",
-    duration: "7분",
   },
   {
     id: "career-match",
     title: "나에게 맞는 직업 찾기",
     description: "적성과 성향을 바탕으로 한 직업 추천",
-    thumbnail: "/placeholder.svg?height=200&width=300",
+    thumbnail_url: "/placeholder.svg?height=200&width=300",
     category: "진로",
-    participants: "8.9만명",
-    color: "bg-blue-500",
-    duration: "6분",
   },
   {
     id: "inner-animal",
     title: "내 마음속 동물은?",
     description: "숨겨진 나의 본성 발견하기",
-    thumbnail: "/placeholder.svg?height=200&width=300",
+    thumbnail_url: "/placeholder.svg?height=200&width=300",
     category: "재미",
-    participants: "5.2만명",
-    color: "bg-green-500",
-    duration: "4분",
   },
   {
     id: "stress-level",
     title: "스트레스 지수 체크",
     description: "현재 나의 스트레스 상태는?",
-    thumbnail: "/placeholder.svg?height=200&width=300",
+    thumbnail_url: "/placeholder.svg?height=200&width=300",
     category: "심리",
-    participants: "12.1만명",
-    color: "bg-orange-500",
-    duration: "5분",
   },
-]
+];
 
 export const testData: Record<string, TestData> = {
   "summer-vacation-style": {
     title: "나에게 어울리는 여름 휴가 스타일",
-    description: "무더운 여름, 당신에게 가장 잘 어울리는 휴가 스타일은 무엇일까요? 6가지 질문을 통해 알아보세요!",
+    description:
+      "무더운 여름, 당신에게 가장 잘 어울리는 휴가 스타일은 무엇일까요? 6가지 질문을 통해 알아보세요!",
     questions: [
       {
         question: "여름이 되면 가장 먼저 떠오르는 단어는?",
@@ -123,7 +107,8 @@ export const testData: Record<string, TestData> = {
         description:
           "당신은 조용하고 한적한 자연 속에서 에너지를 충전하는 타입이에요. 혼자만의 시간과 조용한 환경에서 진짜 휴식을 느낍니다.",
         recommendation: "계곡 근처 한적한 펜션, 숲속 요가 리트릿",
-        image_prompt: "숲속 나무 아래 명상하는 여성, 고요하고 평화로운 분위기, 2D 일러스트",
+        image_prompt:
+          "숲속 나무 아래 명상하는 여성, 고요하고 평화로운 분위기, 2D 일러스트",
         score_range: [6, 7],
       },
       {
@@ -131,7 +116,8 @@ export const testData: Record<string, TestData> = {
         description:
           "당신은 편안함과 서비스가 최고인 휴가를 선호하는 타입이에요. 고급 리조트에서 아무 걱정 없이 쉬는 게 최고의 힐링이죠.",
         recommendation: "풀빌라 리조트, 올인클루시브 호텔",
-        image_prompt: "인피니티 풀에서 칵테일 마시는 우아한 여성, 햇살 가득한 리조트, 2D 일러스트",
+        image_prompt:
+          "인피니티 풀에서 칵테일 마시는 우아한 여성, 햇살 가득한 리조트, 2D 일러스트",
         score_range: [8, 10],
       },
       {
@@ -139,7 +125,8 @@ export const testData: Record<string, TestData> = {
         description:
           "새로운 경험과 활기를 추구하는 당신은 떠들썩한 축제나 도시 탐험이 잘 어울려요. 지칠 줄 모르는 에너지로 사람들과 어울립니다.",
         recommendation: "도시 여행, 음악 페스티벌, 해외 문화 체험",
-        image_prompt: "도심 거리에서 셀카 찍는 활발한 여성, 네온 조명과 사람들, 2D 일러스트",
+        image_prompt:
+          "도심 거리에서 셀카 찍는 활발한 여성, 네온 조명과 사람들, 2D 일러스트",
         score_range: [11, 13],
       },
       {
@@ -147,7 +134,8 @@ export const testData: Record<string, TestData> = {
         description:
           "당신은 여행의 분위기와 감정을 중요하게 여기는 사람입니다. 풍경, 감정, 기록… 하나하나 놓치지 않고 차곡차곡 담아두는 스타일이죠.",
         recommendation: "사진 여행, 브이로그 제작, 감성 펜션",
-        image_prompt: "노트에 여행 일기 쓰는 감성적인 여성, 창밖으로 보이는 노을, 2D 일러스트",
+        image_prompt:
+          "노트에 여행 일기 쓰는 감성적인 여성, 창밖으로 보이는 노을, 2D 일러스트",
         score_range: [14, 18],
       },
     ],
@@ -178,8 +166,10 @@ export const testData: Record<string, TestData> = {
         title: "로맨틱한 연인",
         description:
           "당신은 사랑에 있어서 감성적이고 로맨틱한 스타일입니다. 작은 것에서도 의미를 찾고, 상대방과의 깊은 감정적 연결을 중요하게 생각합니다.",
-        recommendation: "감성적인 데이트, 기념일 챙기기, 편지나 선물로 마음 표현",
-        image_prompt: "장미꽃을 들고 미소짓는 로맨틱한 여성, 따뜻한 조명, 2D 일러스트",
+        recommendation:
+          "감성적인 데이트, 기념일 챙기기, 편지나 선물로 마음 표현",
+        image_prompt:
+          "장미꽃을 들고 미소짓는 로맨틱한 여성, 따뜻한 조명, 2D 일러스트",
         score_range: [2, 4],
       },
       {
@@ -187,9 +177,10 @@ export const testData: Record<string, TestData> = {
         description:
           "당신은 현실적이고 안정적인 관계를 추구합니다. 감정보다는 서로의 성장과 미래를 함께 계획하는 것을 중요하게 여깁니다.",
         recommendation: "함께 목표 세우기, 취미 공유하기, 실용적인 선물",
-        image_prompt: "노트북으로 계획을 세우는 차분한 여성, 깔끔한 사무실, 2D 일러스트",
+        image_prompt:
+          "노트북으로 계획을 세우는 차분한 여성, 깔끔한 사무실, 2D 일러스트",
         score_range: [5, 6],
       },
     ],
   },
-}
+};

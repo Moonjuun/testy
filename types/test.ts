@@ -17,13 +17,14 @@ export interface TestResultItem {
   recommendation: string;
   image_prompt: string;
   score_range: [number, number];
+  result_image_url?: string | null;
 }
 
 export interface TestData {
   title: string;
   description: string;
   questions: TestQuestion[];
-  results: TestResultItem[]; // ✅ 이름 변경된 타입 적용
+  results: TestResultItem[];
 }
 
 // --- 테스트 관련 타입 ---
