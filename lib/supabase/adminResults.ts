@@ -1,4 +1,3 @@
-// lib/supabase/adminResult.ts
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { TestResult } from "@/types/test";
 
@@ -12,7 +11,8 @@ export async function loadResultsWithImages(): Promise<TestResult[]> {
   const { data: resultsData, error: resultsError } = await supabase
     .from("results")
     .select("id, test_id, result_image_url, image_prompt")
-    .not("result_image_url", "is", null);
+    .not("result_image_url", "is", null)
+    .order("id", { ascending: false }); // id 기준으로 내림차순 정렬
 
   if (resultsError || !resultsData) throw resultsError;
 
@@ -58,7 +58,8 @@ export async function loadResultsWithoutImages(): Promise<TestResult[]> {
   const { data: resultsData, error: resultsError } = await supabase
     .from("results")
     .select("id, test_id, result_image_url, image_prompt")
-    .is("result_image_url", null);
+    .is("result_image_url", null)
+    .order("id", { ascending: false });
 
   if (resultsError || !resultsData) throw resultsError;
 

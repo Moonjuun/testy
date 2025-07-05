@@ -11,7 +11,8 @@ export async function loadTestsWithoutThumbnails(): Promise<TestForUpload[]> {
     .from("tests")
     .select("id, thumbnail_url, tone, theme, palette, character")
     .is("thumbnail_url", null)
-    .eq("is_visible", true);
+    .eq("is_visible", true)
+    .order("id", { ascending: false });
 
   if (error) throw error;
   if (!tests) return [];
@@ -47,7 +48,8 @@ export async function loadTestsWithThumbnails(): Promise<TestForUpload[]> {
     // ✅ 조회할 컬럼 추가
     .select("id, thumbnail_url, tone, theme, palette, character")
     .not("thumbnail_url", "is", null)
-    .eq("is_visible", true);
+    .eq("is_visible", true)
+    .order("id", { ascending: false });
 
   if (error) throw error;
   if (!tests) return [];
