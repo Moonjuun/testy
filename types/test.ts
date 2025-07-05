@@ -22,6 +22,7 @@ export interface TestResultItem {
 
 export interface TestData {
   title: string;
+  thumbnail_url: string;
   description: string;
   questions: TestQuestion[];
   results: TestResultItem[];

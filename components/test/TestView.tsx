@@ -101,7 +101,7 @@ export default function TestView({ initialTestData, testId, language }: Props) {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
       <MobileAdBanner type="sticky-top" size="320x50" />
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto mb-8">
+        <div className="max-w-2xl mx-auto mb-4">
           <Link
             href={`/?lang=${currentLangCode}`}
             className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 mb-4"
@@ -109,9 +109,29 @@ export default function TestView({ initialTestData, testId, language }: Props) {
             <ArrowLeft className="w-4 h-4" />
             테스트 목록으로
           </Link>
+
+          {/* 썸네일 이미지 추가 */}
+          {initialTestData.thumbnail_url && (
+            <div className="relative mb-4 rounded-2xl overflow-hidden shadow-xl">
+              <img
+                src={initialTestData.thumbnail_url}
+                alt="Test thumbnail"
+                className="w-full h-64 object-cover brightness-75"
+              />
+              <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
+                <h1 className="text-2xl font-bold">{initialTestData.title}</h1>
+                {initialTestData.description && (
+                  <p className="text-sm text-white/80 mt-1">
+                    {initialTestData.description}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-              {initialTestData.title}
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+              {currentQuestionData.question}
             </h1>
             <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-4">
               <span>
@@ -126,9 +146,9 @@ export default function TestView({ initialTestData, testId, language }: Props) {
         <div className="max-w-2xl mx-auto">
           <div className="lg:col-span-3">
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
-              <h2 className="text-xl md:text-2xl font-semibold text-gray-900 dark:text-white mb-8 leading-relaxed">
+              {/* <h2 className="text-xl md:text-2xl font-semibold text-gray-900 dark:text-white mb-8 leading-relaxed">
                 {currentQuestionData.question}
-              </h2>
+              </h2> */}
               <div className="space-y-4">
                 {currentQuestionData.options.map((option, index) => (
                   <button
