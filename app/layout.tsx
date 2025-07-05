@@ -2,11 +2,7 @@ import type React from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
-import { SideAdContainer } from "@/components/Banner/side-ad-container";
-import { ThemeProvider } from "@/contexts/theme-context";
-import SideBanner from "@/components/Banner/SideBanner";
+import ClientLayout from "@/components/ClientLayout"; // 새로 만들 클라이언트 컴포넌트
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,28 +21,7 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-
-            <div className="flex flex-1 relative">
-              {/* Left Side Ad */}
-              <div className="hidden xl:block w-80 flex-shrink-0">
-                <SideAdContainer position="left" />
-              </div>
-
-              {/* Main Content */}
-              <main className="flex-1 min-w-0">{children}</main>
-
-              {/* Right Side Ad */}
-              <div className="hidden xl:block w-80 flex-shrink-0">
-                <SideAdContainer position="right" />
-              </div>
-            </div>
-
-            <Footer />
-          </div>
-        </ThemeProvider>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
