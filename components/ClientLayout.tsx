@@ -8,14 +8,26 @@ import { ThemeProvider } from "@/contexts/theme-context";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { SideAdContainer } from "@/components/banner/side-ad-container";
+import type { User } from "@supabase/supabase-js";
+import { useUserStore } from "@/store/useUserStore";
+import { useEffect } from "react";
 
 export default function ClientLayout({
+  user,
   children,
 }: {
+  user: User | null;
   children: React.ReactNode;
 }) {
   const pathname = usePathname() ?? "";
   const isAdminPage = pathname.startsWith("/admin");
+
+  const setUser = useUserStore((state) => state.setUser);
+
+  useEffect(() => {
+    console.log("dsadsa", user);
+    setUser(user);
+  }, [user, setUser]);
 
   return (
     <ThemeProvider>

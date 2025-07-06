@@ -3,18 +3,24 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ProfileModal } from "@/components/profile-modal";
+import { ProfileModal } from "@/components/modal/profile-modal";
 import { useTheme } from "@/contexts/theme-context";
 import { User, Menu, X, Moon, Sun, Globe } from "lucide-react";
 import { useActiveCategories } from "@/hooks/useActiveCategories";
 import { Skeleton } from "./ui/skeleton";
 import { useLanguageStore } from "@/store/useLanguageStore";
+import { useUserStore } from "@/store/useUserStore";
+// modal
+import { AuthModal } from "./modal/auth-modal";
 
 export function Header() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
+
+  const user = useUserStore((state) => state.user);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const currentLangCode = useLanguageStore((state) => state.currentLanguage);
   const setCurrentLangCode = useLanguageStore((state) => state.setLanguage);
@@ -23,6 +29,9 @@ export function Header() {
 
   const { categories, loading } = useActiveCategories(currentLangCode);
   const [mounted, setMounted] = useState(false);
+
+  const [showLogout, setShowLogout] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   const languages = [
     { code: "ko", name: "한국어" },
@@ -60,6 +69,19 @@ export function Header() {
 
   useEffect(() => {
     setMounted(true); // ✅ 2. 클라이언트 마운트 후 true 설정
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(e.target as Node)
+      ) {
+        setShowLogout(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -147,15 +169,41 @@ export function Header() {
                 )}
               </Button>
 
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsProfileModalOpen(true)}
-                className="hidden sm:flex items-center gap-2 rounded-full bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-              >
-                <User className="w-4 h-4" />
-                <span className="hidden md:inline">프로필</span>
-              </Button>
+              {user ? (
+                <>
+                  {/* 로그인 상태 → 프로필 버튼 */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsProfileModalOpen(true)}
+                    className="hidden sm:flex items-center gap-2 rounded-full bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                  >
+                    <User className="w-4 h-4" />
+                    <span className="hidden md:inline">프로필</span>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  {/* 로그아웃 상태 → 로그인 버튼 */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsAuthModalOpen(true)}
+                    className="hidden sm:flex items-center gap-2 rounded-full bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                  >
+                    <User className="w-4 h-4" />
+                    <span className="hidden md:inline">로그인</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsAuthModalOpen(true)}
+                    className="sm:hidden rounded-full p-2"
+                  >
+                    <User className="w-4 h-4" />
+                  </Button>
+                </>
+              )}
 
               <Button
                 variant="outline"
@@ -216,6 +264,11 @@ export function Header() {
       <ProfileModal
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}
+      />
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
       />
     </>
   );
