@@ -1,0 +1,60 @@
+{
+  "header": {
+    "all": "All",
+    "profile": "Profile",
+    "login": "Login"
+  },
+  "welcome": "Nice to meet you!",
+  "description": "A surprisingly good test when you're bored!!",
+  "modal": {
+    "appleLoginNotImplemented": "Apple login feature is not yet implemented.",
+    "facebookLoginNotImplemented": "Facebook login feature is not yet implemented.",
+    "loginError": "Login Error",
+    "googleLoginFailed": "Google login failed. Please try again.",
+    "confirm": "Confirm",
+    "unimplementedFeature": "Unimplemented Feature",
+    "loginPrompt": "Easily log in using one of the methods below",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithApple": "Continue with Apple",
+    "continueWithFacebook": "Continue with Facebook"
+  },
+  "home": {
+    "weeklyUpdate": "New tests updated weekly!",
+    "heroTitlePart1": "Casual Personality",
+    "heroTitlePart2": "Tests",
+    "heroDescription": "Quick, surprisingly accurate tests for when you're bored",
+    "latestTests": "Latest Tests",
+    "allTests": "All Tests"
+  },
+  "testView": {
+    "loading": "Loading test...",
+    "backToList": "Back to Test List",
+    "questionProgress": "Question {{current}} / {{total}}",
+    "progressCompleted": "{{percent}}% completed",
+    "previous": "Previous",
+    "next": "Next",
+    "viewResults": "View Results"
+  },
+  "resultPage": {
+    "analyzingResults": "Analyzing results...",
+    "noResultFound": "Result not found. Redirecting to test page...",
+    "youAre": "You are",
+    "analysisTitle": "Your Analysis",
+    "traitsAnalysis": "Trait Analysis",
+    "recommendationGuide": "Recommended Guide for You",
+    "matchingType": "Matching Personality Type",
+    "suggestedActions": "Suggested Actions",
+    "suitableItems": "Suitable Items",
+    "shareWithFriends": "Share with Friends",
+    "kakaoTalk": "KakaoTalk",
+    "twitter": "X (Twitter)",
+    "copyLink": "Copy Link",
+    "saveImage": "Save Image",
+    "otherTests": "How about these tests?",
+    "retakeTest": "Retake Test",
+    "goHome": "Take Another Test"
+  },
+  "search": {
+    "placeholder": "Search tests..."
+  }
+}

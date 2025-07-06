@@ -14,6 +14,10 @@ import Link from "next/link";
 import type { TestData } from "@/types/test";
 import { useLanguageStore } from "@/store/useLanguageStore";
 
+// --- useTranslation 훅 임포트 추가 ---
+import { useTranslation } from "react-i18next";
+// ------------------------------------
+
 interface Props {
   initialTestData: TestData;
   testId: string;
@@ -28,6 +32,10 @@ export default function TestView({ initialTestData, testId, language }: Props) {
 
   const [showContent, setShowContent] = useState(false);
 
+  // --- useTranslation 훅 사용 ---
+  const { t } = useTranslation("common"); // 'common' 네임스페이스 사용
+  // -----------------------------
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowContent(true);
@@ -37,12 +45,13 @@ export default function TestView({ initialTestData, testId, language }: Props) {
   }, []);
 
   useEffect(() => {
+    // URL 언어와 현재 언어가 다르면 URL 업데이트 (testId도 포함)
     if (currentLangCode !== language) {
       const newSearchParams = new URLSearchParams(searchParams || undefined);
       newSearchParams.set("lang", currentLangCode);
       router.replace(`/test/${testId}?${newSearchParams.toString()}`);
     }
-  }, [currentLangCode, language, router, testId, searchParams]);
+  }, [currentLangCode, language, router, testId, searchParams]); // testId 의존성 추가
 
   const {
     currentQuestion,
@@ -68,7 +77,15 @@ export default function TestView({ initialTestData, testId, language }: Props) {
       resultSearchParams.set("lang", currentLangCode);
       router.push(`/test/${testId}/result?${resultSearchParams.toString()}`);
     }
-  }, [isCompleted, testId, router, currentLangCode, searchParams]);
+  }, [
+    isCompleted,
+    testId,
+    router,
+    currentLangCode,
+    searchParams,
+    calculateResult,
+    setResult,
+  ]); // 의존성 배열에 추가
 
   if (!showContent) {
     return (
@@ -90,7 +107,7 @@ export default function TestView({ initialTestData, testId, language }: Props) {
           </svg>
         </div>
         <p className="mt-8 text-xl font-semibold text-gray-700 dark:text-gray-300">
-          테스트를 불러오는 중...
+          {t("testView.loading")} {/* 번역 키 사용 */}
         </p>
       </div>
     );
@@ -105,8 +122,8 @@ export default function TestView({ initialTestData, testId, language }: Props) {
             href={`/?lang=${currentLangCode}`}
             className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 mb-4"
           >
-            <ArrowLeft className="w-4 h-4" />
-            테스트 목록으로
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            {t("testView.backToList")} {/* 번역 키 사용 */}
           </Link>
 
           {/* 썸네일 이미지 추가 */}
@@ -118,6 +135,7 @@ export default function TestView({ initialTestData, testId, language }: Props) {
                 className="w-full h-64 object-cover brightness-75"
               />
               <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
+                {/* 테스트 제목과 설명은 DB에서 가져온 값이므로 번역하지 않습니다. */}
                 <h1 className="text-2xl font-bold">{initialTestData.title}</h1>
                 {initialTestData.description && (
                   <p className="text-sm text-white/80 mt-1">
@@ -134,9 +152,18 @@ export default function TestView({ initialTestData, testId, language }: Props) {
             </h1>
             <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-4">
               <span>
-                질문 {currentQuestion + 1} / {totalQuestions}
+                {t("testView.questionProgress", {
+                  current: currentQuestion + 1,
+                  total: totalQuestions,
+                })}{" "}
+                {/* 번역 키 및 값 전달 */}
               </span>
-              <span>{Math.round(progress)}% 완료</span>
+              <span>
+                {t("testView.progressCompleted", {
+                  percent: Math.round(progress),
+                })}{" "}
+                {/* 번역 키 및 값 전달 */}
+              </span>
             </div>
             <Progress value={progress} className="h-2" />
           </div>
@@ -172,7 +199,7 @@ export default function TestView({ initialTestData, testId, language }: Props) {
                         )}
                       </div>
                       <span className="font-medium text-gray-900 dark:text-white">
-                        {option.text}
+                        {option.text} {/* 옵션 텍스트는 DB에서 가져옴 */}
                       </span>
                     </div>
                   </button>
@@ -186,7 +213,7 @@ export default function TestView({ initialTestData, testId, language }: Props) {
                   className="rounded-full px-6 bg-transparent"
                 >
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  이전
+                  {t("testView.previous")} {/* 번역 키 사용 */}
                 </Button>
                 <Button
                   onClick={handleNext}
@@ -194,8 +221,9 @@ export default function TestView({ initialTestData, testId, language }: Props) {
                   className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-full px-6"
                 >
                   {currentQuestion === totalQuestions - 1
-                    ? "결과 보기"
-                    : "다음"}
+                    ? t("testView.viewResults") // 번역 키 사용
+                    : t("testView.next")}{" "}
+                  {/* 번역 키 사용 */}
                   {currentQuestion !== totalQuestions - 1 && (
                     <ArrowRight className="w-4 h-4 ml-2" />
                   )}

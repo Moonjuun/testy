@@ -8,14 +8,17 @@ import { useLanguageStore } from "@/store/useLanguageStore";
 import { getNewTests } from "@/lib/supabase/getNewTests";
 import { NewTest } from "@/types/test";
 import { TestCardSkeleton } from "@/components/TestCardSkeleton";
+import { useTranslation } from "react-i18next";
 
 export default function HomePage() {
   const currentLanguage = useLanguageStore((state) => state.currentLanguage);
 
   const [newTestList, setnewTestList] = useState<NewTest[]>([]);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     const fetchData = async () => {
+      // currentLanguage는 'ko', 'en' 등 정규화된 값입니다.
       const data = await getNewTests(currentLanguage);
       setnewTestList(data);
     };
@@ -34,16 +37,17 @@ export default function HomePage() {
           <div className="inline-flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full px-4 py-2 mb-6 shadow-sm">
             <Sparkles className="w-4 h-4 text-purple-500" />
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              새로운 테스트가 매주 업데이트!
+              {t("home.weeklyUpdate")} {/* 번역 키 사용 */}
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
             <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              가볍게 해보는 성향 테스트
+              {t("home.heroTitlePart1")} {/* 번역 키 사용 */}
             </span>
+            {t("home.heroTitlePart2")} {/* 번역 키 사용 */}
           </h1>
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
-            심심할 때 가볍게, 생각보다 잘 맞는 테스트
+            {t("home.heroDescription")} {/* 번역 키 사용 */}
           </p>
         </div>
       </section>
@@ -54,7 +58,7 @@ export default function HomePage() {
           <div className="flex items-center gap-3 mb-8">
             <Clock className="w-6 h-6 text-purple-600" />
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
-              최신 테스트
+              {t("home.latestTests")} {/* 번역 키 사용 */}
             </h2>
           </div>
 
@@ -73,13 +77,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* All Tests */}
-      {/* <section className="py-8 px-4 bg-white/50 dark:bg-gray-800/30 backdrop-blur-sm">
+      {/* All Tests (주석 처리된 섹션) */}
+      {/* 만약 이 섹션의 주석을 해제한다면, 해당 텍스트들도 번역 키로 대체해야 합니다.
+      <section className="py-8 px-4 bg-white/50 dark:bg-gray-800/30 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-3 mb-8">
             <Brain className="w-6 h-6 text-blue-600" />
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
-              모든 테스트
+              {t("home.allTests")}
             </h2>
           </div>
 

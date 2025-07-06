@@ -10,10 +10,14 @@ import { useActiveCategories } from "@/hooks/useActiveCategories";
 import { Skeleton } from "./ui/skeleton";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { useUserStore } from "@/store/useUserStore";
+import { getAllLabel, languages } from "@/constants/Header";
+import { useTranslation } from "react-i18next";
 // modal
 import { AuthModal } from "./modal/auth-modal";
 
 export function Header() {
+  const { t, i18n } = useTranslation("common");
+
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
@@ -33,29 +37,8 @@ export function Header() {
   const [showLogout, setShowLogout] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
 
-  const languages = [
-    { code: "ko", name: "한국어" },
-    { code: "en", name: "English" },
-    { code: "ja", name: "日本語" },
-    { code: "vi", name: "Tiếng Việt" },
-  ];
-
   const currentLanguage =
     languages.find((l) => l.code === currentLangCode)?.name ?? "한국어";
-
-  const getAllLabel = () => {
-    switch (currentLangCode) {
-      case "en":
-        return "All";
-      case "ja":
-        return "すべて";
-      case "vi":
-        return "Tất cả";
-      case "ko":
-      default:
-        return "전체";
-    }
-  };
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -103,7 +86,7 @@ export function Header() {
                 href="/test/list"
                 className="px-3 py-2 text-sm font-medium ..."
               >
-                {getAllLabel()}
+                {getAllLabel(currentLangCode)}
               </Link>
               {loading
                 ? Array.from({ length: 5 }).map((_, i) => (
@@ -179,7 +162,9 @@ export function Header() {
                     className="hidden sm:flex items-center gap-2 rounded-full bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                   >
                     <User className="w-4 h-4" />
-                    <span className="hidden md:inline">프로필</span>
+                    <span className="hidden md:inline">
+                      {t("header.profile")}
+                    </span>
                   </Button>
                 </>
               ) : (
@@ -192,7 +177,9 @@ export function Header() {
                     className="hidden sm:flex items-center gap-2 rounded-full bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                   >
                     <User className="w-4 h-4" />
-                    <span className="hidden md:inline">로그인</span>
+                    <span className="hidden md:inline">
+                      {t("header.login")}
+                    </span>
                   </Button>
                   <Button
                     variant="outline"
@@ -236,7 +223,7 @@ export function Header() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="px-3 py-2 text-sm font-medium ..."
                 >
-                  {getAllLabel()}
+                  {getAllLabel(currentLangCode)}
                 </Link>
 
                 {loading

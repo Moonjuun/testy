@@ -1,0 +1,60 @@
+{
+  "header": {
+    "all": "すべて",
+    "profile": "プロフィール",
+    "login": "ログイン"
+  },
+  "welcome": "はじめまして！",
+  "description": "暇なときに気軽に、予想以上に相性の良いテスト！！",
+  "modal": {
+    "appleLoginNotImplemented": "Appleログイン機能はまだ実装されていません。",
+    "facebookLoginNotImplemented": "Facebookログイン機能はまだ実装されていません。",
+    "loginError": "ログインエラー",
+    "googleLoginFailed": "Googleログインに失敗しました。もう一度お試しください。",
+    "confirm": "確認",
+    "unimplementedFeature": "未実装機能",
+    "loginPrompt": "以下の方法で簡単にログインしてください",
+    "continueWithGoogle": "Googleで続行",
+    "continueWithApple": "Appleで続行",
+    "continueWithFacebook": "Facebookで続行"
+  },
+  "home": {
+    "weeklyUpdate": "新しいテストが毎週更新！",
+    "heroTitlePart1": "気軽にやってみる",
+    "heroTitlePart2": "性格テスト",
+    "heroDescription": "暇なときに気軽に、予想以上に相性の良いテスト",
+    "latestTests": "最新のテスト",
+    "allTests": "すべてのテスト"
+  },
+  "testView": {
+    "loading": "テストを読み込み中...",
+    "backToList": "テスト一覧へ戻る",
+    "questionProgress": "質問 {{current}} / {{total}}",
+    "progressCompleted": "{{percent}}% 完了",
+    "previous": "前へ",
+    "next": "次へ",
+    "viewResults": "結果を見る"
+  },
+  "resultPage": {
+    "analyzingResults": "結果を分析しています...",
+    "noResultFound": "結果が見つかりません。テストページに移動します...",
+    "youAre": "あなたは",
+    "analysisTitle": "あなたについての解説",
+    "traitsAnalysis": "特性分析",
+    "recommendationGuide": "あなたへのおすすめガイド",
+    "matchingType": "相性の良いタイプ",
+    "suggestedActions": "おすすめの行動",
+    "suitableItems": "おすすめアイテム",
+    "shareWithFriends": "友達にシェアする",
+    "kakaoTalk": "カカオトーク",
+    "twitter": "X (Twitter)",
+    "copyLink": "リンクをコピー",
+    "saveImage": "画像を保存",
+    "otherTests": "こんなテストはどうですか？",
+    "retakeTest": "もう一度テストする",
+    "goHome": "他のテストを試す"
+  },
+  "search": {
+    "placeholder": "テストを検索..."
+  }
+}

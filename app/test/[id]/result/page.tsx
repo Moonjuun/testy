@@ -28,6 +28,10 @@ import { getRelatedTests } from "@/lib/supabase/getRelatedTests";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { formatBoldText } from "@/utils/formatBoldText";
 
+// --- useTranslation 훅 임포트 추가 ---
+import { useTranslation } from "react-i18next";
+// ------------------------------------
+
 // params를 Promise로 받아서 React.use()로 언래핑
 export default function ResultPage({
   params,
@@ -42,6 +46,11 @@ export default function ResultPage({
   const { result, clearResult } = useTestResultStore();
   const [relatedTests, setRelatedTests] = useState<RelatedTest[]>([]);
   const currentLanguage = useLanguageStore((state) => state.currentLanguage);
+
+  // --- useTranslation 훅 사용 ---
+  const { t } = useTranslation("common"); // 'common' 네임스페이스 사용
+  // -----------------------------
+
   useEffect(() => {
     if (result) {
       console.log(result);
@@ -61,7 +70,7 @@ export default function ResultPage({
     };
 
     fetchData();
-  }, [currentLanguage]);
+  }, [id, currentLanguage]); // id 의존성 추가
 
   const handleShare = (platform: string) => {
     // ... sharing logic
@@ -84,7 +93,7 @@ export default function ResultPage({
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-600 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-300">
-            결과를 분석하고 있어요...
+            {t("resultPage.analyzingResults")} {/* 번역 키 사용 */}
           </p>
         </div>
       </div>
@@ -97,7 +106,7 @@ export default function ResultPage({
       <div className="min-h-screen bg-gray-50 dark:bg-black flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-600 dark:text-gray-300">
-            결과를 찾을 수 없습니다. 테스트 페이지로 이동합니다...
+            {t("resultPage.noResultFound")} {/* 번역 키 사용 */}
           </p>
         </div>
       </div>
@@ -132,14 +141,14 @@ export default function ResultPage({
                 </div>
               )}
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                당신은{" "}
+                {t("resultPage.youAre")} {/* 번역 키 사용 */}
                 <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                   "{result.title}"
                 </span>
               </h1>
               <p className="text-md text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-line text-center md:text-left">
                 <span className="block font-medium mb-2 text-purple-500">
-                  💡 당신에 대한 해석
+                  💡 {t("resultPage.analysisTitle")} {/* 번역 키 사용 */}
                 </span>
                 {formatBoldText(result.description)}
               </p>
@@ -150,7 +159,7 @@ export default function ResultPage({
             <CardContent className="p-8">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                 <Compass className="w-6 h-6 text-blue-600" />
-                특성 분석
+                {t("resultPage.traitsAnalysis")} {/* 번역 키 사용 */}
               </h2>
               <div className="space-y-6">
                 {result.keywords?.map((keyword, index) => {
@@ -188,15 +197,15 @@ export default function ResultPage({
             <CardContent className="p-8 space-y-6">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 <Heart className="w-6 h-6 text-pink-600" />
-                당신을 위한 추천 가이드
+                {t("resultPage.recommendationGuide")} {/* 번역 키 사용 */}
               </h2>
 
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Matching Type */}
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                    <Users className="w-5 h-5 text-purple-500" />잘 맞는 사람
-                    유형
+                    <Users className="w-5 h-5 text-purple-500" />
+                    {t("resultPage.matchingType")} {/* 번역 키 사용 */}
                   </h3>
                   <p className="bg-white/70 dark:bg-gray-700/70 p-4 rounded-xl text-gray-700 dark:text-gray-300 leading-relaxed">
                     {formatBoldText(result.recommendation?.matching_type)}
@@ -207,7 +216,7 @@ export default function ResultPage({
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
                     <Sparkles className="w-5 h-5 text-yellow-500" />
-                    추천 행동
+                    {t("resultPage.suggestedActions")} {/* 번역 키 사용 */}
                   </h3>
                   <p className="bg-white/70 dark:bg-gray-700/70 p-4 rounded-xl text-gray-700 dark:text-gray-300 leading-relaxed">
                     {formatBoldText(result.recommendation?.suggested_actions)}
@@ -221,7 +230,7 @@ export default function ResultPage({
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
                       <ShoppingBag className="w-5 h-5 text-green-500" />
-                      어울리는 아이템
+                      {t("resultPage.suitableItems")} {/* 번역 키 사용 */}
                     </h3>
                     <div className="grid sm:grid-cols-2 gap-4">
                       {result.recommendation.items.map((item, index) => (
@@ -247,7 +256,7 @@ export default function ResultPage({
             <CardContent className="p-8">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-left flex items-center justify-start gap-2">
                 <Share2 className="w-6 h-6 text-blue-600" />
-                친구들에게 자랑하기
+                {t("resultPage.shareWithFriends")} {/* 번역 키 사용 */}
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Button
@@ -255,14 +264,14 @@ export default function ResultPage({
                   className="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 px-6 py-4 rounded-2xl font-semibold flex flex-col items-center gap-2 h-auto shadow-lg hover:shadow-xl transition-all"
                 >
                   <span className="text-2xl">💬</span>
-                  <span>카카오톡</span>
+                  <span>{t("resultPage.kakaoTalk")}</span> {/* 번역 키 사용 */}
                 </Button>
                 <Button
                   onClick={() => handleShare("twitter")}
                   className="bg-blue-400 hover:bg-blue-500 text-white px-6 py-4 rounded-2xl font-semibold flex flex-col items-center gap-2 h-auto shadow-lg hover:shadow-xl transition-all"
                 >
                   <span className="text-2xl">🐦</span>
-                  <span>X (Twitter)</span>
+                  <span>{t("resultPage.twitter")}</span> {/* 번역 키 사용 */}
                 </Button>
                 <Button
                   onClick={() => handleShare("copy")}
@@ -270,14 +279,14 @@ export default function ResultPage({
                   className="px-6 py-4 rounded-2xl font-semibold flex flex-col items-center gap-2 h-auto border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 bg-transparent shadow-lg hover:shadow-xl transition-all"
                 >
                   <Share2 className="w-6 h-6" />
-                  <span>링크 복사</span>
+                  <span>{t("resultPage.copyLink")}</span> {/* 번역 키 사용 */}
                 </Button>
                 <Button
                   variant="outline"
                   className="px-6 py-4 rounded-2xl font-semibold flex flex-col items-center gap-2 h-auto bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 shadow-lg hover:shadow-xl transition-all"
                 >
                   <Download className="w-6 h-6" />
-                  <span>이미지 저장</span>
+                  <span>{t("resultPage.saveImage")}</span> {/* 번역 키 사용 */}
                 </Button>
               </div>
             </CardContent>
@@ -287,7 +296,7 @@ export default function ResultPage({
             <CardContent className="p-8">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                 <TrendingUp className="w-6 h-6 text-green-600" />
-                이런 테스트는 어때요?
+                {t("resultPage.otherTests")} {/* 번역 키 사용 */}
               </h2>
               <div className="grid md:grid-cols-3 gap-6">
                 {relatedTests.map((test) => (
@@ -299,14 +308,15 @@ export default function ResultPage({
                           style={{ backgroundColor: test.tone.color }}
                         ></div>
                         <Badge variant="outline" className="text-xs">
-                          {test.category?.name}
+                          {test.category?.name}{" "}
+                          {/* 카테고리 이름은 DB에서 가져옴 */}
                         </Badge>
                       </div>
                       <h3 className="font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors text-ellipsis overflow-hidden whitespace-nowrap">
-                        {test.title}
+                        {test.title} {/* 테스트 제목은 DB에서 가져옴 */}
                       </h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-                        {test.description}
+                        {test.description} {/* 테스트 설명은 DB에서 가져옴 */}
                       </p>
                     </div>
                   </Link>
@@ -324,7 +334,7 @@ export default function ResultPage({
                 onClick={handleRetakeTest}
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
-                다시 테스트하기
+                {t("resultPage.retakeTest")} {/* 번역 키 사용 */}
               </Button>
             </Link>
             <Link href="/">
@@ -334,7 +344,7 @@ export default function ResultPage({
                 onClick={handleGoHome}
               >
                 <Home className="w-4 h-4 mr-2" />
-                다른 테스트 하기
+                {t("resultPage.goHome")} {/* 번역 키 사용 */}
               </Button>
             </Link>
           </div>

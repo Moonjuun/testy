@@ -1,0 +1,60 @@
+{
+  "header": {
+    "all": "Tất cả",
+    "profile": "Hồ sơ",
+    "login": "Đăng nhập"
+  },
+  "welcome": "Rất vui được gặp bạn!",
+  "description": "Bài kiểm tra tuyệt vời bất ngờ khi bạn buồn chán!!",
+  "modal": {
+    "appleLoginNotImplemented": "Tính năng đăng nhập Apple chưa được triển khai.",
+    "facebookLoginNotImplemented": "Tính năng đăng nhập Facebook chưa được triển khai.",
+    "loginError": "Lỗi đăng nhập",
+    "googleLoginFailed": "Đăng nhập Google thất bại. Vui lòng thử lại.",
+    "confirm": "Xác nhận",
+    "unimplementedFeature": "Tính năng chưa triển khai",
+    "loginPrompt": "Vui lòng đăng nhập dễ dàng bằng một trong các phương pháp dưới đây",
+    "continueWithGoogle": "Tiếp tục với Google",
+    "continueWithApple": "Tiếp tục với Apple",
+    "continueWithFacebook": "Tiếp tục với Facebook"
+  },
+  "home": {
+    "weeklyUpdate": "Bài kiểm tra mới được cập nhật hàng tuần!",
+    "heroTitlePart1": "Kiểm tra tính cách",
+    "heroTitlePart2": "nhẹ nhàng",
+    "heroDescription": "Bài kiểm tra nhanh, chính xác đáng ngạc nhiên khi bạn buồn chán",
+    "latestTests": "Bài kiểm tra mới nhất",
+    "allTests": "Tất cả bài kiểm tra"
+  },
+  "testView": {
+    "loading": "Đang tải bài kiểm tra...",
+    "backToList": "Quay lại danh sách bài kiểm tra",
+    "questionProgress": "Câu hỏi {{current}} / {{total}}",
+    "progressCompleted": "Hoàn thành {{percent}}%",
+    "previous": "Trước",
+    "next": "Tiếp theo",
+    "viewResults": "Xem kết quả"
+  },
+  "resultPage": {
+    "analyzingResults": "Đang phân tích kết quả...",
+    "noResultFound": "Không tìm thấy kết quả. Đang chuyển hướng đến trang kiểm tra...",
+    "youAre": "Bạn là",
+    "analysisTitle": "Phân tích về bạn",
+    "traitsAnalysis": "Phân tích đặc điểm",
+    "recommendationGuide": "Hướng dẫn đề xuất dành cho bạn",
+    "matchingType": "Kiểu người phù hợp",
+    "suggestedActions": "Hành động được đề xuất",
+    "suitableItems": "Vật phẩm phù hợp",
+    "shareWithFriends": "Chia sẻ với bạn bè",
+    "kakaoTalk": "KakaoTalk",
+    "twitter": "X (Twitter)",
+    "copyLink": "Sao chép liên kết",
+    "saveImage": "Lưu hình ảnh",
+    "otherTests": "Bạn nghĩ sao về các bài kiểm tra này?",
+    "retakeTest": "Làm lại bài kiểm tra",
+    "goHome": "Làm bài kiểm tra khác"
+  },
+  "search": {
+    "placeholder": "Tìm kiếm bài kiểm tra..."
+  }
+}

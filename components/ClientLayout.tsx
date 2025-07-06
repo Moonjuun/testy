@@ -11,7 +11,8 @@ import { SideAdContainer } from "@/components/banner/side-ad-container";
 import type { User } from "@supabase/supabase-js";
 import { useUserStore } from "@/store/useUserStore";
 import { useEffect } from "react";
-
+import { I18nextProvider } from "react-i18next";
+import i18n from "@/app/i18n";
 export default function ClientLayout({
   user,
   children,
@@ -30,30 +31,32 @@ export default function ClientLayout({
   }, [user, setUser]);
 
   return (
-    <ThemeProvider>
-      <div className="flex flex-col min-h-screen">
-        <Header />
+    <I18nextProvider i18n={i18n}>
+      <ThemeProvider>
+        <div className="flex flex-col min-h-screen">
+          <Header />
 
-        <div className="flex flex-1 relative">
-          {/* Left Side Ad */}
-          {!isAdminPage && (
-            <div className="hidden xl:block w-80 flex-shrink-0">
-              <SideAdContainer position="left" />
-            </div>
-          )}
+          <div className="flex flex-1 relative">
+            {/* Left Side Ad */}
+            {!isAdminPage && (
+              <div className="hidden xl:block w-80 flex-shrink-0">
+                <SideAdContainer position="left" />
+              </div>
+            )}
 
-          {/* Main Content */}
-          <main className="flex-1 min-w-0">{children}</main>
-          {/* Right Side Ad */}
-          {!isAdminPage && (
-            <div className="hidden xl:block w-80 flex-shrink-0">
-              <SideAdContainer position="right" />
-            </div>
-          )}
+            {/* Main Content */}
+            <main className="flex-1 min-w-0">{children}</main>
+            {/* Right Side Ad */}
+            {!isAdminPage && (
+              <div className="hidden xl:block w-80 flex-shrink-0">
+                <SideAdContainer position="right" />
+              </div>
+            )}
+          </div>
+
+          <Footer />
         </div>
-
-        <Footer />
-      </div>
-    </ThemeProvider>
+      </ThemeProvider>
+    </I18nextProvider>
   );
 }

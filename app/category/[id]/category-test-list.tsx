@@ -10,13 +10,14 @@ import { TestCard } from "@/components/test-card";
 import { getTestsByCategory } from "@/lib/supabase/getTestsByCategory"; // 서버에서 가져오던 함수를 클라이언트에서 사용
 import { useLanguageStore } from "@/store/useLanguageStore"; // Zustand 스토어 임포트
 import { TestCardSkeleton } from "@/components/TestCardSkeleton";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   categoryId: string; // 서버 컴포넌트에서 전달받을 카테고리 ID
 }
 
 export function CategoryTestList({ categoryId }: Props) {
-  // 서버에서 받아오던 데이터를 저장할 상태(state)를 만듭니다.
+  const { t } = useTranslation("common");
   const [initialTests, setInitialTests] = useState<NewTest[]>([]);
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
@@ -79,7 +80,7 @@ export function CategoryTestList({ categoryId }: Props) {
           <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
             <Input
-              placeholder="테스트 검색..."
+              placeholder={t("search.placeholder")}
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
