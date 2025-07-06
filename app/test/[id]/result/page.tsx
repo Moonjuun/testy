@@ -245,7 +245,7 @@ export default function ResultPage({
 
           <Card className="bg-white dark:bg-gray-800 shadow-xl">
             <CardContent className="p-8">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center flex items-center justify-center gap-2">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-left flex items-center justify-start gap-2">
                 <Share2 className="w-6 h-6 text-blue-600" />
                 친구들에게 자랑하기
               </h2>
@@ -302,7 +302,7 @@ export default function ResultPage({
                           {test.category?.name}
                         </Badge>
                       </div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      <h3 className="font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors text-ellipsis overflow-hidden whitespace-nowrap">
                         {test.title}
                       </h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
