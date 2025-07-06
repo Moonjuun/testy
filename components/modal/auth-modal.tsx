@@ -5,6 +5,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { X, User, Sparkles, Heart, Star } from "lucide-react";
 import { signInWithGoogle } from "@/lib/supabase/action";
+import { FcGoogle } from "react-icons/fc";
+import { FaFacebook } from "react-icons/fa";
+// No longer need to import AlertDialog directly if using the hook's component
+import { useAlert } from "@/hooks/useAlert"; // Corrected import path if it's in a 'hooks' directory
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -13,6 +17,7 @@ interface AuthModalProps {
 
 export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const { customAlert, Alert } = useAlert(); // Destructure showAlert and Alert from useAlert
 
   if (!isOpen) return null;
 
@@ -74,6 +79,11 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   onClose();
                 } catch (e) {
                   console.error("Google 로그인 실패:", e);
+                  await customAlert({
+                    title: "로그인 오류",
+                    message: "Google 로그인에 실패했습니다. 다시 시도해주세요.",
+                    confirmText: "확인",
+                  });
                 } finally {
                   setIsLoading(false);
                 }
@@ -81,7 +91,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
               disabled={isLoading}
               className="w-full h-12 rounded-xl font-medium transition-all bg-white hover:bg-gray-50 text-gray-900 border border-gray-300"
             >
-              <span className="mr-3 text-lg">🔍</span>
+              <FcGoogle className="w-7 h-7 mr-3" />
               Google로 계속하기
               {isLoading && (
                 <div className="ml-2 w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
@@ -90,8 +100,13 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
             {/* Apple 로그인 */}
             <Button
-              onClick={() => {
-                alert("Apple 로그인 기능은 아직 구현되지 않았습니다.");
+              onClick={async () => {
+                // Changed to async to await the alert
+                await customAlert({
+                  title: "미구현 기능",
+                  message: "Apple 로그인 기능은 아직 구현되지 않았습니다.",
+                  confirmText: "확인",
+                });
               }}
               disabled={isLoading}
               className="w-full h-12 rounded-xl font-medium transition-all bg-black text-white hover:bg-gray-900"
@@ -102,18 +117,25 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
             {/* Facebook 로그인 */}
             <Button
-              onClick={() => {
-                alert("Facebook 로그인 기능은 아직 구현되지 않았습니다.");
+              onClick={async () => {
+                // Changed to async to await the alert
+                await customAlert({
+                  title: "미구현 기능",
+                  message: "Facebook 로그인 기능은 아직 구현되지 않았습니다.",
+                  confirmText: "확인",
+                });
               }}
               disabled={isLoading}
               className="w-full h-12 rounded-xl font-medium transition-all bg-blue-600 hover:bg-blue-700 text-white"
             >
-              <span className="mr-3 text-lg">📘</span>
+              <FaFacebook className="w-6 h-6 mr-3" />
               Facebook으로 계속하기
             </Button>
           </div>
         </div>
       </div>
+      {/* Render the Alert component from the useAlert hook */}
+      <Alert />
     </div>
   );
 }
