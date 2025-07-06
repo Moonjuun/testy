@@ -10,11 +10,17 @@ export interface TestQuestion {
   options: TestOption[];
 }
 
-// 📛 이름 변경: TestResult -> TestResultItem
+export interface TestRecommendation {
+  matching_type: string;
+  suggested_actions: string;
+  items: string[];
+}
+
 export interface TestResultItem {
   title: string;
   description: string;
-  recommendation: string;
+  recommendation: TestRecommendation;
+  keywords: string[];
   image_prompt: string;
   score_range: [number, number];
   result_image_url?: string | null;
@@ -106,4 +112,24 @@ export interface TestForUpload {
   theme: string | null;
   palette: any;
   character: any;
+}
+
+export interface TestJsonInsertData {
+  title: string;
+  thumbnail_url: string | null;
+  description: string;
+  tone: {
+    code: string;
+    color: string;
+  };
+  theme: string;
+  palette: string[];
+  character: {
+    type: string;
+    style: string;
+    prompt_hint: string;
+  };
+  category_id: number | null;
+  questions: TestQuestion[];
+  results: TestResultItem[];
 }

@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Upload, CheckCircle, XCircle, Copy, Check } from "lucide-react";
 import { sendTestJson } from "@/apis/sendTestJson";
-import { promptText } from "@/constants/AdminResult";
+import { NewPromptText } from "@/constants/AdminResult";
 import type { TestData } from "@/types/test";
 import { Input } from "@/components/ui/input"; // ✅ test_id 입력용
 
@@ -32,10 +32,10 @@ export default function TestJsonUploader({ onUploadSuccess }: Props) {
   const [copied, setCopied] = useState(false);
 
   const [language, setLanguage] = useState<"ko" | "ja" | "en" | "vi">("ko");
-  const [testId, setTestId] = useState<number | null>(null); // ✅ 저장용 testId
+  const [testId, setTestId] = useState<number | null>(null);
 
   const handleCopyPrompt = async () => {
-    await navigator.clipboard.writeText(promptText);
+    await navigator.clipboard.writeText(NewPromptText);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
