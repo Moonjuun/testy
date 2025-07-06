@@ -40,13 +40,18 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  const allowedEmailsEnv = process.env.NEXT_PUBLIC_ADMIN_ALLOWED_EMAILS; // 클라이언트에서도 접근 가능하게 NEXT_PUBLIC_ 접두사 사용
+  const allowedEmails = allowedEmailsEnv
+    ? allowedEmailsEnv.split(",").map((email) => email.trim())
+    : [];
+
   const isAdminPath = request.nextUrl.pathname.startsWith("/admin");
   const isLocalhost =
     request.nextUrl.hostname === "localhost" && request.nextUrl.port === "3000";
 
-  if (isAdminPath && !isLocalhost && !user) {
+  if (isAdminPath && !allowedEmails.includes(user?.user_metadata.email)) {
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
+    url.pathname = "/sorry";
     return NextResponse.redirect(url);
   }
 
