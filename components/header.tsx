@@ -184,14 +184,26 @@ export function Header() {
                 </>
               )}
 
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsProfileModalOpen(true)}
-                className="sm:hidden rounded-full p-2"
-              >
-                <User className="w-4 h-4" />
-              </Button>
+              {/* 모바일용 사람 아이콘: 조건부로 렌더링 */}
+              {user ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsProfileModalOpen(true)}
+                  className="sm:hidden rounded-full p-2"
+                >
+                  <User className="w-4 h-4" />
+                </Button>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsAuthModalOpen(true)}
+                  className="sm:hidden rounded-full p-2"
+                >
+                  <User className="w-4 h-4" />
+                </Button>
+              )}
               <Button
                 variant="outline"
                 size="sm"
