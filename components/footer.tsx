@@ -58,7 +58,7 @@ export function Footer() {
           </div> */}
 
           {/* Support & Legal */}
-          <div>
+          {/* <div>
             <h3 className="font-semibold text-white mb-4">고객지원</h3>
             <ul className="space-y-2 text-sm">
               <li>
@@ -96,7 +96,7 @@ export function Footer() {
                 </Link>
               </li>
             </ul>
-          </div>
+          </div> */}
         </div>
 
         {/* Copyright & Additional Links */}
@@ -104,6 +104,18 @@ export function Footer() {
           <div className="text-sm text-gray-400 mb-4 md:mb-0">
             © {new Date().getFullYear()} Testy. All rights reserved.
           </div>
+
+          <div className="flex flex-col items-center  mb-4 md:mb-0">
+            <span className="text-gray-400 text-sm mb-1">광고/제작 문의</span>
+            <a
+              href="mailto:cmoonjun11@gmail.com"
+              className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-sm"
+            >
+              <Mail className="w-4 h-4" />
+              cmoonjun11@gmail.com
+            </a>
+          </div>
+
           <div className="flex justify-center gap-6 text-sm text-gray-400">
             <Link
               href="/sitemap"
