@@ -82,10 +82,9 @@ ID	code	name_ko	name_en
 3	mbti	MBTI	MBTI
 4	career	진로/직업	Career & Job
 5	friendship	인간관계	Friendship
-6	vacation	휴가/여행	Travel & Vacation
+6	vacation	여행	Travel
 7	animal	동물 캐릭터	Animal Character
 8	fun	재미	Just for Fun
-9	self	자아 탐색	Self Discovery
 
 ---
 [예시 주제]  
