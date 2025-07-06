@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import GoogleAd from "../ads/GoogleAd";
 
 interface CenterBannerProps {
   size: "large" | "medium" | "small";
@@ -23,13 +24,8 @@ const CenterBanner = ({ size }: CenterBannerProps) => {
           className={`p-4 h-full flex items-center justify-center text-center`}
         >
           <div>
-            <div className="text-gray-400 mb-2">
-              <div className="w-12 h-12 bg-gray-200 rounded-lg mb-2 mx-auto flex items-center justify-center">
-                📺
-              </div>
-            </div>
-            <h4 className="font-semibold text-gray-600 mb-1">중앙 배너 광고</h4>
-            <p className="text-sm text-gray-500">{label}</p>
+            AD
+            <GoogleAd />
           </div>
         </CardContent>
       </Card>

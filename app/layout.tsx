@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "@/components/ClientLayout"; // 새로 만들 클라이언트 컴포넌트
 import { createClientForServer } from "@/lib/supabase/server";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,6 +30,15 @@ export default async function RootLayout({
 
   return (
     <html lang="ko" suppressHydrationWarning>
+      <head>
+        <Script
+          strategy="afterInteractive"
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6915584561138880"
+          crossOrigin="anonymous"
+        />
+      </head>
+
       <body className={inter.className}>
         <ClientLayout user={user}>{children}</ClientLayout>
       </body>
