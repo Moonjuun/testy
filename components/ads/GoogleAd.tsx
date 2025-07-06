@@ -6,7 +6,6 @@ export default function GoogleAd() {
   const adRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 광고가 이미 삽입됐는지 확인
     if (!adRef.current) return;
 
     const adTag = adRef.current.querySelector("ins.adsbygoogle");
@@ -24,10 +23,17 @@ export default function GoogleAd() {
   }, []);
 
   return (
-    <div ref={adRef}>
+    <div
+      ref={adRef}
+      style={{ minWidth: 250, minHeight: 100 }} // 최소 사이즈 보장
+    >
       <ins
         className="adsbygoogle"
-        style={{ display: "block" }}
+        style={{
+          display: "block",
+          width: "100%",
+          height: "100%",
+        }}
         data-ad-client="ca-pub-6915584561138880"
         data-ad-slot="9507144688"
         data-ad-format="fluid"

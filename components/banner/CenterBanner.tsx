@@ -18,7 +18,7 @@ const CenterBanner = ({ size }: CenterBannerProps) => {
   return (
     <div className="flex justify-center">
       <Card
-        className={`${width} ${height} border border-gray-200 bg-gradient-to-r from-yellow-50 to-orange-50`}
+        className={`min-w-[250px] ${width} ${height} border border-gray-200 bg-gradient-to-r from-yellow-50 to-orange-50`}
       >
         <CardContent
           className={`p-4 h-full flex items-center justify-center text-center`}
