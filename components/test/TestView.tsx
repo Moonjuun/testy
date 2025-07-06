@@ -62,7 +62,6 @@ export default function TestView({ initialTestData, testId, language }: Props) {
   useEffect(() => {
     if (isCompleted) {
       const resultData = calculateResult();
-      console.log("resultData", resultData);
       setResult(resultData);
 
       const resultSearchParams = new URLSearchParams(searchParams || undefined);

@@ -56,6 +56,28 @@ export interface NewTest {
   };
 }
 
+export interface RelatedTest {
+  id: number;
+  title: string;
+  tone: {
+    code: string;
+    color: string;
+  };
+  description: string;
+  thumbnail_url: string;
+  is_visible: boolean;
+  created_at: string;
+  category: {
+    code: string;
+    name: string;
+  } | null;
+  test_translations: {
+    title: string;
+    language: string;
+    description: string;
+  };
+}
+
 export interface TestCardProps {
   test: NewTest;
   featured?: boolean;
