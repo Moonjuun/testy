@@ -26,6 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import { RelatedTest } from "@/types/test";
 import { getRelatedTests } from "@/lib/supabase/getRelatedTests";
 import { useLanguageStore } from "@/store/useLanguageStore";
+import { formatBoldText } from "@/utils/formatBoldText";
 
 // params를 Promise로 받아서 React.use()로 언래핑
 export default function ResultPage({
@@ -140,7 +141,7 @@ export default function ResultPage({
                 <span className="block font-medium mb-2 text-purple-500">
                   💡 당신에 대한 해석
                 </span>
-                {result.description}
+                {formatBoldText(result.description)}
               </p>
             </div>
           </div>
@@ -198,7 +199,7 @@ export default function ResultPage({
                     유형
                   </h3>
                   <p className="bg-white/70 dark:bg-gray-700/70 p-4 rounded-xl text-gray-700 dark:text-gray-300 leading-relaxed">
-                    {result.recommendation?.matching_type}
+                    {formatBoldText(result.recommendation?.matching_type)}
                   </p>
                 </div>
 
@@ -209,7 +210,7 @@ export default function ResultPage({
                     추천 행동
                   </h3>
                   <p className="bg-white/70 dark:bg-gray-700/70 p-4 rounded-xl text-gray-700 dark:text-gray-300 leading-relaxed">
-                    {result.recommendation?.suggested_actions}
+                    {formatBoldText(result.recommendation?.suggested_actions)}
                   </p>
                 </div>
               </div>
