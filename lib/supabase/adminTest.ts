@@ -1,7 +1,7 @@
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { TestForUpload } from "@/types/test";
+import { createClient } from "./client";
 
-const supabase = createClientComponentClient();
+const supabase = createClient();
 
 /**
  * 썸네일이 '없는' 테스트 목록을 한글 제목과 함께 불러옵니다.

@@ -1,4 +1,6 @@
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+//lib/supabase/adminResults.ts
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "./client";
 import { TestResult } from "@/types/test";
 
 /**
@@ -6,7 +8,7 @@ import { TestResult } from "@/types/test";
  * 한글 번역 제목과 함께 매핑된 결과를 반환
  */
 export async function loadResultsWithImages(): Promise<TestResult[]> {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const { data: resultsData, error: resultsError } = await supabase
     .from("results")
@@ -53,7 +55,7 @@ export async function loadResultsWithImages(): Promise<TestResult[]> {
  * 한글 번역 제목과 함께 매핑된 결과를 반환
  */
 export async function loadResultsWithoutImages(): Promise<TestResult[]> {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const { data: resultsData, error: resultsError } = await supabase
     .from("results")
@@ -107,7 +109,7 @@ export async function uploadResultImageToSupabase(
   resultId: string,
   file: File
 ): Promise<string> {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   // 1. Supabase Storage에 업로드 (중복 경로는 upsert로 덮어쓰기)
   const uploadPath = `${resultId}/${file.name}`;

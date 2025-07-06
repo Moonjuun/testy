@@ -1,11 +1,11 @@
 // lib/supabase/getAllTests.ts
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "./client";
 import { NewTest } from "@/types/test";
 
 export async function getAllTests(
   language: "ko" | "en" | "ja" | "vi" = "ko"
 ): Promise<NewTest[]> {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const nameField = `name_${language}`;
 
   const { data, error } = await supabase

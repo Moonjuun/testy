@@ -1,10 +1,11 @@
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "./client";
+
 import { Category } from "@/types/categories";
 
 export async function getActiveCategories(
   language: "ko" | "en" | "ja" | "vi" = "ko"
 ): Promise<Category[]> {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const { data: testData, error: testError } = await supabase
     .from("tests")
