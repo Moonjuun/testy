@@ -181,14 +181,6 @@ export function Header() {
                       {t("header.login")}
                     </span>
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setIsAuthModalOpen(true)}
-                    className="sm:hidden rounded-full p-2"
-                  >
-                    <User className="w-4 h-4" />
-                  </Button>
                 </>
               )}
 
