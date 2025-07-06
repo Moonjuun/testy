@@ -293,30 +293,29 @@ export default function ResultPage({
           </Card>
 
           <Card className="bg-white dark:bg-gray-800 shadow-xl">
-            <CardContent className="p-8">
+            <CardContent className="p-5 sm:p-6 md:p-8">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                 <TrendingUp className="w-6 h-6 text-green-600" />
-                {t("resultPage.otherTests")} {/* 번역 키 사용 */}
+                {t("resultPage.otherTests")} {/* 이런 테스트는 어때요? */}
               </h2>
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {relatedTests.map((test) => (
                   <Link key={test.id} href={`/test/${test.id}`}>
-                    <div className="group p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-blue-300 dark:hover:border-blue-600 transition-all hover:shadow-lg hover:-translate-y-1">
+                    <div className="group p-4 w-full border border-gray-200 dark:border-gray-700 rounded-xl hover:border-blue-300 dark:hover:border-blue-600 transition-all hover:shadow-lg hover:-translate-y-1">
                       <div className="flex items-center gap-3 mb-3">
                         <div
                           className="w-3 h-3 rounded-full"
                           style={{ backgroundColor: test.tone.color }}
                         ></div>
                         <Badge variant="outline" className="text-xs">
-                          {test.category?.name}{" "}
-                          {/* 카테고리 이름은 DB에서 가져옴 */}
+                          {test.category?.name}
                         </Badge>
                       </div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors text-ellipsis overflow-hidden whitespace-nowrap">
-                        {test.title} {/* 테스트 제목은 DB에서 가져옴 */}
+                      <h3 className="font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 break-words">
+                        {test.title}
                       </h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-                        {test.description} {/* 테스트 설명은 DB에서 가져옴 */}
+                        {test.description}
                       </p>
                     </div>
                   </Link>
