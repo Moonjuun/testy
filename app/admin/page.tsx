@@ -6,11 +6,11 @@ import { Loader2 } from "lucide-react";
 
 // 컴포넌트
 import AdminSidebar from "@/components/admin/AdminSidebar";
-import TestJsonUploader from "@/components/admin/TestJsonUploader";
 import TestThumbnailUploader from "@/components/admin/TestThumbnailUploader";
-import ResultImageUploader from "@/components/admin/ResultImageUploader";
 import TestThumbnailManager from "@/components/admin/TestThumbnailManager";
+import ResultImageUploader from "@/components/admin/ResultImageUploader";
 import UploadedImageManager from "@/components/admin/UploadedImageManager";
+import TestJsonUploader from "@/components/admin/TestJsonUploader";
 import SnackBar from "@/components/SnackBar";
 
 // 타입
