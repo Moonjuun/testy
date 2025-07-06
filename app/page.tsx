@@ -9,12 +9,8 @@ import { getNewTests } from "@/lib/supabase/getNewTests";
 import { NewTest } from "@/types/test";
 import { TestCardSkeleton } from "@/components/TestCardSkeleton";
 
-//hooks
-import { useActiveCategories } from "@/hooks/useActiveCategories";
-
 export default function HomePage() {
   const currentLanguage = useLanguageStore((state) => state.currentLanguage);
-  const { categories, loading } = useActiveCategories(currentLanguage);
 
   const [newTestList, setnewTestList] = useState<NewTest[]>([]);
 

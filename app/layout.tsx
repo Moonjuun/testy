@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "@/components/ClientLayout"; // 새로 만들 클라이언트 컴포넌트
+import { createClientForServer } from "@/lib/supabase/server";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,15 +17,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const supabase = await createClientForServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <html lang="ko" suppressHydrationWarning>
       <body className={inter.className}>
-        <ClientLayout>{children}</ClientLayout>
+        <ClientLayout user={user}>{children}</ClientLayout>
       </body>
     </html>
   );
