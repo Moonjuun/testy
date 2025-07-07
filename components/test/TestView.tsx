@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { useTestResultStore } from "@/store/testResultStore";
 
 import { MobileAdBanner } from "@/components/banner/mobile-ad-banner";
+import { MobileAdCoupangBanner } from "../banner/mobile-ad-coupang-banner";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { TestData } from "@/types/test";
@@ -115,7 +116,7 @@ export default function TestView({ initialTestData, testId, language }: Props) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
-      <MobileAdBanner type="sticky-top" size="320x50" />
+      {/* <MobileAdCoupangBanner type="sticky-top" /> */}
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto mb-4">
           <Link
@@ -235,7 +236,6 @@ export default function TestView({ initialTestData, testId, language }: Props) {
           </div>
         </div>
       </div>
-      <MobileAdBanner type="sticky-bottom" size="320x50" />
     </div>
   );
 }

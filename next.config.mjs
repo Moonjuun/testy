@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  i18n: {
+    locales: ["ko", "en", "ja", "vi"],
+    defaultLocale: "ko",
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -9,6 +13,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;
