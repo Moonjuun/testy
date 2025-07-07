@@ -53,7 +53,6 @@ export default function ResultPage({
 
   useEffect(() => {
     if (result) {
-      console.log(result);
       setTimeout(() => {
         setIsLoading(false);
       }, 1500); // 1.5초 대기
@@ -324,7 +323,7 @@ export default function ResultPage({
             </CardContent>
           </Card>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-row flex-wrap gap-4 justify-center">
             <Link href={`/test/${id}`}>
               <Button
                 variant="outline"

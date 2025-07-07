@@ -26,7 +26,6 @@ export default function ClientLayout({
   const setUser = useUserStore((state) => state.setUser);
 
   useEffect(() => {
-    console.log("dsadsa", user);
     setUser(user);
   }, [user, setUser]);
 
