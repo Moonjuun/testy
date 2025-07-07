@@ -58,6 +58,10 @@ export default async function RootLayout({
           name="google-site-verification"
           content="XwCW-t3PJfyPYJRWSItA6cY1Yoy3_zuBZ8N9CJEzZwc"
         />
+        <meta
+          name="naver-site-verification"
+          content="4be26cfdfa67a9fe5f9f0b91758530293065fdb8"
+        />
       </head>
       <body className={inter.className}>
         <ClientLayout user={user}>{children}</ClientLayout>
