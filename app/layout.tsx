@@ -30,6 +30,9 @@ export const metadata: Metadata = {
     locale: "ko_KR",
     alternateLocale: ["en_US", "ja_JP", "vi_VN"],
   },
+  icons: {
+    icon: "/favicon.png",
+  },
   twitter: {
     card: "summary_large_image",
     title: "Testy - 성향 테스트 플랫폼",
