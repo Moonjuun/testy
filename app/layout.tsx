@@ -53,6 +53,12 @@ export default async function RootLayout({
 
   return (
     <html lang="ko" suppressHydrationWarning>
+      <head>
+        <meta
+          name="google-site-verification"
+          content="XwCW-t3PJfyPYJRWSItA6cY1Yoy3_zuBZ8N9CJEzZwc"
+        />
+      </head>
       <body className={inter.className}>
         <ClientLayout user={user}>{children}</ClientLayout>
       </body>
