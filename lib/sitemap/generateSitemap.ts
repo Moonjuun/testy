@@ -17,7 +17,6 @@ export async function generateSitemapXml(language: "ko" | "en" | "ja" | "vi") {
   const staticUrls: SitemapUrl[] = [
     { loc: `${baseUrl}/` },
     { loc: `${baseUrl}/test/list` },
-    { loc: `${baseUrl}/about` },
     ...categories.map((cat) => ({
       loc: `${baseUrl}/category/${cat.code}`,
     })),
