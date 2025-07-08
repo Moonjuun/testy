@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     alternateLocale: ["en_US", "ja_JP", "vi_VN"],
   },
   icons: {
-    icon: "/favicon.png",
+    icon: "/favicon.ico",
   },
   twitter: {
     card: "summary_large_image",
