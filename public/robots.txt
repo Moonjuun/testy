@@ -1,6 +1,7 @@
-# *
+Sitemap: https://testy.im/sitemap-ko.xml
+Sitemap: https://testy.im/sitemap-en.xml
+Sitemap: https://testy.im/sitemap-ja.xml
+Sitemap: https://testy.im/sitemap-vi.xml
+
 User-agent: *
 Allow: /
-
-# Host
-Host: https://testy.im
