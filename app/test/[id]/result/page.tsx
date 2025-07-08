@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { FaFacebook } from "react-icons/fa"; // 상단에 추가
 import { useRouter } from "next/navigation";
-import { useEffect, useState, use } from "react";
+import { useEffect, useState, use, useRef } from "react";
 import { useTestResultStore } from "@/store/testResultStore";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
@@ -30,6 +30,8 @@ import { useLanguageStore } from "@/store/useLanguageStore";
 import { formatBoldText } from "@/utils/formatBoldText";
 import { useAlert } from "@/hooks/useAlert";
 import { useTranslation } from "react-i18next";
+import ResultDownloadCard from "@/components/result/ResultDownloadCard";
+import html2canvas from "html2canvas";
 
 // params를 Promise로 받아서 React.use()로 언래핑
 export default function ResultPage({
@@ -47,6 +49,7 @@ export default function ResultPage({
   const currentLanguage = useLanguageStore((state) => state.currentLanguage);
   const { customAlert, Alert } = useAlert(); // customAlert 대신 showAlert가 맞습니다.
   const { t } = useTranslation("common"); // 'common' 네임스페이스 사용
+  const captureRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     console.log(result);
@@ -95,7 +98,20 @@ export default function ResultPage({
       });
     }
 
-    // 기타 플랫폼 ...
+    if (platform === "image") {
+      if (!captureRef.current) return;
+      const canvas = await html2canvas(captureRef.current, {
+        scale: 2,
+        backgroundColor: "#fff",
+        useCORS: true,
+      });
+
+      const dataUrl = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = `result-${id}.png`;
+      link.click();
+    }
   };
   // 결과 사용 후 정리하는 함수
   const handleRetakeTest = () => {
@@ -283,28 +299,28 @@ export default function ResultPage({
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Button
                   onClick={() => handleShare("facebook")}
-                  className="bg-gradient-to-tr from-blue-600 via-blue-500 to-blue-400 hover:opacity-90 text-white px-6 py-4 rounded-2xl font-semibold flex flex-col items-center gap-2 h-auto shadow-lg hover:shadow-xl transition-all"
+                  className="bg-gradient-to-tr from-blue-600 via-blue-500 to-blue-400 hover:opacity-90 text-white rounded-2xl font-semibold flex flex-col items-center justify-center gap-2 h-24 shadow-lg hover:shadow-xl transition-all"
                 >
                   <FaFacebook style={{ width: "32px", height: "32px" }} />
                   <span className="text-sm">{t("resultPage.facebook")}</span>
                 </Button>
                 <Button
                   onClick={() => handleShare("twitter")}
-                  className="bg-blue-400 hover:bg-blue-500 text-white px-6 py-4 rounded-2xl font-semibold flex flex-col items-center gap-2 h-auto shadow-lg hover:shadow-xl transition-all"
+                  className="bg-blue-400 hover:bg-blue-500 text-white rounded-2xl font-semibold flex flex-col items-center justify-center gap-2 h-24 shadow-lg hover:shadow-xl transition-all"
                 >
                   <span className="text-2xl">🐦</span>
-                  <span>{t("resultPage.twitter")}</span> {/* 번역 키 사용 */}
+                  <span className="text-sm">{t("resultPage.twitter")}</span>
                 </Button>
                 <Button
                   onClick={() => handleShare("copy")}
-                  className="bg-gradient-to-tr from-yellow-400 via-amber-400 to-orange-400 hover:opacity-90 text-white px-6 py-4 rounded-2xl font-semibold flex flex-col items-center gap-2 h-auto shadow-lg hover:shadow-xl transition-all"
+                  className="bg-gradient-to-tr from-yellow-400 via-amber-400 to-orange-400 hover:opacity-90 text-white rounded-2xl font-semibold flex flex-col items-center justify-center gap-2 h-24 shadow-lg hover:shadow-xl transition-all"
                 >
                   <Share2 className="w-8 h-8" />
                   <span className="text-sm">{t("resultPage.copyLink")}</span>
                 </Button>
                 <Button
-                  onClick={() => handleShare("image")} // 필요 시 핸들러 연결
-                  className="bg-gradient-to-tr from-emerald-400 via-green-500 to-lime-400 hover:opacity-90 text-white px-6 py-4 rounded-2xl font-semibold flex flex-col items-center gap-2 h-auto shadow-lg hover:shadow-xl transition-all"
+                  onClick={() => handleShare("image")}
+                  className="bg-gradient-to-tr from-emerald-400 via-green-500 to-lime-400 hover:opacity-90 text-white rounded-2xl font-semibold flex flex-col items-center justify-center gap-2 h-24 shadow-lg hover:shadow-xl transition-all"
                 >
                   <Download className="w-8 h-8" />
                   <span className="text-sm">{t("resultPage.saveImage")}</span>
@@ -371,6 +387,13 @@ export default function ResultPage({
         </div>
       </div>
       <Alert />
+      <ResultDownloadCard
+        ref={captureRef}
+        title={result.title}
+        keywords={result.keywords}
+        description={result.description}
+        resultImageUrl={result.result_image_url || ""}
+      />
     </div>
   );
 }
