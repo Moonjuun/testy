@@ -62,6 +62,11 @@ export default async function RootLayout({
           name="naver-site-verification"
           content="4be26cfdfa67a9fe5f9f0b91758530293065fdb8"
         />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6915584561138880"
+          crossOrigin="anonymous"
+        ></script>
       </head>
       <body className={inter.className}>
         <ClientLayout user={user}>{children}</ClientLayout>
