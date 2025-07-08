@@ -6,6 +6,28 @@ import type { TestData } from "@/types/test";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+
+  const url = `https://testy.im/test/${id}`;
+
+  return {
+    alternates: {
+      canonical: url,
+      languages: {
+        ko: url,
+        en: url,
+        ja: url,
+        vi: url,
+      },
+    },
+  };
+}
+
 export default async function TestPage({
   params,
   searchParams,

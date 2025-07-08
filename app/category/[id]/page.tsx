@@ -1,7 +1,33 @@
 // app/category/[id]/page.tsx
 import { CategoryTestList } from "./category-test-list";
+import { createClient } from "@/lib/supabase/client";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("categories")
+    .select("name_ko, name_en, name_ja, name_vi")
+    .eq("code", id)
+    .maybeSingle();
+
+  const name = data?.name_ko ?? id;
+
+  return {
+    title: `${name} 테스트 모음 | Testy`,
+    description: `${name} 관련 심리 테스트, 성향 테스트를 한 곳에 모아봤어요.`,
+    alternates: {
+      canonical: `https://testy.im/category/${id}`,
+    },
+  };
+}
 
 interface CategoryPageProps {
   params: {

@@ -1,4 +1,5 @@
 import { getAllTests } from "@/lib/supabase/getAllTests";
+import { getActiveCategories } from "@/lib/supabase/getActiveCategories";
 
 type SitemapUrl = {
   loc: string;
@@ -8,16 +9,22 @@ type SitemapUrl = {
 export async function generateSitemapXml(language: "ko" | "en" | "ja" | "vi") {
   const baseUrl = "https://testy.im";
 
-  const tests = await getAllTests(language);
+  const [tests, categories] = await Promise.all([
+    getAllTests(language),
+    getActiveCategories(language),
+  ]);
 
   const staticUrls: SitemapUrl[] = [
     { loc: `${baseUrl}/` },
-    { loc: `${baseUrl}/tests` },
+    { loc: `${baseUrl}/test/list` },
     { loc: `${baseUrl}/about` },
+    ...categories.map((cat) => ({
+      loc: `${baseUrl}/category/${cat.code}`,
+    })),
   ];
 
   const dynamicUrls: SitemapUrl[] = tests.map((test) => ({
-    loc: `${baseUrl}/test/${test.id}?lang=${language}`,
+    loc: `${baseUrl}/test/${test.id}`,
     lastmod: new Date(test.created_at).toISOString(),
   }));
 
