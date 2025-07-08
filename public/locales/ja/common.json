@@ -62,5 +62,8 @@
     "copySuccessTitle": "リンクがコピーされました ✨",
     "copySuccessMessage": "共有リンクをコピーしました！",
     "confirm": "確認"
+  },
+  "testCard": {
+    "popular": "人気"
   }
 }

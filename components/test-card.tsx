@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { TestCardProps } from "@/types/test";
+import { useTranslation } from "react-i18next";
 
 export function TestCard({ test, featured = false }: TestCardProps) {
+  const { t } = useTranslation("common");
   return (
     <Link href={`/test/${test.id}`}>
       <div
@@ -23,7 +25,7 @@ export function TestCard({ test, featured = false }: TestCardProps) {
           </div>
           {featured && (
             <div className="absolute top-3 right-3 bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-bold">
-              인기
+              {t("testCard.popular")}
             </div>
           )}
         </div>

@@ -62,5 +62,8 @@
     "copySuccessTitle": "링크 복사 완료 ✨",
     "copySuccessMessage": "공유 링크가 복사되었어요!",
     "confirm": "확인"
+  },
+  "testCard": {
+    "popular": "인기"
   }
 }
