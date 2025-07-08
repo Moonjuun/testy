@@ -183,7 +183,7 @@ export default function ResultPage({
                   "{result.title}"
                 </span>
               </h1>
-              <p className="text-md text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-line text-center md:text-left">
+              <p className="text-md text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-line text-left">
                 <span className="block font-medium mb-2 text-purple-500">
                   💡 {t("resultPage.analysisTitle")} {/* 번역 키 사용 */}
                 </span>
@@ -387,13 +387,16 @@ export default function ResultPage({
         </div>
       </div>
       <Alert />
-      <ResultDownloadCard
-        ref={captureRef}
-        title={result.title}
-        keywords={result.keywords}
-        description={result.description}
-        resultImageUrl={result.result_image_url || ""}
-      />
+
+      <div className="absolute -left-[9999px] top-0">
+        <ResultDownloadCard
+          ref={captureRef}
+          title={result.title}
+          keywords={result.keywords}
+          description={result.description}
+          resultImageUrl={result.result_image_url || ""}
+        />
+      </div>
     </div>
   );
 }
