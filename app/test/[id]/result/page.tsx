@@ -16,6 +16,7 @@ import {
   Compass,
   Sparkles,
 } from "lucide-react";
+import { FaFacebook } from "react-icons/fa"; // 상단에 추가
 import { useRouter } from "next/navigation";
 import { useEffect, useState, use } from "react";
 import { useTestResultStore } from "@/store/testResultStore";
@@ -27,10 +28,8 @@ import { RelatedTest } from "@/types/test";
 import { getRelatedTests } from "@/lib/supabase/getRelatedTests";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { formatBoldText } from "@/utils/formatBoldText";
-
-// --- useTranslation 훅 임포트 추가 ---
+import { useAlert } from "@/hooks/useAlert";
 import { useTranslation } from "react-i18next";
-// ------------------------------------
 
 // params를 Promise로 받아서 React.use()로 언래핑
 export default function ResultPage({
@@ -46,12 +45,11 @@ export default function ResultPage({
   const { result, clearResult } = useTestResultStore();
   const [relatedTests, setRelatedTests] = useState<RelatedTest[]>([]);
   const currentLanguage = useLanguageStore((state) => state.currentLanguage);
-
-  // --- useTranslation 훅 사용 ---
+  const { customAlert, Alert } = useAlert(); // customAlert 대신 showAlert가 맞습니다.
   const { t } = useTranslation("common"); // 'common' 네임스페이스 사용
-  // -----------------------------
 
   useEffect(() => {
+    console.log(result);
     if (result) {
       setTimeout(() => {
         setIsLoading(false);
@@ -71,10 +69,34 @@ export default function ResultPage({
     fetchData();
   }, [id, currentLanguage]); // id 의존성 추가
 
-  const handleShare = (platform: string) => {
-    // ... sharing logic
-  };
+  const handleShare = async (platform: string) => {
+    const shareUrl = `https://testy.im/test/${id}?utm_source=${platform}`;
+    const shareText = `🤩 나의 성향은 "${result?.title}"! 지금 테스트 해보세요 👉`;
 
+    if (platform === "twitter") {
+      const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        shareText
+      )}&url=${encodeURIComponent(shareUrl)}`;
+      window.open(tweetUrl, "_blank", "noopener,noreferrer");
+    }
+
+    if (platform === "facebook") {
+      const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+        shareUrl
+      )}`;
+      window.open(fbShareUrl, "_blank", "noopener,noreferrer");
+    }
+
+    if (platform === "copy") {
+      await customAlert({
+        title: t("alert.copySuccessTitle"),
+        message: t("alert.copySuccessMessage"),
+        confirmText: t("alert.confirm"),
+      });
+    }
+
+    // 기타 플랫폼 ...
+  };
   // 결과 사용 후 정리하는 함수
   const handleRetakeTest = () => {
     clearResult();
@@ -251,6 +273,7 @@ export default function ResultPage({
             </CardContent>
           </Card>
 
+          {/* 친구들에게 자랑하기 */}
           <Card className="bg-white dark:bg-gray-800 shadow-xl">
             <CardContent className="p-8">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-left flex items-center justify-start gap-2">
@@ -259,11 +282,11 @@ export default function ResultPage({
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Button
-                  onClick={() => handleShare("kakao")}
-                  className="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 px-6 py-4 rounded-2xl font-semibold flex flex-col items-center gap-2 h-auto shadow-lg hover:shadow-xl transition-all"
+                  onClick={() => handleShare("facebook")}
+                  className="bg-gradient-to-tr from-blue-600 via-blue-500 to-blue-400 hover:opacity-90 text-white px-6 py-4 rounded-2xl font-semibold flex flex-col items-center gap-2 h-auto shadow-lg hover:shadow-xl transition-all"
                 >
-                  <span className="text-2xl">💬</span>
-                  <span>{t("resultPage.kakaoTalk")}</span> {/* 번역 키 사용 */}
+                  <FaFacebook style={{ width: "32px", height: "32px" }} />
+                  <span className="text-sm">{t("resultPage.facebook")}</span>
                 </Button>
                 <Button
                   onClick={() => handleShare("twitter")}
@@ -274,18 +297,17 @@ export default function ResultPage({
                 </Button>
                 <Button
                   onClick={() => handleShare("copy")}
-                  variant="outline"
-                  className="px-6 py-4 rounded-2xl font-semibold flex flex-col items-center gap-2 h-auto border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 bg-transparent shadow-lg hover:shadow-xl transition-all"
+                  className="bg-gradient-to-tr from-yellow-400 via-amber-400 to-orange-400 hover:opacity-90 text-white px-6 py-4 rounded-2xl font-semibold flex flex-col items-center gap-2 h-auto shadow-lg hover:shadow-xl transition-all"
                 >
-                  <Share2 className="w-6 h-6" />
-                  <span>{t("resultPage.copyLink")}</span> {/* 번역 키 사용 */}
+                  <Share2 className="w-8 h-8" />
+                  <span className="text-sm">{t("resultPage.copyLink")}</span>
                 </Button>
                 <Button
-                  variant="outline"
-                  className="px-6 py-4 rounded-2xl font-semibold flex flex-col items-center gap-2 h-auto bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 shadow-lg hover:shadow-xl transition-all"
+                  onClick={() => handleShare("image")} // 필요 시 핸들러 연결
+                  className="bg-gradient-to-tr from-emerald-400 via-green-500 to-lime-400 hover:opacity-90 text-white px-6 py-4 rounded-2xl font-semibold flex flex-col items-center gap-2 h-auto shadow-lg hover:shadow-xl transition-all"
                 >
-                  <Download className="w-6 h-6" />
-                  <span>{t("resultPage.saveImage")}</span> {/* 번역 키 사용 */}
+                  <Download className="w-8 h-8" />
+                  <span className="text-sm">{t("resultPage.saveImage")}</span>
                 </Button>
               </div>
             </CardContent>
@@ -348,6 +370,7 @@ export default function ResultPage({
           </div>
         </div>
       </div>
+      <Alert />
     </div>
   );
 }

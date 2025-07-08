@@ -48,6 +48,7 @@
     "shareWithFriends": "Chia sẻ với bạn bè",
     "kakaoTalk": "KakaoTalk",
     "twitter": "X (Twitter)",
+    "facebook": "facebook",
     "copyLink": "Sao chép liên kết",
     "saveImage": "Lưu hình ảnh",
     "otherTests": "Bạn nghĩ sao về các bài kiểm tra này?",
@@ -56,5 +57,10 @@
   },
   "search": {
     "placeholder": "Tìm kiếm bài kiểm tra..."
+  },
+  "alert": {
+    "copySuccessTitle": "Đã sao chép liên kết ✨",
+    "copySuccessMessage": "Liên kết chia sẻ đã được sao chép!",
+    "confirm": "Xác nhận"
   }
 }

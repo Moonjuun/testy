@@ -47,6 +47,7 @@
     "suitableItems": "Suitable Items",
     "shareWithFriends": "Share with Friends",
     "kakaoTalk": "KakaoTalk",
+    "facebook": "Facebook",
     "twitter": "X (Twitter)",
     "copyLink": "Copy Link",
     "saveImage": "Save Image",
@@ -56,5 +57,10 @@
   },
   "search": {
     "placeholder": "Search tests..."
+  },
+  "alert": {
+    "copySuccessTitle": "링크 복사 완료 ✨",
+    "copySuccessMessage": "공유 링크가 복사되었어요!",
+    "confirm": "확인"
   }
 }

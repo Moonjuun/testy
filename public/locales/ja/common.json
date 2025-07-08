@@ -48,6 +48,7 @@
     "shareWithFriends": "友達にシェアする",
     "kakaoTalk": "カカオトーク",
     "twitter": "X (Twitter)",
+    "facebook": "facebook",
     "copyLink": "リンクをコピー",
     "saveImage": "画像を保存",
     "otherTests": "こんなテストはどうですか？",
@@ -56,5 +57,10 @@
   },
   "search": {
     "placeholder": "テストを検索..."
+  },
+  "alert": {
+    "copySuccessTitle": "リンクがコピーされました ✨",
+    "copySuccessMessage": "共有リンクをコピーしました！",
+    "confirm": "確認"
   }
 }

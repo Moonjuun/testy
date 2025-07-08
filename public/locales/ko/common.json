@@ -48,6 +48,7 @@
     "shareWithFriends": "친구들에게 자랑하기",
     "kakaoTalk": "카카오톡",
     "twitter": "X (Twitter)",
+    "facebook": "페이스북",
     "copyLink": "링크 복사",
     "saveImage": "이미지 저장",
     "otherTests": "이런 테스트는 어때요?",
@@ -56,5 +57,10 @@
   },
   "search": {
     "placeholder": "테스트 검색..."
+  },
+  "alert": {
+    "copySuccessTitle": "링크 복사 완료 ✨",
+    "copySuccessMessage": "공유 링크가 복사되었어요!",
+    "confirm": "확인"
   }
 }
