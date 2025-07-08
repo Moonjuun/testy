@@ -1,38 +1,71 @@
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+"use client";
+
+import React, { useEffect } from "react";
 
 interface CenterBannerProps {
   size: "large" | "medium" | "small";
+  slot: string;
 }
 
-const CenterBanner = ({ size }: CenterBannerProps) => {
-  const dimensions = {
-    large: { width: "w-full max-w-4xl", height: "h-32", label: "728 × 90" },
-    medium: { width: "w-full max-w-2xl", height: "h-64", label: "336 × 280" },
-    small: { width: "w-full max-w-xl", height: "h-24", label: "320 × 50" },
+const CenterBanner = ({ size, slot }: CenterBannerProps) => {
+  const dimensionMap = {
+    large: {
+      width: 728,
+      height: 90,
+      label: "728 × 90",
+    },
+    medium: {
+      width: 336,
+      height: 280,
+      label: "336 × 280",
+    },
+    small: {
+      width: 320,
+      height: 50,
+      label: "320 × 50",
+    },
   };
 
-  const { width, height, label } = dimensions[size];
+  const { width, height, label } = dimensionMap[size];
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production") return;
+
+    const tryPushAds = () => {
+      const adElement = document.querySelector(`ins[data-ad-slot="${slot}"]`);
+      const isAlreadyRendered =
+        adElement?.getAttribute("data-adsbygoogle-status") === "done";
+
+      if (!adElement || isAlreadyRendered) return;
+
+      const { width } = adElement.getBoundingClientRect();
+      if (width === 0) {
+        // 다음 프레임에서 다시 시도
+        requestAnimationFrame(tryPushAds);
+        return;
+      }
+
+      try {
+        // @ts-ignore
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        console.error("AdSense push error:", e);
+      }
+    };
+
+    tryPushAds();
+  }, [slot]);
 
   return (
     <div className="flex justify-center">
-      <Card
-        className={`${width} ${height} border border-gray-200 bg-gradient-to-r from-yellow-50 to-orange-50`}
-      >
-        <CardContent
-          className={`p-4 h-full flex items-center justify-center text-center`}
-        >
-          <div>
-            <div className="text-gray-400 mb-2">
-              <div className="w-12 h-12 bg-gray-200 rounded-lg mb-2 mx-auto flex items-center justify-center">
-                📺
-              </div>
-            </div>
-            <h4 className="font-semibold text-gray-600 mb-1">중앙 배너 광고</h4>
-            <p className="text-sm text-gray-500">{label}</p>
-          </div>
-        </CardContent>
-      </Card>
+      <ins
+        className="adsbygoogle"
+        style={{ display: "block", width, height }}
+        data-ad-client="ca-pub-6915584561138880" // ✅ 본인 퍼블리셔 ID
+        data-ad-slot={slot} // ✅ 광고 슬롯 ID에 따라 변경
+        data-ad-format="auto"
+        data-full-width-responsive="false"
+      ></ins>
     </div>
   );
 };

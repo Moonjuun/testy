@@ -5,9 +5,10 @@ import { AdBanner } from "@/components/banner/ad-banner";
 
 interface SideAdContainerProps {
   position: "left" | "right";
+  slot: string;
 }
 
-export function SideAdContainer({ position }: SideAdContainerProps) {
+export function SideAdContainer({ position, slot }: SideAdContainerProps) {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -50,7 +51,7 @@ export function SideAdContainer({ position }: SideAdContainerProps) {
           isVisible ? "opacity-100" : "opacity-50"
         }`}
       >
-        <AdBanner type="side" size="300x600" />
+        <AdBanner type="side" size="300x600" slot={slot} />
       </div>
     </div>
   );

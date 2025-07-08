@@ -73,7 +73,7 @@ export default function HomePage() {
           </div>
 
           {/* Center Banner Ad */}
-          <CenterBanner size="large" />
+          <CenterBanner size="large" slot="1695323020" />
         </div>
       </section>
 

@@ -39,7 +39,7 @@ export default function ClientLayout({
             {/* Left Side Ad */}
             {!isAdminPage && (
               <div className="hidden xl:block w-80 flex-shrink-0">
-                <SideAdContainer position="left" />
+                <SideAdContainer position="left" slot="5251424654" />
               </div>
             )}
 
@@ -48,7 +48,7 @@ export default function ClientLayout({
             {/* Right Side Ad */}
             {!isAdminPage && (
               <div className="hidden xl:block w-80 flex-shrink-0">
-                <SideAdContainer position="right" />
+                <SideAdContainer position="right" slot="2714274112" />
               </div>
             )}
           </div>
