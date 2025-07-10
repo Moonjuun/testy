@@ -1,5 +1,3 @@
-// components/ClientLayout.tsx
-
 "use client";
 
 import type React from "react";
@@ -14,6 +12,7 @@ import { useEffect } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18n from "@/app/[locale]/i18n";
 import { useLanguageStore, Language } from "@/store/useLanguageStore";
+import { AlertProvider } from "./modal/alert-context";
 
 export default function ClientLayout({
   user,
@@ -42,29 +41,30 @@ export default function ClientLayout({
   return (
     <I18nextProvider i18n={i18n}>
       <ThemeProvider>
-        <div className="flex flex-col min-h-screen">
-          <Header />
+        {/* 2. 앱 전체를 AlertProvider로 감싸줍니다. */}
+        <AlertProvider>
+          <div className="flex flex-col min-h-screen">
+            <Header />
 
-          <div className="flex flex-1 relative">
-            {/* Left Side Ad */}
-            {!isAdminPage && (
-              <div className="hidden xl:block w-80 flex-shrink-0">
-                <SideAdContainer position="left" slot="5251424654" />
-              </div>
-            )}
+            <div className="flex flex-1 relative">
+              {!isAdminPage && (
+                <div className="hidden xl:block w-80 flex-shrink-0">
+                  <SideAdContainer position="left" slot="5251424654" />
+                </div>
+              )}
 
-            {/* Main Content */}
-            <main className="flex-1 min-w-0">{children}</main>
-            {/* Right Side Ad */}
-            {!isAdminPage && (
-              <div className="hidden xl:block w-80 flex-shrink-0">
-                <SideAdContainer position="right" slot="2714274112" />
-              </div>
-            )}
+              <main className="flex-1 min-w-0">{children}</main>
+
+              {!isAdminPage && (
+                <div className="hidden xl:block w-80 flex-shrink-0">
+                  <SideAdContainer position="right" slot="2714274112" />
+                </div>
+              )}
+            </div>
+
+            <Footer />
           </div>
-
-          <Footer />
-        </div>
+        </AlertProvider>
       </ThemeProvider>
     </I18nextProvider>
   );

@@ -16,11 +16,11 @@ import { AuthModal } from "./modal/auth-modal";
 // 1. next/navigation에서 useRouter와 usePathname을 임포트합니다.
 import { useRouter, usePathname } from "next/navigation";
 import { Language } from "@/store/useLanguageStore";
-import { useAlert } from "@/hooks/useAlert";
+import { useAlert } from "./modal/alert-context";
 
 export function Header() {
   const { t, i18n } = useTranslation("common");
-  const { customAlert, Alert } = useAlert();
+  const customAlert = useAlert();
 
   // 2. router와 pathname 인스턴스를 생성합니다.
   const router = useRouter();
@@ -56,8 +56,8 @@ export function Header() {
     setIsLangOpen(false);
 
     if (pathname.includes("/result")) {
-      // 이제 confirmed 변수는 boolean 타입이 됩니다.
       const confirmed = await customAlert({
+        // 바로 사용 가능
         title: t("alert.changeLangOnResultTitle"),
         message: t("alert.changeLangOnResultMessaage"),
         confirmText: t("alert.confirm"),
@@ -266,7 +266,6 @@ export function Header() {
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
       />
-      <Alert />
     </>
   );
 }

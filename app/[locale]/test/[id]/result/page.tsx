@@ -25,7 +25,7 @@ import { RelatedTest } from "@/types/test";
 import { getRelatedTests } from "@/lib/supabase/getRelatedTests";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { formatBoldText } from "@/utils/formatBoldText";
-import { useAlert } from "@/hooks/useAlert";
+import { useAlert } from "@/components/modal/alert-context";
 import { useTranslation } from "react-i18next";
 import ResultDownloadCard from "@/components/result/ResultDownloadCard";
 import html2canvas from "html2canvas";
@@ -46,7 +46,7 @@ export default function ResultPage({
   const [relatedTests, setRelatedTests] = useState<RelatedTest[]>([]);
   const language = useLanguageStore((state) => state.currentLanguage);
   const setLanguage = useLanguageStore((state) => state.setLanguage);
-  const { customAlert, Alert } = useAlert();
+  const customAlert = useAlert();
   const { t, i18n } = useTranslation("common");
   const captureRef = useRef<HTMLDivElement>(null);
 
@@ -62,9 +62,6 @@ export default function ResultPage({
   useEffect(() => {
     if (result) {
       setTimeout(() => setIsLoading(false), 1500); // 결과 표시 전 잠시 로딩
-    } else {
-      // 3. 결과가 없을 때, 올바른 언어 경로로 리디렉션합니다.
-      router.replace(`/${locale}/test/${id}`);
     }
   }, [result, id, router, locale]);
 

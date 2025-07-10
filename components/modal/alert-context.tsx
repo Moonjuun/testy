@@ -1,33 +1,47 @@
-// hooks/use-alert.tsx
-
 "use client";
 
-import { useState, useCallback } from "react";
-import AlertDialog from "@/components/modal/alert-dialog";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  ReactNode,
+} from "react";
+import AlertDialog from "@/components/modal/alert-dialog"; // AlertDialog 경로 확인
 
 interface AlertOptions {
   title?: string;
   message?: string;
   confirmText?: string;
-  cancelText?: string; // 취소 버튼 텍스트 옵션 추가
+  cancelText?: string;
   confirmVariant?: "default" | "destructive" | "outline" | "ghost" | "link";
 }
 
-export function useAlert() {
+// Context에 전달할 함수의 타입을 정의합니다.
+type AlertContextType = (options: AlertOptions) => Promise<boolean>;
+
+// Context를 생성합니다. 기본값은 에러를 발생시키도록 설정합니다.
+const AlertContext = createContext<AlertContextType>(() => {
+  throw new Error("AlertProvider not found");
+});
+
+// 다른 컴포넌트에서 customAlert 함수를 쉽게 사용하기 위한 훅입니다.
+export const useAlert = () => {
+  return useContext(AlertContext);
+};
+
+// Alert의 상태와 UI를 모두 관리하는 Provider 컴포넌트입니다.
+export function AlertProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [options, setOptions] = useState<AlertOptions>({});
-
-  // 1. resolve 함수의 타입을 boolean을 받도록 변경합니다.
   const [resolvePromise, setResolvePromise] = useState<
     ((value: boolean) => void) | null
   >(null);
 
-  // 2. customAlert가 Promise<boolean>을 반환하도록 시그니처를 변경합니다.
   const customAlert = useCallback(
     (opts: AlertOptions = {}): Promise<boolean> => {
       setOptions(opts);
       setIsOpen(true);
-      // 3. Promise<boolean> 타입의 새로운 Promise를 생성합니다.
       return new Promise<boolean>((resolve) => {
         setResolvePromise(() => resolve);
       });
@@ -35,35 +49,32 @@ export function useAlert() {
     []
   );
 
-  // 4. '확인' 버튼을 눌렀을 때 실행될 함수를 만듭니다.
   const handleConfirm = useCallback(() => {
     if (resolvePromise) {
-      resolvePromise(true); // Promise를 true로 완료시킵니다.
+      resolvePromise(true);
       setResolvePromise(null);
     }
     setIsOpen(false);
   }, [resolvePromise]);
 
-  // 5. '취소' 버튼을 누르거나 외부를 클릭했을 때 실행될 함수를 만듭니다.
   const handleCancel = useCallback(() => {
     if (resolvePromise) {
-      resolvePromise(false); // Promise를 false로 완료시킵니다.
+      resolvePromise(false);
       setResolvePromise(null);
     }
     setIsOpen(false);
   }, [resolvePromise]);
 
-  const Alert = useCallback(() => {
-    return (
-      // 6. AlertDialog에 onConfirm과 onCancel을 전달합니다.
+  return (
+    <AlertContext.Provider value={customAlert}>
+      {children}
+      {/* Alert UI는 Provider가 직접 렌더링합니다. */}
       <AlertDialog
         isOpen={isOpen}
         onConfirm={handleConfirm}
         onCancel={handleCancel}
         options={options}
       />
-    );
-  }, [isOpen, handleConfirm, handleCancel, options]);
-
-  return { customAlert, Alert };
+    </AlertContext.Provider>
+  );
 }

@@ -7,7 +7,7 @@ import { X, User, Sparkles, Heart, Star } from "lucide-react";
 import { signInWithGoogle } from "@/lib/supabase/action";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
-import { useAlert } from "@/hooks/useAlert";
+import { useAlert } from "./alert-context";
 
 // --- useTranslation 훅 임포트 추가 ---
 import { useTranslation } from "react-i18next";
@@ -21,7 +21,7 @@ interface AuthModalProps {
 export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   // 'showAlert'를 'customAlert'로 변경하셨으므로, 그에 맞춰서 조정합니다.
-  const { customAlert, Alert } = useAlert(); // customAlert 대신 showAlert가 맞습니다.
+  const customAlert = useAlert(); // customAlert 대신 showAlert가 맞습니다.
 
   // --- useTranslation 훅 사용 ---
   const { t } = useTranslation("common"); // 'common' 네임스페이스 사용
@@ -142,8 +142,6 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
           </div>
         </div>
       </div>
-      {/* Render the Alert component from the useAlert hook */}
-      <Alert />
     </div>
   );
 }
