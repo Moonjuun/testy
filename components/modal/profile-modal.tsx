@@ -21,6 +21,7 @@ interface ProfileModalProps {
 import { formatDateByStyle } from "@/lib/utils";
 import { signOut } from "@/lib/supabase/action";
 import { useConfirm } from "@/hooks/useConfirm";
+import { useLanguageStore } from "@/store/useLanguageStore";
 
 export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const [activeTab, setActiveTab] = useState<
@@ -28,6 +29,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   >("profile");
   const user = useUserStore((state) => state.user);
   const { customConfirm, ConfirmComponent } = useConfirm();
+  const language = useLanguageStore((state) => state.currentLanguage);
 
   const name =
     user?.user_metadata?.name ||
@@ -51,7 +53,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
     // 사용자가 '확인'을 눌렀을 경우에만 로그아웃 진행
     if (confirmed) {
       try {
-        await signOut(); // supabase action의 signOut 함수 호출
+        await signOut(language); // supabase action의 signOut 함수 호출
         onClose(); // ProfileModal 닫기
         window.location.reload(); // 페이지 새로고침
       } catch (error) {
@@ -162,9 +164,11 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
           <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
             <div className="flex gap-3">
               <Button
+                variant="destructive"
+                className="w-full"
                 onClick={handleLogout}
-                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
               >
+                <LogOut className="w-4 h-4 mr-2" />
                 로그아웃
               </Button>
               {/* <Button

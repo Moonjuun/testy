@@ -8,10 +8,9 @@ import { signInWithGoogle } from "@/lib/supabase/action";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { useAlert } from "./alert-context";
-
-// --- useTranslation 훅 임포트 추가 ---
+import { GoogleSignInButton } from "../ui/GoogleSignInButton";
 import { useTranslation } from "react-i18next";
-// ------------------------------------
+import { useLanguageStore } from "@/store/useLanguageStore";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -20,12 +19,10 @@ interface AuthModalProps {
 
 export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [isLoading, setIsLoading] = useState(false);
-  // 'showAlert'를 'customAlert'로 변경하셨으므로, 그에 맞춰서 조정합니다.
-  const customAlert = useAlert(); // customAlert 대신 showAlert가 맞습니다.
+  const customAlert = useAlert();
+  const language = useLanguageStore((state) => state.currentLanguage);
 
-  // --- useTranslation 훅 사용 ---
   const { t } = useTranslation("common"); // 'common' 네임스페이스 사용
-  // -----------------------------
 
   if (!isOpen) return null;
 
@@ -81,32 +78,10 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
             </p>
 
             {/* Google 로그인 */}
-            <Button
-              onClick={async () => {
-                setIsLoading(true);
-                try {
-                  await signInWithGoogle();
-                  onClose();
-                } catch (e) {
-                  console.error("Google 로그인 실패:", e);
-                  await customAlert({
-                    title: t("modal.loginError"),
-                    message: t("modal.googleLoginFailed"),
-                    confirmText: t("modal.confirm"),
-                  });
-                } finally {
-                  setIsLoading(false);
-                }
-              }}
-              disabled={isLoading}
-              className="w-full h-12 rounded-xl font-medium transition-all bg-white hover:bg-gray-50 text-gray-900 border border-gray-300"
-            >
-              <FcGoogle className="w-7 h-7 mr-3" />
-              {t("modal.continueWithGoogle")} {/* 번역 키 사용 */}
-              {isLoading && (
-                <div className="ml-2 w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-              )}
-            </Button>
+            <form action={signInWithGoogle}>
+              <input type="hidden" name="locale" value={language} />
+              <GoogleSignInButton />
+            </form>
 
             {/* Apple 로그인 */}
             <Button
