@@ -12,11 +12,19 @@ import { useLanguageStore } from "@/store/useLanguageStore";
 import { useUserStore } from "@/store/useUserStore";
 import { getAllLabel, languages } from "@/constants/Header";
 import { useTranslation } from "react-i18next";
-// modal
 import { AuthModal } from "./modal/auth-modal";
+// 1. next/navigation에서 useRouter와 usePathname을 임포트합니다.
+import { useRouter, usePathname } from "next/navigation";
+import { Language } from "@/store/useLanguageStore";
+import { useAlert } from "@/hooks/useAlert";
 
 export function Header() {
   const { t, i18n } = useTranslation("common");
+  const { customAlert, Alert } = useAlert();
+
+  // 2. router와 pathname 인스턴스를 생성합니다.
+  const router = useRouter();
+  const pathname = usePathname();
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -27,35 +35,59 @@ export function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const currentLangCode = useLanguageStore((state) => state.currentLanguage);
-  const setCurrentLangCode = useLanguageStore((state) => state.setLanguage);
+  const setLanguage = useLanguageStore((state) => state.setLanguage);
 
   const { theme, toggleTheme } = useTheme();
-
   const { categories, loading } = useActiveCategories(currentLangCode);
   const [mounted, setMounted] = useState(false);
 
-  const [showLogout, setShowLogout] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
+  const [showLogout, setShowLogout] = useState(false); // 이 상태는 현재 사용되지 않는 것 같아 보입니다.
 
-  const currentLanguage =
+  const currentLanguageName =
     languages.find((l) => l.code === currentLangCode)?.name ?? "한국어";
+
+  // 3. 언어 변경을 처리하는 전용 함수를 만듭니다.
+  const handleLanguageChange = async (newLocale: Language) => {
+    if (!pathname) {
+      return;
+    }
+
+    setIsLangOpen(false);
+
+    if (pathname.includes("/result")) {
+      // 이제 confirmed 변수는 boolean 타입이 됩니다.
+      const confirmed = await customAlert({
+        title: t("alert.changeLangOnResultTitle"),
+        message: t("alert.changeLangOnResultMessaage"),
+        confirmText: t("alert.confirm"),
+        cancelText: t("alert.cancel"),
+      });
+
+      // ✅ 에러 없이 정상 동작
+      if (confirmed) {
+        setLanguage(newLocale);
+        i18n.changeLanguage(newLocale);
+        router.push(`/${newLocale}`);
+      }
+    } else {
+      // 그 외 모든 페이지의 경우
+      setLanguage(newLocale);
+      i18n.changeLanguage(newLocale);
+
+      const currentPathParts = pathname.split("/");
+      currentPathParts[1] = newLocale;
+      const newPath = currentPathParts.join("/");
+
+      router.push(newPath);
+    }
+  };
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (langRef.current && !langRef.current.contains(e.target as Node)) {
         setIsLangOpen(false);
       }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    setMounted(true); // ✅ 2. 클라이언트 마운트 후 true 설정
-  }, []);
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
       if (
         profileRef.current &&
         !profileRef.current.contains(e.target as Node)
@@ -67,12 +99,19 @@ export function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <>
       <header className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 shadow-sm">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-2">
+            <Link
+              href={`/${currentLangCode}`}
+              className="flex items-center gap-2"
+            >
               <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">T</span>
               </div>
@@ -83,8 +122,8 @@ export function Header() {
 
             <nav className="hidden lg:flex items-center space-x-1">
               <Link
-                href="/test/list"
-                className="px-3 py-2 text-sm font-medium ..."
+                href={`/${currentLangCode}/test/list`}
+                className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
               >
                 {getAllLabel(currentLangCode)}
               </Link>
@@ -97,8 +136,8 @@ export function Header() {
                 : categories.map((category) => (
                     <Link
                       key={category.id}
-                      href={`/category/${category.code}`}
-                      className="px-3 py-2 text-sm font-medium ..."
+                      href={`/${currentLangCode}/category/${category.code}`}
+                      className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
                     >
                       {category.name}
                     </Link>
@@ -114,7 +153,7 @@ export function Header() {
                   className="flex items-center gap-2 rounded-full bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                 >
                   <Globe className="w-4 h-4" />
-                  <span className="text-sm">{currentLanguage}</span>
+                  <span className="text-sm">{currentLanguageName}</span>
                 </Button>
 
                 {isLangOpen && (
@@ -122,10 +161,10 @@ export function Header() {
                     {languages.map((lang) => (
                       <button
                         key={lang.code}
-                        onClick={() => {
-                          setCurrentLangCode(lang.code as any);
-                          setIsLangOpen(false);
-                        }}
+                        // 4. 새로 만든 핸들러 함수를 호출합니다.
+                        onClick={() =>
+                          handleLanguageChange(lang.code as Language)
+                        }
                         className="w-full px-3 py-2 text-sm text-left text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 first:rounded-t-lg last:rounded-b-lg"
                       >
                         {lang.name}
@@ -148,49 +187,16 @@ export function Header() {
                     <Moon className="w-4 h-4" />
                   )
                 ) : (
-                  <div className="w-4 h-4" /> // placeholder: 깜빡임 방지용
+                  <div className="w-4 h-4" />
                 )}
               </Button>
 
-              {user ? (
-                <>
-                  {/* 로그인 상태 → 프로필 버튼 */}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setIsProfileModalOpen(true)}
-                    className="hidden sm:flex items-center gap-2 rounded-full bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-                  >
-                    <User className="w-4 h-4" />
-                    <span className="hidden md:inline">
-                      {t("header.profile")}
-                    </span>
-                  </Button>
-                </>
-              ) : (
-                <>
-                  {/* 로그아웃 상태 → 로그인 버튼 */}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setIsAuthModalOpen(true)}
-                    className="hidden sm:flex items-center gap-2 rounded-full bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-                  >
-                    <User className="w-4 h-4" />
-                    <span className="hidden md:inline">
-                      {t("header.login")}
-                    </span>
-                  </Button>
-                </>
-              )}
-
-              {/* 모바일용 사람 아이콘: 조건부로 렌더링 */}
               {user ? (
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setIsProfileModalOpen(true)}
-                  className="sm:hidden rounded-full p-2"
+                  className="rounded-full p-2"
                 >
                   <User className="w-4 h-4" />
                 </Button>
@@ -199,7 +205,7 @@ export function Header() {
                   variant="outline"
                   size="sm"
                   onClick={() => setIsAuthModalOpen(true)}
-                  className="sm:hidden rounded-full p-2"
+                  className="rounded-full p-2"
                 >
                   <User className="w-4 h-4" />
                 </Button>
@@ -223,9 +229,9 @@ export function Header() {
             <div className="lg:hidden py-4 border-t border-gray-200 dark:border-gray-700">
               <nav className="grid grid-cols-2 gap-2 px-3">
                 <Link
-                  href="/test/list"
+                  href={`/${currentLangCode}/test/list`}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-3 py-2 text-sm font-medium ..."
+                  className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 text-center"
                 >
                   {getAllLabel(currentLangCode)}
                 </Link>
@@ -239,9 +245,9 @@ export function Header() {
                   : categories.map((category) => (
                       <Link
                         key={category.id}
-                        href={`/category/${category.code}`}
+                        href={`/${currentLangCode}/category/${category.code}`}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="px-3 py-2 text-sm font-medium ..."
+                        className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 text-center"
                       >
                         {category.name}
                       </Link>
@@ -256,11 +262,11 @@ export function Header() {
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}
       />
-
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
       />
+      <Alert />
     </>
   );
 }

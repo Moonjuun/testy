@@ -59,9 +59,12 @@
     "placeholder": "テストを検索..."
   },
   "alert": {
-    "copySuccessTitle": "リンクがコピーされました ✨",
-    "copySuccessMessage": "共有リンクをコピーしました！",
-    "confirm": "確認"
+    "copySuccessTitle": "リンクコピー完了 ✨",
+    "copySuccessMessage": "共有リンクがコピーされました！",
+    "confirm": "確認",
+    "cancel": "キャンセル",
+    "changeLangOnResultTitle": "言語の変更",
+    "changeLangOnResultMessaage": "言語を変更すると結果がリセットされ、ホームページに移動します。続行しますか？"
   },
   "testCard": {
     "popular": "人気"

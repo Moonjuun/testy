@@ -2,11 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { TestCardProps } from "@/types/test";
 import { useTranslation } from "react-i18next";
+// 1. 언어 상태를 가져오기 위해 useLanguageStore를 임포트합니다.
+import { useLanguageStore } from "@/store/useLanguageStore";
 
 export function TestCard({ test, featured = false }: TestCardProps) {
   const { t } = useTranslation("common");
+  // 2. 스토어에서 현재 언어 코드를 가져옵니다.
+  const language = useLanguageStore((state) => state.currentLanguage);
+
   return (
-    <Link href={`/test/${test.id}`}>
+    // 3. href에 현재 언어 코드를 포함시킵니다.
+    <Link href={language ? `/${language}/test/${test.id}` : `/test/${test.id}`}>
       <div
         className={`group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl dark:shadow-gray-900/20 transition-all duration-300 hover:-translate-y-1
         ${featured ? "border-2 border-purple-100 dark:border-purple-800" : ""}
@@ -43,17 +49,6 @@ export function TestCard({ test, featured = false }: TestCardProps) {
           </p>
         </div>
       </div>
-
-      {/* <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-            <div className="flex items-center gap-1">
-              <Users className="w-3 h-3" />
-              <span>{test.participants} 참여</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Clock className="w-3 h-3" />
-              <span>{test.duration} 소요</span>
-            </div>
-          </div> */}
     </Link>
   );
 }

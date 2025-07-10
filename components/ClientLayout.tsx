@@ -1,4 +1,4 @@
-// components/ClientLayout.tsx (새 파일 생성)
+// components/ClientLayout.tsx
 
 "use client";
 
@@ -12,22 +12,32 @@ import type { User } from "@supabase/supabase-js";
 import { useUserStore } from "@/store/useUserStore";
 import { useEffect } from "react";
 import { I18nextProvider } from "react-i18next";
-import i18n from "@/app/i18n";
+import i18n from "@/app/[locale]/i18n";
+import { useLanguageStore, Language } from "@/store/useLanguageStore";
+
 export default function ClientLayout({
   user,
   children,
+  locale,
 }: {
   user: User | null;
   children: React.ReactNode;
+  locale: string;
 }) {
   const pathname = usePathname() ?? "";
   const isAdminPage = pathname.startsWith("/admin");
 
   const setUser = useUserStore((state) => state.setUser);
+  const setLanguage = useLanguageStore((state) => state.setLanguage);
 
   useEffect(() => {
     setUser(user);
   }, [user, setUser]);
+
+  useEffect(() => {
+    i18n.changeLanguage(locale);
+    setLanguage(locale as Language);
+  }, [locale, setLanguage]);
 
   return (
     <I18nextProvider i18n={i18n}>

@@ -59,9 +59,12 @@
     "placeholder": "Search tests..."
   },
   "alert": {
-    "copySuccessTitle": "링크 복사 완료 ✨",
-    "copySuccessMessage": "공유 링크가 복사되었어요!",
-    "confirm": "확인"
+    "copySuccessTitle": "Link Copied! ✨",
+    "copySuccessMessage": "The share link has been copied!",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "changeLangOnResultTitle": "Change Language",
+    "changeLangOnResultMessaage": "Changing the language will reset the result and navigate to the homepage. Do you want to continue?"
   },
   "testCard": {
     "popular": "Popular"

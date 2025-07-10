@@ -1,4 +1,5 @@
-// components/test/TestView.tsx
+// 파일 위치: components/test/TestView.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -9,33 +10,23 @@ import { Progress } from "@/components/ui/progress";
 import { useTestResultStore } from "@/store/testResultStore";
 
 import { MobileAdBanner } from "@/components/banner/mobile-ad-banner";
-import { MobileAdCoupangBanner } from "../banner/mobile-ad-coupang-banner";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { TestData } from "@/types/test";
-import { useLanguageStore } from "@/store/useLanguageStore";
-
-// --- useTranslation 훅 임포트 추가 ---
 import { useTranslation } from "react-i18next";
-// ------------------------------------
 
 interface Props {
   initialTestData: TestData;
   testId: string;
-  language: string;
+  // 1. props 이름을 language에서 locale로 변경합니다.
+  locale: string;
 }
 
-export default function TestView({ initialTestData, testId, language }: Props) {
+export default function TestView({ initialTestData, testId, locale }: Props) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const setResult = useTestResultStore((state) => state.setResult);
-  const currentLangCode = useLanguageStore((state) => state.currentLanguage);
-
   const [showContent, setShowContent] = useState(false);
-
-  // --- useTranslation 훅 사용 ---
-  const { t } = useTranslation("common"); // 'common' 네임스페이스 사용
-  // -----------------------------
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -44,15 +35,6 @@ export default function TestView({ initialTestData, testId, language }: Props) {
 
     return () => clearTimeout(timer);
   }, []);
-
-  useEffect(() => {
-    // URL 언어와 현재 언어가 다르면 URL 업데이트 (testId도 포함)
-    if (currentLangCode !== language) {
-      const newSearchParams = new URLSearchParams(searchParams || undefined);
-      newSearchParams.set("lang", currentLangCode);
-      router.replace(`/test/${testId}?${newSearchParams.toString()}`);
-    }
-  }, [currentLangCode, language, router, testId, searchParams]); // testId 의존성 추가
 
   const {
     currentQuestion,
@@ -74,19 +56,10 @@ export default function TestView({ initialTestData, testId, language }: Props) {
       const resultData = calculateResult();
       setResult(resultData);
 
-      const resultSearchParams = new URLSearchParams(searchParams || undefined);
-      resultSearchParams.set("lang", currentLangCode);
-      router.push(`/test/${testId}/result?${resultSearchParams.toString()}`);
+      // 3. 결과 페이지로 이동할 때도 경로에 locale을 사용합니다.
+      router.push(`/${locale}/test/${testId}/result`);
     }
-  }, [
-    isCompleted,
-    testId,
-    router,
-    currentLangCode,
-    searchParams,
-    calculateResult,
-    setResult,
-  ]); // 의존성 배열에 추가
+  }, [isCompleted, testId, router, locale, calculateResult, setResult]);
 
   if (!showContent) {
     return (
@@ -108,7 +81,7 @@ export default function TestView({ initialTestData, testId, language }: Props) {
           </svg>
         </div>
         <p className="mt-8 text-xl font-semibold text-gray-700 dark:text-gray-300">
-          {t("testView.loading")} {/* 번역 키 사용 */}
+          {t("testView.loading")}
         </p>
       </div>
     );
@@ -116,18 +89,15 @@ export default function TestView({ initialTestData, testId, language }: Props) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
-      {/* <MobileAdCoupangBanner type="sticky-top" /> */}
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto mb-4">
           <Link
-            href={`/?lang=${currentLangCode}`}
+            href={`/${locale}`}
             className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            {t("testView.backToList")} {/* 번역 키 사용 */}
+            {t("testView.backToList")}
           </Link>
-
-          {/* 썸네일 이미지 추가 */}
           {initialTestData.thumbnail_url && (
             <div className="relative mb-4 rounded-2xl overflow-hidden shadow-xl">
               <img
@@ -136,7 +106,6 @@ export default function TestView({ initialTestData, testId, language }: Props) {
                 className="w-full h-64 object-cover brightness-75"
               />
               <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
-                {/* 테스트 제목과 설명은 DB에서 가져온 값이므로 번역하지 않습니다. */}
                 <h1 className="text-2xl font-bold">{initialTestData.title}</h1>
                 {initialTestData.description && (
                   <p className="text-sm text-white/80 mt-1">
@@ -146,7 +115,6 @@ export default function TestView({ initialTestData, testId, language }: Props) {
               </div>
             </div>
           )}
-
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
             <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
               {currentQuestionData.question}
@@ -156,26 +124,20 @@ export default function TestView({ initialTestData, testId, language }: Props) {
                 {t("testView.questionProgress", {
                   current: currentQuestion + 1,
                   total: totalQuestions,
-                })}{" "}
-                {/* 번역 키 및 값 전달 */}
+                })}
               </span>
               <span>
                 {t("testView.progressCompleted", {
                   percent: Math.round(progress),
-                })}{" "}
-                {/* 번역 키 및 값 전달 */}
+                })}
               </span>
             </div>
             <Progress value={progress} className="h-2" />
           </div>
         </div>
-
         <div className="max-w-2xl mx-auto">
           <div className="lg:col-span-3">
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
-              {/* <h2 className="text-xl md:text-2xl font-semibold text-gray-900 dark:text-white mb-8 leading-relaxed">
-                {currentQuestionData.question}
-              </h2> */}
               <div className="space-y-4">
                 {currentQuestionData.options.map((option, index) => (
                   <button
@@ -200,7 +162,7 @@ export default function TestView({ initialTestData, testId, language }: Props) {
                         )}
                       </div>
                       <span className="font-medium text-gray-900 dark:text-white">
-                        {option.text} {/* 옵션 텍스트는 DB에서 가져옴 */}
+                        {option.text}
                       </span>
                     </div>
                   </button>
@@ -214,7 +176,7 @@ export default function TestView({ initialTestData, testId, language }: Props) {
                   className="rounded-full px-6 bg-transparent"
                 >
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  {t("testView.previous")} {/* 번역 키 사용 */}
+                  {t("testView.previous")}
                 </Button>
                 <Button
                   onClick={handleNext}
@@ -222,16 +184,14 @@ export default function TestView({ initialTestData, testId, language }: Props) {
                   className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-full px-6"
                 >
                   {currentQuestion === totalQuestions - 1
-                    ? t("testView.viewResults") // 번역 키 사용
-                    : t("testView.next")}{" "}
-                  {/* 번역 키 사용 */}
+                    ? t("testView.viewResults")
+                    : t("testView.next")}
                   {currentQuestion !== totalQuestions - 1 && (
                     <ArrowRight className="w-4 h-4 ml-2" />
                   )}
                 </Button>
               </div>
             </div>
-
             <MobileAdBanner type="inline" size="300x250" className="mt-8" />
           </div>
         </div>

@@ -59,9 +59,12 @@
     "placeholder": "Tìm kiếm bài kiểm tra..."
   },
   "alert": {
-    "copySuccessTitle": "Đã sao chép liên kết ✨",
+    "copySuccessTitle": "Sao chép liên kết thành công ✨",
     "copySuccessMessage": "Liên kết chia sẻ đã được sao chép!",
-    "confirm": "Xác nhận"
+    "confirm": "Xác nhận",
+    "cancel": "Hủy",
+    "changeLangOnResultTitle": "Thay đổi ngôn ngữ",
+    "changeLangOnResultMessaage": "Thay đổi ngôn ngữ sẽ đặt lại kết quả và điều hướng đến trang chủ. Bạn có muốn tiếp tục không?"
   },
   "testCard": {
     "popular": "Phổ biến"

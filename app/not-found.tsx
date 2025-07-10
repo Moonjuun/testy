@@ -1,4 +1,4 @@
-// app/not-found.tsx 또는 app/not-found/page.tsx
+// app/not-found.tsx
 "use client";
 
 import Link from "next/link";
