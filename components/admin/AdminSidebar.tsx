@@ -24,7 +24,11 @@ interface Props {
 
 export default function AdminSidebar({ activeTab, setActiveTab }: Props) {
   const menuItems = [
-    { key: "json" as const, label: "1. JSON 업로드", icon: <UploadCloud /> },
+    {
+      key: "json" as const,
+      label: "1. 테스트 유형 JSON 업로드",
+      icon: <UploadCloud />,
+    },
     {
       key: "thumbnail-upload" as const,
       label: "2. 테스트 썸네일 등록",
@@ -51,7 +55,7 @@ export default function AdminSidebar({ activeTab, setActiveTab }: Props) {
   return (
     <aside className="w-72 bg-white dark:bg-gray-800/50 flex-shrink-0 border-r border-gray-200 dark:border-gray-700 p-6 flex flex-col">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">
-        어드민 대시보드
+        Testy 어드민
       </h1>
       <nav className="space-y-2">
         {menuItems.map((item) => (
