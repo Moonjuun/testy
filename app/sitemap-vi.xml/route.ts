@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { generateSitemapXml } from "@/lib/sitemap/generateSitemap";
 
 export async function GET() {
-  const xml = await generateSitemapXml("vi");
+  const xml = await generateSitemapXml();
 
   return new NextResponse(xml, {
     headers: {
