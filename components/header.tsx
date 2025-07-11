@@ -18,7 +18,11 @@ import { useRouter, usePathname } from "next/navigation";
 import { Language } from "@/store/useLanguageStore";
 import { useAlert } from "./modal/alert-context";
 
-export function Header() {
+interface HeaderProps {
+  locale: string;
+}
+
+export function Header({ locale }: HeaderProps) {
   const { t, i18n } = useTranslation("common");
   const customAlert = useAlert();
 
@@ -34,18 +38,17 @@ export function Header() {
   const user = useUserStore((state) => state.user);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  const currentLangCode = useLanguageStore((state) => state.currentLanguage);
   const setLanguage = useLanguageStore((state) => state.setLanguage);
 
   const { theme, toggleTheme } = useTheme();
-  const { categories, loading } = useActiveCategories(currentLangCode);
+  const { categories, loading } = useActiveCategories(locale as Language);
   const [mounted, setMounted] = useState(false);
 
   const profileRef = useRef<HTMLDivElement>(null);
   const [showLogout, setShowLogout] = useState(false); // 이 상태는 현재 사용되지 않는 것 같아 보입니다.
 
   const currentLanguageName =
-    languages.find((l) => l.code === currentLangCode)?.name ?? "한국어";
+    languages.find((l) => l.code === locale)?.name ?? "English";
 
   // 3. 언어 변경을 처리하는 전용 함수를 만듭니다.
   const handleLanguageChange = async (newLocale: Language) => {
@@ -108,10 +111,7 @@ export function Header() {
       <header className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 shadow-sm">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <Link
-              href={`/${currentLangCode}`}
-              className="flex items-center gap-2"
-            >
+            <Link href={`/${locale}`} className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">T</span>
               </div>
@@ -122,10 +122,10 @@ export function Header() {
 
             <nav className="hidden lg:flex items-center space-x-1">
               <Link
-                href={`/${currentLangCode}/test/list`}
+                href={`/${locale}/test/list`}
                 className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
               >
-                {getAllLabel(currentLangCode)}
+                {getAllLabel(locale)}
               </Link>
               {loading
                 ? Array.from({ length: 5 }).map((_, i) => (
@@ -136,7 +136,7 @@ export function Header() {
                 : categories.map((category) => (
                     <Link
                       key={category.id}
-                      href={`/${currentLangCode}/category/${category.code}`}
+                      href={`/${locale}/category/${category.code}`}
                       className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
                     >
                       {category.name}
@@ -229,11 +229,11 @@ export function Header() {
             <div className="lg:hidden py-4 border-t border-gray-200 dark:border-gray-700">
               <nav className="grid grid-cols-2 gap-2 px-3">
                 <Link
-                  href={`/${currentLangCode}/test/list`}
+                  href={`/${locale}/test/list`}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 text-center"
                 >
-                  {getAllLabel(currentLangCode)}
+                  {getAllLabel(locale)}
                 </Link>
 
                 {loading
@@ -245,7 +245,7 @@ export function Header() {
                   : categories.map((category) => (
                       <Link
                         key={category.id}
-                        href={`/${currentLangCode}/category/${category.code}`}
+                        href={`/${locale}/category/${category.code}`}
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 text-center"
                       >

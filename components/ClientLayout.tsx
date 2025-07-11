@@ -44,7 +44,7 @@ export default function ClientLayout({
         {/* 2. 앱 전체를 AlertProvider로 감싸줍니다. */}
         <AlertProvider>
           <div className="flex flex-col min-h-screen">
-            <Header />
+            <Header locale={locale} />
 
             <div className="flex flex-1 relative">
               {!isAdminPage && (

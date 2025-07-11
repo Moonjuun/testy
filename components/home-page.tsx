@@ -37,11 +37,9 @@ export default function HomePage({ locale }: HomePageProps) {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (currentLanguage) {
-        setnewTestList([]);
-        const data = await getNewTests(currentLanguage);
-        setnewTestList(data);
-      }
+      setnewTestList([]);
+      const data = await getNewTests(locale as Language);
+      setnewTestList(data);
     };
 
     fetchData();

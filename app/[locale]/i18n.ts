@@ -13,7 +13,12 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: "ko", // 번역이 없는 경우 기본 언어
+    lng: undefined, // 언어를 명시적으로 지정하지 않음 (감지 사용)
+    detection: {
+      order: ["path", "navigator"],
+      // 경로 > 브라우저 순으로 언어 감지
+    },
+    fallbackLng: "en", // 번역이 없는 경우 기본 언어
     debug: false, // 개발 중에만 true로 설정 (콘솔에 디버그 로그 출력)
     interpolation: {
       escapeValue: false, // React는 기본적으로 이스케이프를 처리
