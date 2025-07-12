@@ -28,7 +28,7 @@
   },
   "testView": {
     "loading": "Loading test...",
-    "backToList": "Back to Test List",
+    "backToList": "Back",
     "questionProgress": "Question {{current}} / {{total}}",
     "progressCompleted": "{{percent}}% Completed",
     "previous": "Previous",
@@ -100,6 +100,7 @@
     "change": "Change",
     "inDevelopment": "In Development",
     "noHistory": "No test history available.",
-    "recentResults": "Recent Test Results"
+    "recentResults": "Recent Test Results",
+    "reply": "Replay"
   }
 }

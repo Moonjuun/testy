@@ -74,7 +74,7 @@ export function TestHistoryTab({ userId, onPreview }: TestHistoryTabProps) {
                 className="text-xs bg-purple-50 dark:bg-purple-900/30 border-purple-200 dark:border-purple-700 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors py-1 px-2"
                 onClick={() => onPreview(test.id)}
               >
-                {t("resultPage.retakeTest")}
+                {t("profile.reply")}
               </Button>
             </div>
           </div>

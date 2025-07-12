@@ -28,7 +28,7 @@
   },
   "testView": {
     "loading": "Đang tải bài test...",
-    "backToList": "Quay lại danh sách",
+    "backToList": "Quay lại",
     "questionProgress": "Câu hỏi {{current}} / {{total}}",
     "progressCompleted": "Hoàn thành {{percent}}%",
     "previous": "Trước",
@@ -100,6 +100,7 @@
     "change": "Thay đổi",
     "inDevelopment": "Đang phát triển",
     "noHistory": "Không có lịch sử bài test.",
-    "recentResults": "Kết quả bài test gần đây"
+    "recentResults": "Kết quả bài test gần đây",
+    "reply": "Phát lại"
   }
 }

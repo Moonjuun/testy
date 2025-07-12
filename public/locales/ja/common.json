@@ -28,7 +28,7 @@
   },
   "testView": {
     "loading": "テストを読み込み中...",
-    "backToList": "テスト一覧へ戻る",
+    "backToList": "戻る",
     "questionProgress": "質問 {{current}} / {{total}}",
     "progressCompleted": "{{percent}}% 完了",
     "previous": "前へ",
@@ -100,6 +100,7 @@
     "change": "変更",
     "inDevelopment": "開発中",
     "noHistory": "テスト履歴がありません。",
-    "recentResults": "最近のテスト結果"
+    "recentResults": "最近のテスト結果",
+    "reply": "再生"
   }
 }

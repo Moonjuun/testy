@@ -28,7 +28,7 @@
   },
   "testView": {
     "loading": "테스트를 불러오는 중...",
-    "backToList": "테스트 목록으로",
+    "backToList": "뒤로가기",
     "questionProgress": "질문 {{current}} / {{total}}",
     "progressCompleted": "{{percent}}% 완료",
     "previous": "이전",
@@ -100,6 +100,7 @@
     "change": "변경",
     "inDevelopment": "현재 개발 중",
     "noHistory": "테스트 기록이 없습니다.",
-    "recentResults": "최근 테스트 결과"
+    "recentResults": "최근 테스트 결과",
+    "reply": "다시보기"
   }
 }
