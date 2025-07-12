@@ -413,10 +413,12 @@ export default function ResultPage({
       <div className="absolute -left-[9999px] top-0">
         <ResultDownloadCard
           ref={captureRef}
+          test_title={result.test_title}
           title={result?.title || ""}
           keywords={result?.keywords || []}
           description={result?.description || ""}
           resultImageUrl={result?.result_image_url || ""}
+          recommendation={result?.recommendation}
         />
       </div>
     </div>
