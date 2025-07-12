@@ -41,12 +41,10 @@ export async function saveUserTestResult(
     }
     console.log("Test result saved successfully.");
 
-    // user_profiles의 test_completed_count 업데이트 및 last_tested_at 갱신
+    // user_profiles의 last_tested_at 갱신
     const { error: profileUpdateError } = await supabase
       .from("user_profiles")
       .update({
-        test_completed_count:
-          (user.user_metadata.test_completed_count || 0) + 1,
         last_tested_at: new Date().toISOString(),
       })
       .eq("id", user.id);
