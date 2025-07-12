@@ -1,3 +1,4 @@
+// app/[locale]/test/[id]/result/page.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -61,7 +62,8 @@ export default function ResultPage({
   // 테스트 결과가 없으면 테스트 페이지로 리디렉션합니다.
   useEffect(() => {
     if (result) {
-      setTimeout(() => setIsLoading(false), 1500); // 결과 표시 전 잠시 로딩
+      console.log(result);
+      setTimeout(() => setIsLoading(false), 2000); // 결과 표시 전 잠시 로딩
     }
   }, [result, id, router, locale]);
 

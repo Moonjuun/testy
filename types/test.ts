@@ -1,4 +1,4 @@
-// types/test.ts 또는 types.ts
+// types/types.ts
 
 export interface TestOption {
   text: string;
@@ -17,6 +17,10 @@ export interface TestRecommendation {
 }
 
 export interface TestResultItem {
+  test_id: string;
+  test_title: string;
+  category: string;
+  result_id: string;
   title: string;
   description: string;
   recommendation: TestRecommendation;
@@ -30,6 +34,7 @@ export interface TestData {
   title: string;
   thumbnail_url: string;
   description: string;
+  category: string;
   questions: TestQuestion[];
   results: TestResultItem[];
 }

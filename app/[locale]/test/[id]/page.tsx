@@ -15,12 +15,7 @@ export async function generateMetadata({
   const { id, locale } = await params;
   const url = `https://testy.im/${locale}/test/${id}`;
 
-  // rpc를 호출하여 테스트 제목을 가져올 수도 있습니다.
-  // const supabase = createClient();
-  // const { data: testData } = await supabase.from('tests').select('title').eq('id', id).single();
-
   return {
-    // title: testData?.title || "Testy 테스트",
     alternates: {
       canonical: url,
     },
@@ -48,8 +43,5 @@ export default async function TestPage({
     notFound();
   }
 
-  return (
-    // 4. TestView에는 props로 locale을 전달합니다.
-    <TestView initialTestData={data} testId={id} locale={locale} />
-  );
+  return <TestView initialTestData={data} testId={id} locale={locale} />;
 }

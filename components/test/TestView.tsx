@@ -1,4 +1,4 @@
-// 파일 위치: components/test/TestView.tsx
+//components/test/TestView.tsx
 
 "use client";
 
@@ -18,7 +18,6 @@ import { useTranslation } from "react-i18next";
 interface Props {
   initialTestData: TestData;
   testId: string;
-  // 1. props 이름을 language에서 locale로 변경합니다.
   locale: string;
 }
 
@@ -54,9 +53,16 @@ export default function TestView({ initialTestData, testId, locale }: Props) {
   useEffect(() => {
     if (isCompleted) {
       const resultData = calculateResult();
-      setResult(resultData);
 
-      // 3. 결과 페이지로 이동할 때도 경로에 locale을 사용합니다.
+      const fullResult = {
+        ...resultData,
+        test_id: testId,
+        test_title: initialTestData.title,
+        category: initialTestData.category,
+      };
+
+      setResult(fullResult);
+
       router.push(`/${locale}/test/${testId}/result`);
     }
   }, [isCompleted, testId, router, locale, calculateResult, setResult]);
