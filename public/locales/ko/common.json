@@ -55,7 +55,9 @@
     "retakeTest": "다시 테스트하기",
     "goHome": "다른 테스트 하기",
     "loginToSaveResultsTitle": "내가 한 테스트, 다시 보고 싶다면?",
-    "loginToSaveResultsMessage": "로그인하면 저장된 결과를 다시 볼 수 있어요.\n놓치기 아까운 나의 테스트 결과, 지금 확인해보세요!"
+    "loginToSaveResultsMessage": "로그인하면 저장된 결과를 다시 볼 수 있어요.\n놓치기 아까운 나의 테스트 결과, 지금 확인해보세요!",
+    "result": "결과",
+    "date": "날짜"
   },
   "search": {
     "placeholder": "테스트 검색..."
@@ -66,9 +68,38 @@
     "confirm": "확인",
     "cancel": "취소",
     "changeLangOnResultTitle": "언어 변경",
-    "changeLangOnResultMessaage": "언어를 변경하면 결과가 초기화되어 홈페이지로 이동합니다. 계속하시겠습니까?"
+    "changeLangOnResultMessaage": "언어를 변경하면 결과가 초기화되어 홈페이지로 이동합니다. 계속하시겠습니까?",
+    "more": "더보기"
   },
   "testCard": {
-    "popular": "인기"
+    "popular": "인기",
+    "category": "카테고리"
+  },
+  "profile": {
+    "anonymous": "익명 사용자",
+    "noEmail": "이메일 없음",
+    "infoTab": "내 정보",
+    "testHistoryTab": "테스트 기록",
+    "logoutConfirmTitle": "로그아웃 확인",
+    "logoutConfirmMessage": "정말 로그아웃 하시겠습니까?",
+    "nicknameSaved": "닉네임이 저장되었습니다.",
+    "deleteConfirmTitle": "계정 삭제 확인",
+    "deleteConfirmMessage": "정말 계정을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+    "deleteConfirmButton": "계정 삭제",
+    "accountDeleted": "계정이 삭제되었습니다.",
+    "settings": "설정",
+    "nickname": "닉네임",
+    "language": "언어",
+    "notification": "알림",
+    "logout": "로그아웃",
+    "deleteAccount": "계정 삭제",
+    "nicknamePlaceholder": "닉네임을 입력해주세요",
+    "saveNickname": "닉네임 저장",
+    "joinDate": "가입일",
+    "setting": "설정",
+    "change": "변경",
+    "inDevelopment": "현재 개발 중",
+    "noHistory": "테스트 기록이 없습니다.",
+    "recentResults": "최근 테스트 결과"
   }
 }

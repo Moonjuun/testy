@@ -5,24 +5,24 @@
     "login": "ログイン"
   },
   "welcome": "はじめまして！",
-  "description": "暇なときに気軽に、予想以上に相性の良いテスト！！",
+  "description": "暇つぶしにピッタリ、意外と当たるテスト！",
   "modal": {
     "appleLoginNotImplemented": "Appleログイン機能はまだ実装されていません。",
     "facebookLoginNotImplemented": "Facebookログイン機能はまだ実装されていません。",
     "loginError": "ログインエラー",
-    "googleLoginFailed": "Googleログインに失敗しました。もう一度お試しください。",
+    "googleLoginFailed": "Googleログインに失敗しました。再度お試しください。",
     "confirm": "確認",
     "unimplementedFeature": "未実装機能",
-    "loginPrompt": "以下の方法で簡単にログインしてください",
+    "loginPrompt": "以下の方法で簡単にログインできます",
     "continueWithGoogle": "Googleで続行",
     "continueWithApple": "Appleで続行",
     "continueWithFacebook": "Facebookで続行"
   },
   "home": {
-    "weeklyUpdate": "新しいテストが毎週更新！",
-    "heroTitlePart1": "気軽にやってみる",
-    "heroTitlePart2": "性格テスト",
-    "heroDescription": "暇なときに気軽に、予想以上に相性の良いテスト",
+    "weeklyUpdate": "毎週新しいテストを追加！",
+    "heroTitlePart1": "気軽に楽しむ",
+    "heroTitlePart2": "性格診断テスト",
+    "heroDescription": "暇つぶしにピッタリ、意外と当たるテスト",
     "latestTests": "最新のテスト",
     "allTests": "すべてのテスト"
   },
@@ -36,39 +36,70 @@
     "viewResults": "結果を見る"
   },
   "resultPage": {
-    "analyzingResults": "結果を分析しています...",
+    "analyzingResults": "結果を分析中...",
     "noResultFound": "結果が見つかりません。テストページに移動します...",
     "youAre": "あなたは",
-    "analysisTitle": "あなたについての解説",
-    "traitsAnalysis": "特性分析",
-    "recommendationGuide": "あなたへのおすすめガイド",
+    "analysisTitle": "あなたの分析",
+    "traitsAnalysis": "特徴の分析",
+    "recommendationGuide": "おすすめガイド",
     "matchingType": "相性の良いタイプ",
     "suggestedActions": "おすすめの行動",
     "suitableItems": "おすすめアイテム",
-    "shareWithFriends": "友達にシェアする",
+    "shareWithFriends": "友達とシェアする",
     "kakaoTalk": "カカオトーク",
     "twitter": "X (Twitter)",
-    "facebook": "facebook",
+    "facebook": "Facebook",
     "copyLink": "リンクをコピー",
     "saveImage": "画像を保存",
-    "otherTests": "こんなテストはどうですか？",
+    "otherTests": "他にもこんなテストはどう？",
     "retakeTest": "もう一度テストする",
-    "goHome": "他のテストを試す",
-    "loginToSaveResultsTitle": "結果を再確認",
-    "loginToSaveResultsMessage": "ログインすれば保存された結果をもう一度確認できます。\n見逃したくない診断結果、今すぐチェックしましょう！"
+    "goHome": "他のテストを見る",
+    "loginToSaveResultsTitle": "テスト結果を再確認したい？",
+    "loginToSaveResultsMessage": "ログインすると、保存された結果を再確認できます。\nあなたの診断結果を見逃さないで！",
+    "result": "結果",
+    "date": "日付"
   },
   "search": {
     "placeholder": "テストを検索..."
   },
   "alert": {
-    "copySuccessTitle": "リンクコピー完了 ✨",
+    "copySuccessTitle": "リンクをコピーしました ✨",
     "copySuccessMessage": "共有リンクがコピーされました！",
     "confirm": "確認",
     "cancel": "キャンセル",
-    "changeLangOnResultTitle": "言語の変更",
-    "changeLangOnResultMessaage": "言語を変更すると結果がリセットされ、ホームページに移動します。続行しますか？"
+    "changeLangOnResultTitle": "言語を変更",
+    "changeLangOnResultMessaage": "言語を変更すると結果がリセットされ、ホームページに戻ります。続けますか？",
+    "more": "もっと見る"
   },
   "testCard": {
-    "popular": "人気"
+    "popular": "人気",
+    "category": "カテゴリ"
+  },
+  "profile": {
+    "anonymous": "匿名ユーザー",
+    "noEmail": "メールなし",
+    "infoTab": "プロフィール情報",
+    "testHistoryTab": "テスト履歴",
+    "logoutConfirmTitle": "ログアウトの確認",
+    "logoutConfirmMessage": "本当にログアウトしますか？",
+    "nicknameSaved": "ニックネームが保存されました。",
+    "deleteConfirmTitle": "アカウント削除の確認",
+    "deleteConfirmMessage": "本当にアカウントを削除しますか？この操作は元に戻せません。",
+    "deleteConfirmButton": "アカウント削除",
+    "accountDeleted": "アカウントが削除されました。",
+    "settings": "設定",
+    "nickname": "ニックネーム",
+    "language": "言語",
+    "notification": "通知",
+    "logout": "ログアウト",
+    "deleteAccount": "アカウント削除",
+    "nicknamePlaceholder": "ニックネームを入力してください",
+    "saveNickname": "ニックネームを保存",
+    "joinDate": "登録日",
+    "setting": "設定",
+    "change": "変更",
+    "inDevelopment": "開発中",
+    "noHistory": "テスト履歴がありません。",
+    "recentResults": "最近のテスト結果"
   }
 }

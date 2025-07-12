@@ -1,10 +1,10 @@
-// components/profile/TestHistoryTab.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { getTestHistory } from "@/lib/supabase/getTestHistory";
+import { useTranslation } from "react-i18next";
 
 interface TestHistoryTabProps {
   userId: string;
@@ -15,6 +15,7 @@ export function TestHistoryTab({ userId, onPreview }: TestHistoryTabProps) {
   const [testHistory, setTestHistory] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (userId) {
@@ -34,14 +35,14 @@ export function TestHistoryTab({ userId, onPreview }: TestHistoryTabProps) {
     setLoadingMore(false);
   };
 
-  if (!testHistory) {
-    return <p className="text-sm text-gray-500">테스트 기록이 없습니다.</p>;
+  if (!testHistory || testHistory.length === 0) {
+    return <p className="text-sm text-gray-500">{t("profile.noHistory")}</p>;
   }
 
   return (
     <div className="space-y-4">
       <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-3">
-        최근 테스트 결과
+        {t("profile.recentResults")}
       </h3>
       <div className="grid gap-3">
         {testHistory.map((test) => (
@@ -60,10 +61,11 @@ export function TestHistoryTab({ userId, onPreview }: TestHistoryTabProps) {
             <div className="flex items-center justify-between mt-1">
               <div>
                 <p className="text-sm sm:text-base text-purple-600 dark:text-purple-400 font-medium">
-                  결과: {test.result}
+                  {t("resultPage.result")}: {test.result}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                  카테고리: {test.category}
+                  {t("testCard.category", { defaultValue: "카테고리" })}:{" "}
+                  {test.category}
                 </p>
               </div>
               <Button
@@ -72,7 +74,7 @@ export function TestHistoryTab({ userId, onPreview }: TestHistoryTabProps) {
                 className="text-xs bg-purple-50 dark:bg-purple-900/30 border-purple-200 dark:border-purple-700 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors py-1 px-2"
                 onClick={() => onPreview(test.id)}
               >
-                다시 보기
+                {t("resultPage.retakeTest")}
               </Button>
             </div>
           </div>
@@ -85,7 +87,7 @@ export function TestHistoryTab({ userId, onPreview }: TestHistoryTabProps) {
           className="w-full mt-3 bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors flex items-center justify-center gap-2 text-sm"
           disabled={loadingMore}
         >
-          {loadingMore ? "불러오는 중..." : "더보기"}
+          {loadingMore ? t("testView.loading") : t("alert.more")}
           <ChevronRight className="w-4 h-4" />
         </Button>
       )}
