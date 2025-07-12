@@ -53,7 +53,9 @@
     "saveImage": "Lưu hình ảnh",
     "otherTests": "Bạn nghĩ sao về các bài kiểm tra này?",
     "retakeTest": "Làm lại bài kiểm tra",
-    "goHome": "Làm bài kiểm tra khác"
+    "goHome": "Làm bài kiểm tra khác",
+    "loginToSaveResultsTitle": "Kết quả đã lưu",
+    "loginToSaveResultsMessage": "Hãy đăng nhập để xem lại kết quả đã lưu của bạn.\nĐừng bỏ lỡ cơ hội xem lại kết quả bài test của mình!"
   },
   "search": {
     "placeholder": "Tìm kiếm bài kiểm tra..."

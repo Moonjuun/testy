@@ -31,8 +31,9 @@ import { useTranslation } from "react-i18next";
 import ResultDownloadCard from "@/components/result/ResultDownloadCard";
 import html2canvas from "html2canvas";
 import { Language } from "@/store/useLanguageStore";
+import { saveUserTestResult } from "@/lib/supabase/saveUserTestResult";
+import { useUserStore } from "@/store/useUserStore";
 
-// 1. params 타입에 locale을 추가합니다.
 export default function ResultPage({
   params,
 }: {
@@ -40,6 +41,7 @@ export default function ResultPage({
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const { user, setUser } = useUserStore();
 
   // 2. params에서 id와 locale을 모두 추출합니다.
   const { id, locale } = use(params);
@@ -50,6 +52,7 @@ export default function ResultPage({
   const customAlert = useAlert();
   const { t, i18n } = useTranslation("common");
   const captureRef = useRef<HTMLDivElement>(null);
+  const hasSaved = useRef(false); // Ref를 사용하여 저장 여부 추적
 
   // 페이지 진입 시 URL의 locale과 전역 상태를 동기화합니다.
   useEffect(() => {
@@ -62,10 +65,36 @@ export default function ResultPage({
   // 테스트 결과가 없으면 테스트 페이지로 리디렉션합니다.
   useEffect(() => {
     if (result) {
-      console.log(result);
       setTimeout(() => setIsLoading(false), 2000); // 결과 표시 전 잠시 로딩
     }
   }, [result, id, router, locale]);
+
+  useEffect(() => {
+    const processResult = async () => {
+      const sleep = (ms: number) =>
+        new Promise((resolve) => setTimeout(resolve, ms));
+
+      if (result && user && !hasSaved.current) {
+        // user가 있고, 아직 저장되지 않았을 때만 실행
+        hasSaved.current = true; // 저장 시도 전에 true로 설정
+        const success = await saveUserTestResult(user, result);
+
+        setTimeout(() => setIsLoading(false), 2000);
+      } else if (!result) {
+        router.replace(`/${locale}/test/${id}`);
+      } else if (!user) {
+        await sleep(2000);
+
+        customAlert({
+          title: t("resultPage.loginToSaveResultsTitle"),
+          message: t("resultPage.loginToSaveResultsMessage"),
+          confirmText: t("alert.confirm"),
+        });
+      }
+    };
+
+    processResult();
+  }, []);
 
   // 관련 테스트 데이터를 가져옵니다.
   useEffect(() => {

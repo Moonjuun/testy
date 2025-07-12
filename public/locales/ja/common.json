@@ -53,7 +53,9 @@
     "saveImage": "画像を保存",
     "otherTests": "こんなテストはどうですか？",
     "retakeTest": "もう一度テストする",
-    "goHome": "他のテストを試す"
+    "goHome": "他のテストを試す",
+    "loginToSaveResultsTitle": "結果を再確認",
+    "loginToSaveResultsMessage": "ログインすれば保存された結果をもう一度確認できます。\n見逃したくない診断結果、今すぐチェックしましょう！"
   },
   "search": {
     "placeholder": "テストを検索..."

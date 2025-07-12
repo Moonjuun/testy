@@ -45,8 +45,8 @@ const AlertDialog: React.FC<{
           </Button>
         </div>
         <div className="mb-6">
-          <p className="text-gray-700 dark:text-gray-300 text-base">
-            {options.message || "작업이 완료되었습니다."}
+          <p className="text-gray-700 dark:text-gray-300 text-base whitespace-pre-line">
+            {options.message}
           </p>
         </div>
         <div className="flex justify-end space-x-3">

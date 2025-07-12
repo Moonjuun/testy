@@ -20,7 +20,7 @@ export interface TestResultItem {
   test_id: string;
   test_title: string;
   category: string;
-  result_id: string;
+  result_id: number;
   title: string;
   description: string;
   recommendation: TestRecommendation;

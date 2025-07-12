@@ -53,7 +53,9 @@
     "saveImage": "이미지 저장",
     "otherTests": "이런 테스트는 어때요?",
     "retakeTest": "다시 테스트하기",
-    "goHome": "다른 테스트 하기"
+    "goHome": "다른 테스트 하기",
+    "loginToSaveResultsTitle": "내가 한 테스트, 다시 보고 싶다면?",
+    "loginToSaveResultsMessage": "로그인하면 저장된 결과를 다시 볼 수 있어요.\n놓치기 아까운 나의 테스트 결과, 지금 확인해보세요!"
   },
   "search": {
     "placeholder": "테스트 검색..."
