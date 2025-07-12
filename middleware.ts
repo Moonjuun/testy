@@ -17,6 +17,11 @@ export async function middleware(request: NextRequest) {
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
 
+  // API 경로를 로케일 처리 대상에서 제외
+  if (pathname.startsWith("/api")) {
+    return await updateSession(request); // API 경로는 세션 업데이트만 수행하고 로케일 처리 건너뛰기
+  }
+
   if (pathnameHasLocale) {
     return await updateSession(request);
   }
@@ -28,6 +33,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    // API 라우트 경로를 제외합니다.
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|api).*)",
   ],
 };

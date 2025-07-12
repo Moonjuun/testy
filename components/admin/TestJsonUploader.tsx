@@ -9,9 +9,14 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Upload, CheckCircle, XCircle, Copy, Check } from "lucide-react";
 import { sendTestJson } from "@/apis/sendTestJson";
-import { NewPromptText } from "@/constants/AdminResult";
+import {
+  NewPromptText,
+  TestPrompt,
+  ResultPrompt,
+} from "@/constants/AdminResult";
 import type { TestData } from "@/types/test";
-import { Input } from "@/components/ui/input"; // ✅ test_id 입력용
+import { Input } from "@/components/ui/input";
+import { detectDominantLanguage } from "@/lib/utils";
 
 interface UploadStatus {
   type: "success" | "error" | null;
@@ -24,42 +29,71 @@ interface Props {
 
 export default function TestJsonUploader({ onUploadSuccess }: Props) {
   const [jsonInput, setJsonInput] = useState("");
+  const [jsonResultInput, setJsonResultInput] = useState("");
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>({
     type: null,
     message: "",
   });
   const [isUploading, setIsUploading] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [copiedTest, setCopiedTest] = useState(false);
+  const [copiedResult, setCopiedResult] = useState(false);
 
   const [language, setLanguage] = useState<"ko" | "ja" | "en" | "vi">("ko");
   const [testId, setTestId] = useState<number | null>(null);
 
-  const handleCopyPrompt = async () => {
-    await navigator.clipboard.writeText(NewPromptText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  // 복사 핸들러들
+  const handleCopyTestPrompt = async () => {
+    await navigator.clipboard.writeText(TestPrompt);
+    setCopiedTest(true);
+    setTimeout(() => setCopiedTest(false), 2000);
+  };
+
+  const handleCopyResultPrompt = async () => {
+    await navigator.clipboard.writeText(ResultPrompt);
+    setCopiedResult(true);
+    setTimeout(() => setCopiedResult(false), 2000);
   };
 
   const validateJSON = (
     jsonString: string
-  ): { isValid: boolean; data?: TestData; error?: string } => {
+  ): { isValid: boolean; data?: Omit<TestData, "results">; error?: string } => {
     try {
       const data = JSON.parse(jsonString);
+      const data2 = JSON.parse(jsonResultInput);
       if (
         !data.title ||
         !data.description ||
-        !data.questions ||
-        !data.results
+        !data.tone ||
+        !data.theme ||
+        !data.palette ||
+        !data.character ||
+        !data.questions
       ) {
         return {
           isValid: false,
-          error: "필수 필드 누락 (title, description, questions, results)",
+          error:
+            "필수 필드 누락 (title, description, tone, theme, palette, character, questions)",
         };
       }
-      if (!Array.isArray(data.questions) || !Array.isArray(data.results)) {
+
+      // if (
+      //   !data2.result.description ||
+      //   !data2.result.recommendation ||
+      //   !data2.result.keywords ||
+      //   !data2.result.score_range ||
+      //   !data2.result.image_prompt
+      // ) {
+      //   return {
+      //     isValid: false,
+      //     error:
+      //       "필수 필드 누락 (description, recommendation, keywords, score_range, image_prompt)",
+      //   };
+      // }
+
+      if (!Array.isArray(data.questions)) {
         return {
           isValid: false,
-          error: "questions/results는 배열이어야 합니다",
+          error: "questions는 배열이어야 합니다",
         };
       }
       return { isValid: true, data };
@@ -69,7 +103,18 @@ export default function TestJsonUploader({ onUploadSuccess }: Props) {
   };
 
   const handleUploadTest = async () => {
-    if (!jsonInput.trim()) return;
+    if (!jsonInput.trim() || !jsonResultInput.trim()) return;
+
+    // const dominantLang = detectDominantLanguage(jsonInput + jsonResultInput);
+    // if (language !== "ko" && dominantLang !== language) {
+    //   setUploadStatus({
+    //     type: "error",
+    //     message: `선택된 언어는 ${language.toUpperCase()}인데 실제 내용은 ${dominantLang.toUpperCase()}로 추정됩니다.`,
+    //   });
+    //   return;
+    // }
+
+    // 테스트 JSON 유효성 검사
     const validation = validateJSON(jsonInput);
     if (!validation.isValid) {
       setUploadStatus({
@@ -79,6 +124,7 @@ export default function TestJsonUploader({ onUploadSuccess }: Props) {
       return;
     }
 
+    // 번역 업로드 시 testId 필요
     if (language !== "ko" && !testId) {
       setUploadStatus({
         type: "error",
@@ -91,20 +137,31 @@ export default function TestJsonUploader({ onUploadSuccess }: Props) {
     setUploadStatus({ type: null, message: "" });
 
     try {
-      const result = await sendTestJson(validation.data!, {
+      // 병합 후 전송
+      const parsed = JSON.parse(jsonResultInput);
+
+      const mergedData = {
+        ...validation.data,
+        results: parsed.results,
+      };
+      console.log(mergedData);
+
+      const result = await sendTestJson(mergedData, {
         language,
         testId: language === "ko" ? undefined : testId!,
       });
 
       const uploadedTestId = result.testId;
-      if (language === "ko") setTestId(uploadedTestId); // ✅ 처음 업로드 시 자동 저장
+      if (language === "ko") setTestId(uploadedTestId);
 
       setUploadStatus({
         type: "success",
         message: `✅ ${language.toUpperCase()} 테스트 업로드 완료! (ID: ${uploadedTestId})`,
       });
 
-      setJsonInput(""); // 입력 초기화
+      // 입력 초기화
+      setJsonInput("");
+      setJsonResultInput("");
       onUploadSuccess();
     } catch (error: any) {
       setUploadStatus({
@@ -119,21 +176,37 @@ export default function TestJsonUploader({ onUploadSuccess }: Props) {
   return (
     <Card className="bg-white dark:bg-gray-800 shadow-lg">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+        <CardTitle className="flex flex-wrap items-center gap-2 text-gray-900 dark:text-white">
           🧪 테스트 JSON 업로드
           <Button
             size="sm"
             variant="outline"
-            className="ml-2 px-2 py-1 text-xs"
-            onClick={handleCopyPrompt}
+            className="px-2 py-1 text-xs"
+            onClick={handleCopyTestPrompt}
           >
-            {copied ? (
+            {copiedTest ? (
               <>
-                <Check className="w-4 h-4 mr-1 text-green-500" /> 복사됨
+                <Check className="w-4 h-4 mr-1 text-green-500" /> 테스트 복사됨
               </>
             ) : (
               <>
-                <Copy className="w-4 h-4 mr-1" /> 프롬프트 복사
+                <Copy className="w-4 h-4 mr-1" /> 테스트 복사
+              </>
+            )}
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="px-2 py-1 text-xs"
+            onClick={handleCopyResultPrompt}
+          >
+            {copiedResult ? (
+              <>
+                <Check className="w-4 h-4 mr-1 text-green-500" /> 결과 복사됨
+              </>
+            ) : (
+              <>
+                <Copy className="w-4 h-4 mr-1" /> 결과 복사
               </>
             )}
           </Button>
@@ -170,22 +243,6 @@ export default function TestJsonUploader({ onUploadSuccess }: Props) {
           <div className="text-sm text-gray-500">
             현재 선택된 test_id:{" "}
             <span className="font-mono font-semibold">{testId}</span>{" "}
-            <Button
-              variant="outline"
-              onClick={() => {
-                navigator.clipboard.writeText(String(testId));
-                setCopied(true);
-                setTimeout(() => setCopied(false), 2000);
-              }}
-              className="ml-2"
-            >
-              {copied ? (
-                <Check className="w-3 h-3 mr-1 text-green-500" />
-              ) : (
-                <Copy className="w-3 h-3 mr-1" />
-              )}
-              복사
-            </Button>
           </div>
         )}
 
@@ -195,6 +252,16 @@ export default function TestJsonUploader({ onUploadSuccess }: Props) {
             id="json-input"
             value={jsonInput}
             onChange={(e) => setJsonInput(e.target.value)}
+            className="mt-2 min-h-[400px] font-mono text-sm bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="json-input">결과 JSON</Label>
+          <Textarea
+            id="json-input"
+            value={jsonResultInput}
+            onChange={(e) => setJsonResultInput(e.target.value)}
             className="mt-2 min-h-[400px] font-mono text-sm bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
           />
         </div>

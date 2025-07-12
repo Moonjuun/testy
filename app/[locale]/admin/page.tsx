@@ -176,8 +176,12 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
-      <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
+      {/* 사이드바를 왼쪽 상단에 고정 */}
+      <div className="fixed left-0 h-screen w-64">
+        <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      </div>
+
       <main className="flex-1 p-8">{renderContent()}</main>
       {snackBarMessage && (
         <SnackBar key={snackBarKey} message={snackBarMessage} duration={3000} />

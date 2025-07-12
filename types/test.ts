@@ -14,6 +14,7 @@ export interface TestRecommendation {
   matching_type: string;
   suggested_actions: string;
   items: string[];
+  short_description: string;
 }
 
 export interface TestResultItem {

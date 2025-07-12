@@ -51,3 +51,17 @@ export function formatDateByStyle(
       return `${yyyy}.${mm}.${dd}`;
   }
 }
+
+export const detectDominantLanguage = (
+  text: string
+): "ko" | "ja" | "en" | "vi" | "unknown" => {
+  const counts = {
+    ko: (text.match(/[\uac00-\ud7af]/g) || []).length,
+    ja: (text.match(/[\u3040-\u30ff\u31f0-\u31ff]/g) || []).length,
+    vi: (text.match(/[ăâêôơưđ]/gi) || []).length,
+    en: (text.match(/[a-zA-Z]/g) || []).length,
+  };
+
+  const dominant = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  return dominant[1] > 10 ? (dominant[0] as any) : "unknown"; // 최소 10자 이상일 때만 확신
+};
