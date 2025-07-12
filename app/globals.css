@@ -100,3 +100,57 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* globals.css 또는 해당하는 스타일 파일 */
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+/* Custom Scrollbar for the content area */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px; /* 데스크탑 스크롤바 너비 */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1; /* 스크롤바 트랙 색상 */
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888; /* 스크롤바 썸(바) 색상 */
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555; /* 스크롤바 썸 호버 색상 */
+}
+
+/* For Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+/* 모바일 환경에서 스크롤바 숨기기 (선택 사항) */
+@media (max-width: 768px) {
+  /* Tailwind의 md breakpoint (768px) 이전 */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 0px; /* 스크롤바 숨김 */
+  }
+  .custom-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
