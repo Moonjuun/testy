@@ -11,11 +11,11 @@ export default function RootLayout({
     <html lang="ko">
       <head>
         {/* Google Analytics (gtag.js) */}
-        <script
+        <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-ZLT3VML0DW"
-        ></script>
-        <script
+        />
+        <Script
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
