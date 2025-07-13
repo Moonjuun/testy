@@ -154,3 +154,10 @@ body {
     scrollbar-width: none; /* Firefox */
   }
 }
+
+@keyframes particle-fade-in-out {
+  /* 애니메이션 정의 */
+}
+.animate-particle-1 {
+  animation-delay: 0.2s;
+}
