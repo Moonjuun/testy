@@ -48,11 +48,13 @@ export default function HomePage({ locale, initialTests }: HomePageProps) {
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <span>
               {/* 다른 텍스트에도 동일하게 적용할 수 있습니다. */}
               {isMounted ? t("home.heroTitlePart1") : "\u00A0"}
+            </span>{" "}
+            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              {isMounted ? t("home.heroTitlePart2") : ""}
             </span>
-            {isMounted ? t("home.heroTitlePart2") : ""}
           </h1>
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
             {isMounted ? t("home.heroDescription") : "\u00A0"}

@@ -148,7 +148,7 @@ export const TestPrompt = `
 - 결과는 최소 3개 이상, 점수 범위는 겹치지 않게 분배  
 - 센스 있고 유머있는 질문으로 구성해주세요.
 - tone, theme, palette, character는 프론트에서 스타일을 결정하므로 적절하게 다양하고 창의적으로 작성  
-- image_prompt는 2D 일러스트 스타일로 생성에 적합한 묘사를 넣을 것 (영어)  
+- image_prompt는 2D 테스트나 결과에 대한 적합한 이미지로 표현 (영어)  
 - character.prompt_hint는 이미지 생성 AI를 위한 자연어 프롬프트로 구체적인 외형 및 분위기를 묘사할 것  
 - 사람들의 관심을 끌 수 있는 참신할수록 좋음
 
