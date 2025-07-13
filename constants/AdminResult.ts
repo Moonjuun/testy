@@ -109,8 +109,8 @@ ID | code        | name_ko     | name_en
 
 export const TestPrompt = `
 아래 조건에 따라 성향 기반 테스트 데이터를 JSON 형식으로 생성해주세요. 
-이 데이터는 Supabase DB에 자동 삽입될 수 있도록 사용됩니다.
 양질의 컨텐츠, 테스트를 만드는게 제일 중요합니다.
+테스트를 먼저 만들고 결과를 만들거야.
 ---
 [요구 사항]  
 1. 전체 구조는 다음 JSON 스키마를 따릅니다:  
@@ -158,11 +158,6 @@ ID | code        | name_ko     | name_en
 -- | ----------- | ----------- | ---------  
 1  | personality | 성격        | Personality  
 2  | love        | 연애        | Love & Dating  
-3  | mbti        | MBTI        | MBTI  
-4  | career      | 진로/직업   | Career & Job  
-5  | friendship  | 인간관계    | Friendship  
-6  | vacation    | 휴가/여행   | Travel & Vacation  
-7  | animal      | 동물 캐릭터 | Animal Character  
 8  | fun         | 재미        | Just for Fun  
 
 ---

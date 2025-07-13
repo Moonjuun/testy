@@ -6,7 +6,6 @@ import { MobileAdBanner } from "@/components/banner/mobile-ad-banner";
 import { Sparkles, Clock } from "lucide-react";
 import CenterBanner from "@/components/banner/CenterBanner";
 import { useLanguageStore } from "@/store/useLanguageStore";
-import { getNewTests } from "@/lib/supabase/getNewTests";
 import { NewTest } from "@/types/test";
 import { TestCardSkeleton } from "@/components/TestCardSkeleton";
 import { useTranslation } from "react-i18next";
@@ -14,10 +13,10 @@ import { Language } from "@/store/useLanguageStore";
 
 interface HomePageProps {
   locale: string;
+  initialTests: NewTest[];
 }
 
-export default function HomePage({ locale }: HomePageProps) {
-  const [newTestList, setnewTestList] = useState<NewTest[]>([]);
+export default function HomePage({ locale, initialTests }: HomePageProps) {
   const { t } = useTranslation("common");
   const { currentLanguage, setLanguage } = useLanguageStore();
 
@@ -34,16 +33,6 @@ export default function HomePage({ locale }: HomePageProps) {
       setLanguage(locale as Language);
     }
   }, [locale, setLanguage]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setnewTestList([]);
-      const data = await getNewTests(locale as Language);
-      setnewTestList(data);
-    };
-
-    fetchData();
-  }, [currentLanguage]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
@@ -81,11 +70,11 @@ export default function HomePage({ locale }: HomePageProps) {
             </h2>
           </div>
           <div className="grid [grid-template-columns:repeat(auto-fit,minmax(250px,1fr))] gap-6 mb-12">
-            {newTestList.length === 0
+            {initialTests.length === 0
               ? Array.from({ length: 10 }).map((_, i) => (
                   <TestCardSkeleton key={i} />
                 ))
-              : newTestList.map((test) => (
+              : initialTests.map((test) => (
                   <TestCard key={test.id} test={test} featured />
                 ))}
           </div>
