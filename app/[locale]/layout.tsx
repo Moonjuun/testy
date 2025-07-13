@@ -8,6 +8,7 @@ import { createClientForServer } from "@/lib/supabase/server";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// 1. 이미지 경로 및 alt 텍스트 추가
 const metadataTranslations = {
   ko: {
     title: "Testy 테스티 - 가볍게 해보는 성향 테스트",
@@ -15,7 +16,9 @@ const metadataTranslations = {
       "간단한 질문들로 숨겨진 나의 모습을 발견해보세요. 성격, 연애, 진로 등 다양한 테스트를 제공합니다.",
     twitterTitle: "Testy 테스티 - 성향 테스트 플랫폼",
     twitterDescription:
-      "테스트로 나를 알아가는 즐거움. 가볍고 재미있게 시작해보세요!",
+      "테스트로 나를 알아가는 즐거움. 가볍게 재미있게 시작해보세요!",
+    ogImage: "/og-image-ko.png",
+    ogImageAlt: "Testy 테스티 한국어 대표 이미지",
   },
   en: {
     title: "Testy - Lighthearted Personality Tests",
@@ -24,6 +27,8 @@ const metadataTranslations = {
     twitterTitle: "Testy - Personality Test Platform",
     twitterDescription:
       "The joy of discovering yourself through tests. Start lightly and have fun!",
+    ogImage: "/og-image-en.png",
+    ogImageAlt: "Testy - Main promotional image in English",
   },
   ja: {
     title: "Testy テスティ - 気軽にできる性格テスト",
@@ -31,6 +36,8 @@ const metadataTranslations = {
       "簡単な質問で隠れた自分を発見してみましょう。性格、恋愛、進路など、様々なテストを提供しています。",
     twitterTitle: "Testy テスティ - 性格テストプラットフォーム",
     twitterDescription: "テストで自分を知る楽しさ。気軽に始めてみましょう！",
+    ogImage: "/og-image-ja.png",
+    ogImageAlt: "Testy テスティ 日本語版の代表画像",
   },
   vi: {
     title: "Testy - Bài kiểm tra tính cách nhẹ nhàng",
@@ -39,6 +46,8 @@ const metadataTranslations = {
     twitterTitle: "Testy - Nền tảng kiểm tra tính cách",
     twitterDescription:
       "Niềm vui khám phá bản thân qua các bài kiểm tra. Hãy bắt đầu nhẹ nhàng và vui vẻ!",
+    ogImage: "/og-image-vi.png",
+    ogImageAlt: "Hình ảnh đại diện Testy bằng tiếng Việt",
   },
 };
 
@@ -51,7 +60,7 @@ export async function generateStaticParams() {
   ];
 }
 
-// generateMetadata 수정: 언어에 맞춰 메타데이터를 동적으로 생성
+// 2. generateMetadata 함수 수정
 export async function generateMetadata({
   params,
 }: {
@@ -59,8 +68,6 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
 
-  // 현재 로케일에 맞는 번역된 메타데이터를 가져옵니다.
-  // 만약 해당 로케일의 번역이 없으면 한국어(ko)를 기본값으로 사용합니다.
   const translatedMetadata =
     metadataTranslations[locale as keyof typeof metadataTranslations] ||
     metadataTranslations.ko;
@@ -68,6 +75,8 @@ export async function generateMetadata({
   const title = translatedMetadata.title;
   const description = translatedMetadata.description;
   const url = `https://testy.im/${locale}`;
+  const ogImageUrl = translatedMetadata.ogImage;
+  const ogImageAlt = translatedMetadata.ogImageAlt;
 
   return {
     title,
@@ -80,10 +89,10 @@ export async function generateMetadata({
       siteName: "Testy",
       images: [
         {
-          url: "/og-image.png",
+          url: ogImageUrl,
           width: 1200,
           height: 630,
-          alt: "Testy 테스티 대표 이미지",
+          alt: ogImageAlt,
         },
       ],
       type: "website",
@@ -94,9 +103,9 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: translatedMetadata.twitterTitle, // 트위터 제목도 언어에 맞춰 변경
-      description: translatedMetadata.twitterDescription, // 트위터 설명도 언어에 맞춰 변경
-      images: ["/og-image.png"],
+      title: translatedMetadata.twitterTitle,
+      description: translatedMetadata.twitterDescription,
+      images: [ogImageUrl],
     },
     alternates: {
       canonical: url,
@@ -110,7 +119,7 @@ export async function generateMetadata({
   };
 }
 
-// RootLayout 수정
+// RootLayout (기존과 동일)
 export default async function LocaleLayout({
   children,
   params,
