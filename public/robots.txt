@@ -2,8 +2,5 @@
 User-agent: *
 Allow: /
 
-# Host
-Host: https://testy.im
-
 # Sitemaps
 Sitemap: https://testy.im/sitemap.xml
