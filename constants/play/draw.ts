@@ -30,7 +30,7 @@ export const SHAPES: Record<ShapeType, ShapeConfig> = {
   },
   umbrella: {
     name: "Umbrella",
-    emoji: "☂️",
+    emoji: "☂️⭐",
     description: "Draw an umbrella shape",
     gradient: "from-rose-300 via-pink-300 to-fuchsia-300",
     shadowColor: "rgba(255, 182, 193, 0.3)",

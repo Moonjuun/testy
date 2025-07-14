@@ -121,7 +121,7 @@ export function GameCanvas({
       ref={canvasRef}
       width={CANVAS_SIZE}
       height={CANVAS_SIZE}
-      className="w-full h-full rounded-2xl shadow-lg cursor-crosshair touch-none border-2 border-white/50 bg-white/50"
+      className="w-full h-full rounded-2xl shadow-lg cursor-crosshair touch-none border-2 border-white/50 dark:border-gray-700/50 bg-white/50 dark:bg-gray-800/50"
       onMouseDown={handleStartDrawing}
       onMouseMove={handleDraw}
       onMouseUp={handleStopDrawing}

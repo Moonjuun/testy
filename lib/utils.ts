@@ -212,33 +212,47 @@ const distanceToLineSegment = (
   return Math.sqrt(dx * dx + dy * dy);
 };
 
-// =======================================================
-// ===== 도형별 계산 로직 ==================================
-// =======================================================
+// 도형별 계산 로직
 
 /** 원의 편차와 완성도를 계산합니다. */
+/**
+ * [수정됨] 원 그리기 경로를 평가합니다.
+ * 완성도(Completeness) 계산이 주요 지점 방문 방식으로 변경되어 더 넉넉해졌습니다.
+ * @param path 사용자가 그린 경로(점들의 배열)
+ * @returns { deviation: 편차, completeness: 완성도 }
+ */
 const calculateCircleMetrics = (
   path: Point[]
 ): { deviation: number; completeness: number } => {
   const targetRadius = 85;
   let totalDeviation = 0;
+
+  // 편차 계산: 경로의 각 점이 목표 반지름에서 얼마나 벗어났는지의 총합
   path.forEach((point) => {
     totalDeviation += Math.abs(
       distance(point, { x: CENTER_X, y: CENTER_Y }) - targetRadius
     );
   });
 
-  const angles = path.map((p) => Math.atan2(p.y - CENTER_Y, p.x - CENTER_X));
-  const minAngle = Math.min(...angles);
-  const maxAngle = Math.max(...angles);
-  let angleRange = maxAngle - minAngle;
+  // 완성도 계산: 삼각형처럼 주요 지점(상,하,좌,우)을 방문했는지 체크
+  const keyPoints = [
+    { x: CENTER_X, y: CENTER_Y - targetRadius }, // 상
+    { x: CENTER_X + targetRadius, y: CENTER_Y }, // 우
+    { x: CENTER_X, y: CENTER_Y + targetRadius }, // 하
+    { x: CENTER_X - targetRadius, y: CENTER_Y }, // 좌
+  ];
 
-  if (angleRange > Math.PI * 1.5) {
-    // -PI ~ PI 범위 보정
-    angleRange = 2 * Math.PI - (maxAngle - minAngle);
+  let visitedKeyPoints = 0;
+  for (const keyPoint of keyPoints) {
+    // 원은 꼭짓점을 정확히 지나갈 필요가 없으므로, 임계값을 약간 더 넉넉하게 설정 (예: 1.2배)
+    if (
+      path.some((p) => distance(p, keyPoint) < COMPLETENESS_THRESHOLD * 1.2)
+    ) {
+      visitedKeyPoints++;
+    }
   }
 
-  const completeness = Math.min(1, angleRange / (Math.PI * 2 * 0.8)); // 원 둘레의 80% 이상을 그려야 만점
+  const completeness = visitedKeyPoints / 4.0;
   return { deviation: totalDeviation, completeness };
 };
 
@@ -404,6 +418,7 @@ export const calculateStarMetrics = (
   return { deviation: totalDeviation, completeness };
 };
 
+// 다이아몬드 개선 로직 예시
 export const calculateDiamondMetrics = (
   path: Point[]
 ): { deviation: number; completeness: number } => {
@@ -413,8 +428,25 @@ export const calculateDiamondMetrics = (
     { x: CENTER_X, y: CENTER_Y + 85 },
     { x: CENTER_X - 60, y: CENTER_Y },
   ];
-  // ... (사각형 채점 로직과 유사하게 구현) ...
-  return { deviation: 0, completeness: 0 };
+
+  let totalDeviation = 0;
+  path.forEach((point) => {
+    const d1 = distanceToLineSegment(point, vertices[0], vertices[1]);
+    const d2 = distanceToLineSegment(point, vertices[1], vertices[2]);
+    const d3 = distanceToLineSegment(point, vertices[2], vertices[3]);
+    const d4 = distanceToLineSegment(point, vertices[3], vertices[0]);
+    totalDeviation += Math.min(d1, d2, d3, d4);
+  });
+
+  let visitedCorners = 0;
+  for (const vertex of vertices) {
+    if (path.some((p) => distance(p, vertex) < COMPLETENESS_THRESHOLD)) {
+      visitedCorners++;
+    }
+  }
+
+  const completeness = visitedCorners / 4.0;
+  return { deviation: totalDeviation, completeness };
 };
 
 //  메인 점수 계산 함수 (Export)
@@ -464,7 +496,8 @@ export const calculateScore = (
 
   // 1. 기본 정확도 점수 계산
   const averageDeviation = deviation / path.length;
-  const maxDeviation = 20 + SHAPES[shape].difficulty * 15;
+  // 난이도에 따른 최대 편차 값을 조정하여 점수를 더 관대하게 책정
+  const maxDeviation = 30 + SHAPES[shape].difficulty * 20;
 
   let accuracyScore = Math.max(
     0,
@@ -472,18 +505,20 @@ export const calculateScore = (
   );
 
   // 2. 완성도 페널티 적용
-  accuracyScore *= completeness; // 완성한 만큼만 점수 인정
-  if (completeness < 0.75) {
-    accuracyScore *= 0.5; // 완성도가 75% 미만이면 추가 페널티
+  // 완성도 점수를 더 큰 폭으로 반영
+  accuracyScore *= Math.pow(completeness, 2);
+  if (completeness < 0.7) {
+    accuracyScore *= 0.6; // 완성도가 70% 미만이면 추가 페널티
   }
 
   // 3. 시간 보너스 점수 계산
   const timeTakenSeconds = timeTakenMs / 1000;
-  const maxTimeForBonus = 10; // 10초를 기준으로 보너스 계산
-  const timeBonus = Math.max(0, 1 - timeTakenSeconds / maxTimeForBonus) * 25;
+  // 시간 보너스 기준을 12초로 늘리고, 보너스 점수 폭을 30점으로 확대
+  const maxTimeForBonus = 12;
+  const timeBonus = Math.max(0, 1 - timeTakenSeconds / maxTimeForBonus) * 30;
 
-  // 4. 최종 점수 합산 (정확도 75% + 시간 보너스 25%)
-  const finalScore = accuracyScore * 0.75 + timeBonus;
+  // 4. 최종 점수 합산 (정확도 70% + 시간 보너스 30%)
+  const finalScore = accuracyScore * 0.7 + timeBonus;
 
   return Math.min(100, finalScore); // 100점을 넘지 않도록 보정
 };

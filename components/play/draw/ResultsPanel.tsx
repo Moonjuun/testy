@@ -1,4 +1,4 @@
-// /components/ResultsPanel.tsx
+// /components/play/draw/ResultsPanel.tsx
 
 "use client";
 
@@ -16,7 +16,7 @@ interface ResultsPanelProps {
   completionTime: number;
   selectedShape: ShapeType;
   showComparison: boolean;
-  onResetGame: () => void;
+  onResetGame: (startImmediately: boolean) => void;
   onShare: (platform: "kakao" | "twitter" | "copy") => void;
 }
 
@@ -32,10 +32,10 @@ export function ResultsPanel({
   const currentShape = SHAPES[selectedShape];
 
   return (
-    <Card className="bg-gradient-to-br from-white/90 via-purple-50/50 to-pink-50/50 backdrop-blur-sm shadow-xl border-0 animate-fade-in">
+    <Card className="bg-gradient-to-br from-white/90 via-purple-50/50 to-pink-50/50 dark:from-gray-800/90 dark:via-purple-900/40 dark:to-pink-900/40 backdrop-blur-sm shadow-xl border-0 animate-fade-in">
       <CardContent className="p-6 sm:p-8">
         <div className="text-center">
-          <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
+          <h3 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
             Your Result
           </h3>
           <p
@@ -45,7 +45,7 @@ export function ResultsPanel({
           >
             {userScore.toFixed(2)}%
           </p>
-          <p className="text-gray-600 text-base sm:text-lg mb-4 font-medium">
+          <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg mb-4 font-medium">
             {getScoreMessage(userScore)}
           </p>
 
@@ -53,7 +53,7 @@ export function ResultsPanel({
             {userRank && (
               <Badge
                 variant="outline"
-                className="text-base bg-white/50 border-purple-200 text-purple-700 font-bold px-4 py-2"
+                className="text-base bg-white/50 dark:bg-gray-700/50 border-purple-200 dark:border-purple-600/50 text-purple-700 dark:text-purple-300 font-bold px-4 py-2"
               >
                 <Trophy className="w-4 h-4 mr-2 text-yellow-500" /> Rank #
                 {userRank}
@@ -61,7 +61,7 @@ export function ResultsPanel({
             )}
             <Badge
               variant="outline"
-              className="text-base bg-white/50 border-pink-200 text-pink-700 font-bold px-4 py-2"
+              className="text-base bg-white/50 dark:bg-gray-700/50 border-pink-200 dark:border-pink-500/50 text-pink-700 dark:text-pink-300 font-bold px-4 py-2"
             >
               <Zap className="w-4 h-4 mr-2 text-orange-400" />{" "}
               {completionTime.toFixed(2)}s
@@ -69,27 +69,22 @@ export function ResultsPanel({
           </div>
 
           {showComparison && (
-            <div className="bg-white/60 backdrop-blur-sm rounded-xl p-3 mb-6 shadow-sm text-xs sm:text-sm">
-              <div className="flex items-center justify-center gap-4 text-gray-700">
-                <div className="flex items-center gap-2">
-                  <div
-                    className="w-4 h-4 rounded-full"
-                    style={{ backgroundColor: currentShape.strokeColor }}
-                  ></div>
-                  <span>Your line</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-emerald-400 border-dashed rounded-full"></div>
-                  <span>Perfect line</span>
-                </div>
-              </div>
+            <div className="p-3 mb-6 ">
+              <Button
+                onClick={() => onResetGame(true)}
+                variant="outline"
+                className="w-full rounded-lg py-3 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 bg-white/80 dark:bg-gray-800/80 shadow-sm font-bold"
+              >
+                <RotateCcw className="w-4 h-4 mr-2" />
+                Play Again
+              </Button>
             </div>
           )}
 
           <div className="space-y-3">
             <div className="flex items-center justify-center gap-2">
-              <Share2 className="w-4 h-4 text-purple-600" />
-              <span className="text-sm font-bold text-gray-700">
+              <Share2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+              <span className="text-sm font-bold text-gray-700 dark:text-gray-200">
                 Share Your Score!
               </span>
             </div>
@@ -116,14 +111,6 @@ export function ResultsPanel({
                 <span className="text-xs">Copy Link</span>
               </Button>
             </div>
-            <Button
-              onClick={onResetGame}
-              variant="outline"
-              className="w-full rounded-lg py-3 border-gray-300 text-gray-700 hover:bg-gray-100 bg-white/80 shadow-sm font-bold"
-            >
-              <RotateCcw className="w-4 h-4 mr-2" />
-              Play Again
-            </Button>
           </div>
         </div>
       </CardContent>

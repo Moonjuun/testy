@@ -118,8 +118,7 @@ export const useGameLogic = (initialShape: ShapeType = "circle") => {
   }, [gameState, userPath, selectedShape, calculateUserRank, createParticles]);
 
   // 게임 리셋
-  const resetGame = useCallback(() => {
-    setGameState("idle");
+  const resetGame = useCallback((startImmediately = false) => {
     setUserPath([]);
     setUserScore(null);
     setUserRank(null);
@@ -132,6 +131,12 @@ export const useGameLogic = (initialShape: ShapeType = "circle") => {
     if (timerIntervalRef.current) {
       clearInterval(timerIntervalRef.current);
       timerIntervalRef.current = null;
+    }
+
+    if (startImmediately) {
+      setGameState("countdown");
+    } else {
+      setGameState("idle");
     }
   }, []);
 
