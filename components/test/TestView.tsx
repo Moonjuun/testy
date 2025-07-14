@@ -14,6 +14,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { TestData } from "@/types/test";
 import { useTranslation } from "react-i18next";
+import { incrementTestViewCount } from "@/lib/supabase/incrementViewCount";
 
 interface Props {
   initialTestData: TestData;
@@ -66,6 +67,12 @@ export default function TestView({ initialTestData, testId, locale }: Props) {
       router.push(`/${locale}/test/${testId}/result`);
     }
   }, [isCompleted, testId, router, locale, calculateResult, setResult]);
+
+  useEffect(() => {
+    if (testId) {
+      incrementTestViewCount(testId);
+    }
+  }, []);
 
   if (!showContent) {
     return (

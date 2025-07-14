@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { TestCardProps } from "@/types/test";
 import { useTranslation } from "react-i18next";
-// 1. 언어 상태를 가져오기 위해 useLanguageStore를 임포트합니다.
 import { useLanguageStore } from "@/store/useLanguageStore";
 
 export function TestCard({ test, featured = false }: TestCardProps) {
