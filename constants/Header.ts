@@ -2,7 +2,7 @@ export const languages = [
   { code: "ko", name: "한국어" },
   { code: "en", name: "English" },
   { code: "ja", name: "日本語" },
-  { code: "vi", name: "Tiếng Việt" },
+  { code: "vi", name: "VN" },
 ];
 
 export const getAllLabel = (currentLangCode: string) => {

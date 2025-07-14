@@ -33,6 +33,7 @@ import html2canvas from "html2canvas";
 import { Language } from "@/store/useLanguageStore";
 import { saveUserTestResult } from "@/lib/supabase/saveUserTestResult";
 import { useUserStore } from "@/store/useUserStore";
+import { incrementTestResultCount } from "@/lib/supabase/incrementTestResultCount";
 
 export default function ResultPage({
   params,
@@ -107,6 +108,12 @@ export default function ResultPage({
     };
     fetchData();
   }, [id, language]);
+
+  useEffect(() => {
+    if (result) {
+      incrementTestResultCount(result.result_id);
+    }
+  }, []);
 
   // 공유 기능을 처리하는 함수입니다.
   const handleShare = async (platform: string) => {
