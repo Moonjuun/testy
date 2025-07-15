@@ -2,7 +2,13 @@
   "header": {
     "all": "すべて",
     "profile": "プロフィール",
-    "login": "ログイン"
+    "login": "ログイン",
+    "playground": "プレイグラウンド",
+    "speedDraw": "スピードドロー",
+    "ladder": "はしごゲーム",
+    "lunch": "ランチ",
+    "test": "テスト",
+    "language": "言語"
   },
   "welcome": "はじめまして！",
   "description": "暇つぶしにピッタリ、意外と当たるテスト！",
@@ -102,5 +108,41 @@
     "noHistory": "テスト履歴がありません。",
     "recentResults": "最近のテスト結果",
     "reply": "再生"
+  },
+  "lunch": {
+    "title": "今日のランチは何にする？😋",
+    "description": "簡単な選択でランチメニューを提案します！",
+    "selectWho": "誰と一緒に食べますか？",
+    "selectCuisine": "どんな料理が食べたいですか？",
+    "selectMealType": "どのような形式の食事がいいですか？",
+    "getRecommendation": "おすすめを受け取る！✨",
+    "recommending": "考え中...",
+    "loading": {
+      "title": "メニューを選んでいます... 🤔",
+      "description": "一番おいしいメニューをおすすめします！"
+    },
+    "result": {
+      "title": "今日のおすすめメニューは...",
+      "retry": "再選択",
+      "share": "結果を共有する",
+      "reroll": "やり直す"
+    },
+    "alert": {
+      "selectAll": "すべてのオプションを選択してください！",
+      "sharePreparing": "共有機能は準備中です！"
+    },
+    "options": {
+      "friend": "友達",
+      "partner": "恋人",
+      "family": "家族",
+      "group": "グループ",
+      "korean": "韓国料理",
+      "chinese": "中華料理",
+      "japanese": "和食",
+      "western": "洋食",
+      "asian": "アジア・その他",
+      "full_meal": "食事",
+      "dish": "軽食"
+    }
   }
 }

@@ -2,7 +2,13 @@
   "header": {
     "all": "All",
     "profile": "Profile",
-    "login": "Login"
+    "login": "Login",
+    "playground": "Playground",
+    "speedDraw": "Spped Draw",
+    "ladder": "Ladder Game",
+    "lunch": "WFL?",
+    "test": "Test",
+    "language": "Language"
   },
   "welcome": "Nice to meet you!",
   "description": "A fun and surprisingly accurate test to kill time!",
@@ -102,5 +108,41 @@
     "noHistory": "No test history available.",
     "recentResults": "Recent Test Results",
     "reply": "Replay"
+  },
+  "lunch": {
+    "title": "What's for lunch today? 😋",
+    "description": "Get lunch menu suggestions with just a few taps!",
+    "selectWho": "Who are you eating with?",
+    "selectCuisine": "What type of cuisine do you want?",
+    "selectMealType": "What kind of meal are you looking for?",
+    "getRecommendation": "Get Recommendation! ✨",
+    "recommending": "Thinking...",
+    "loading": {
+      "title": "Picking the best menu for you... 🤔",
+      "description": "We'll recommend the most delicious option!"
+    },
+    "result": {
+      "title": "Today's recommended menu is...",
+      "retry": "Select Again",
+      "share": "Share Result",
+      "reroll": "Reroll"
+    },
+    "alert": {
+      "selectAll": "Please select all options!",
+      "sharePreparing": "Sharing feature is under preparation!"
+    },
+    "options": {
+      "friend": "Friend",
+      "partner": "Partner",
+      "family": "Family",
+      "group": "Group",
+      "korean": "Korean",
+      "chinese": "Chinese",
+      "japanese": "Japanese",
+      "western": "Western",
+      "asian": "Asian/Other",
+      "full_meal": "Full Meal",
+      "dish": "Light Dish"
+    }
   }
 }

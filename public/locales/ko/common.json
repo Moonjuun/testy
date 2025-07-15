@@ -2,7 +2,13 @@
   "header": {
     "all": "전체",
     "profile": "프로필",
-    "login": "로그인"
+    "login": "로그인",
+    "playground": "놀이터",
+    "speedDraw": "스피드 드로우",
+    "ladder": "사다리 게임",
+    "lunch": "오점머?",
+    "test": "테스트",
+    "language": "언어"
   },
   "welcome": "만나서 반가워요!",
   "description": "심심할 때 가볍게, 생각보다 잘 맞는 테스트!!",
@@ -102,5 +108,41 @@
     "noHistory": "테스트 기록이 없습니다.",
     "recentResults": "최근 테스트 결과",
     "reply": "다시보기"
+  },
+  "lunch": {
+    "title": "오늘 점심 뭐 먹지? 😋",
+    "description": "간단한 선택으로 점심 메뉴를 추천받으세요!",
+    "selectWho": "누구와 함께 먹나요?",
+    "selectCuisine": "어떤 종류의 음식을 원하세요?",
+    "selectMealType": "어떤 형태의 식사를 원하세요?",
+    "getRecommendation": "메뉴 추천받기! ✨",
+    "recommending": "고민 중...",
+    "loading": {
+      "title": "메뉴를 고르고 있어요... 🤔",
+      "description": "가장 맛있는 메뉴로 추천해 드릴게요!"
+    },
+    "result": {
+      "title": "오늘의 추천 메뉴는...",
+      "retry": "다시 선택하기",
+      "share": "결과 공유하기",
+      "reroll": "다시하기"
+    },
+    "alert": {
+      "selectAll": "모든 옵션을 선택해주세요!",
+      "sharePreparing": "공유 기능은 준비 중입니다!"
+    },
+    "options": {
+      "friend": "친구",
+      "partner": "연인",
+      "family": "가족",
+      "group": "단체",
+      "korean": "한식",
+      "chinese": "중식",
+      "japanese": "일식",
+      "western": "양식",
+      "asian": "아시아/기타",
+      "full_meal": "식사",
+      "dish": "간단한 요리"
+    }
   }
 }

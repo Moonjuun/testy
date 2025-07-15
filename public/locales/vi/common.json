@@ -2,7 +2,13 @@
   "header": {
     "all": "Tất cả",
     "profile": "Hồ sơ",
-    "login": "Đăng nhập"
+    "login": "Đăng nhập",
+    "playground": "Sân chơi",
+    "speedDraw": "Vẽ nhanh",
+    "ladder": "Trò chơi thang",
+    "lunch": "Ăn trưa?",
+    "test": "Bài kiểm tra",
+    "language": "Ngôn ngữ"
   },
   "welcome": "Rất vui được gặp bạn!",
   "description": "Một bài test nhẹ nhàng, vui vẻ và chính xác bất ngờ!",
@@ -102,5 +108,41 @@
     "noHistory": "Không có lịch sử bài test.",
     "recentResults": "Kết quả bài test gần đây",
     "reply": "Phát lại"
+  },
+  "lunch": {
+    "title": "Hôm nay ăn gì trưa nay? 😋",
+    "description": "Chỉ cần vài lựa chọn đơn giản để nhận đề xuất món ăn trưa!",
+    "selectWho": "Bạn ăn cùng ai?",
+    "selectCuisine": "Bạn muốn ăn món gì?",
+    "selectMealType": "Bạn muốn kiểu bữa ăn như thế nào?",
+    "getRecommendation": "Nhận đề xuất! ✨",
+    "recommending": "Đang suy nghĩ...",
+    "loading": {
+      "title": "Đang chọn món ngon nhất cho bạn... 🤔",
+      "description": "Chúng tôi sẽ gợi ý món ăn ngon nhất cho bạn!"
+    },
+    "result": {
+      "title": "Món ăn được đề xuất hôm nay là...",
+      "retry": "Chọn lại",
+      "share": "Chia sẻ kết quả",
+      "reroll": "Làm lại"
+    },
+    "alert": {
+      "selectAll": "Vui lòng chọn tất cả các tùy chọn!",
+      "sharePreparing": "Chức năng chia sẻ đang được chuẩn bị!"
+    },
+    "options": {
+      "friend": "Bạn bè",
+      "partner": "Người yêu",
+      "family": "Gia đình",
+      "group": "Nhóm/đoàn thể",
+      "korean": "Món Hàn",
+      "chinese": "Món Trung",
+      "japanese": "Món Nhật",
+      "western": "Món Âu",
+      "asian": "Món Á/khác",
+      "full_meal": "Bữa ăn đầy đủ",
+      "dish": "Món ăn nhẹ"
+    }
   }
 }
