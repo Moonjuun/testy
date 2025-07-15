@@ -754,17 +754,7 @@ export default function LadderGame() {
                     <Play className="w-5 h-5 mr-2" /> {t("ladder.startGame")}
                   </Button>
                 )}
-                {gameState === "playing" &&
-                  revealMode === "show-all" &&
-                  revealedPlayers.size === 0 && (
-                    <Button
-                      onClick={revealAll}
-                      className="w-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white py-3"
-                      disabled={animatingPlayer !== null}
-                    >
-                      🔄 모든 결과 공개하기
-                    </Button>
-                  )}
+
                 {gameState === "playing" &&
                   revealedPlayers.size < players.length &&
                   revealMode === "one-by-one" && (
