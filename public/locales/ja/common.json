@@ -109,6 +109,28 @@
     "recentResults": "最近のテスト結果",
     "reply": "再生"
   },
+  "draw": {
+    "title1": "スピードドロー・チャレンジ",
+    "title2": "図形を素早く正確に描こう！",
+    "description": "さまざまな図形を素早く描いて、他の人と競争しよう！",
+    "canvasDescription": "どれだけうまく描けるかな？スピードと正確さのテスト！",
+    "start": "スタート",
+    "shape": {
+      "Triangle": "三角形",
+      "Square": "四角形",
+      "Circle": "円",
+      "Star": "星",
+      "Umbrella": "傘",
+      "Heart": "ハート",
+      "Diamond": "ダイヤモンド"
+    },
+    "result": {
+      "score": "スコア",
+      "retry": "もう一度",
+      "share": "結果を共有する"
+    },
+    "message": {}
+  },
   "ladder": {
     "addParticipants": "参加者を追加",
     "enterParticipants": "参加者の名前を入力（最大15人）",

@@ -115,15 +115,30 @@ export const drawGuideShape = (
 
       // 손잡이 아래쪽 갈고리 (왼쪽으로 휘어진 반원)
       ctx.arc(CENTER_X - 15, CENTER_Y + 50, 15, 0, Math.PI / 2, false);
+      break; // Fixed: Added break statement
     case "star":
       drawStar(ctx, CENTER_X, CENTER_Y, 5, 85, 40);
       break;
 
     case "diamond":
-      ctx.moveTo(CENTER_X, CENTER_Y - 85); // Top
-      ctx.lineTo(CENTER_X + 60, CENTER_Y); // Right
-      ctx.lineTo(CENTER_X, CENTER_Y + 85); // Bottom
-      ctx.lineTo(CENTER_X - 60, CENTER_Y); // Left
+      const size = 90; // 전체적인 크기 조절
+      const girdleRatio = 0.2; // 전체 높이 대비 허리(girdle)의 위치 (0.1 ~ 0.3 추천)
+      const tableRatio = 0.6; // 허리 너비 대비 상단 평평한 부분(table)의 너비 비율
+
+      const halfWidth = size * 0.7; // 다이아몬드의 절반 너비
+      const fullHeight = size * 2; // 다이아몬드의 전체 높이
+
+      const topY = CENTER_Y - fullHeight / 2;
+      const girdleY = CENTER_Y - fullHeight / 2 + fullHeight * girdleRatio;
+      const bottomY = CENTER_Y + fullHeight / 2;
+
+      const tableWidth = halfWidth * 2 * tableRatio;
+
+      ctx.moveTo(CENTER_X - tableWidth / 2, topY); // 1. 상단 왼쪽
+      ctx.lineTo(CENTER_X + tableWidth / 2, topY); // 2. 상단 오른쪽
+      ctx.lineTo(CENTER_X + halfWidth, girdleY); // 3. 허리 오른쪽
+      ctx.lineTo(CENTER_X, bottomY); // 4. 최하단
+      ctx.lineTo(CENTER_X - halfWidth, girdleY); // 5. 허리 왼쪽
       ctx.closePath();
       break;
   }
@@ -216,36 +231,27 @@ const distanceToLineSegment = (
 // 도형별 계산 로직
 
 /** 원의 편차와 완성도를 계산합니다. */
-/**
- * [수정됨] 원 그리기 경로를 평가합니다.
- * 완성도(Completeness) 계산이 주요 지점 방문 방식으로 변경되어 더 넉넉해졌습니다.
- * @param path 사용자가 그린 경로(점들의 배열)
- * @returns { deviation: 편차, completeness: 완성도 }
- */
 const calculateCircleMetrics = (
   path: Point[]
 ): { deviation: number; completeness: number } => {
   const targetRadius = 85;
   let totalDeviation = 0;
 
-  // 편차 계산: 경로의 각 점이 목표 반지름에서 얼마나 벗어났는지의 총합
   path.forEach((point) => {
     totalDeviation += Math.abs(
       distance(point, { x: CENTER_X, y: CENTER_Y }) - targetRadius
     );
   });
 
-  // 완성도 계산: 삼각형처럼 주요 지점(상,하,좌,우)을 방문했는지 체크
   const keyPoints = [
-    { x: CENTER_X, y: CENTER_Y - targetRadius }, // 상
-    { x: CENTER_X + targetRadius, y: CENTER_Y }, // 우
-    { x: CENTER_X, y: CENTER_Y + targetRadius }, // 하
-    { x: CENTER_X - targetRadius, y: CENTER_Y }, // 좌
+    { x: CENTER_X, y: CENTER_Y - targetRadius }, // Top
+    { x: CENTER_X + targetRadius, y: CENTER_Y }, // Right
+    { x: CENTER_X, y: CENTER_Y + targetRadius }, // Bottom
+    { x: CENTER_X - targetRadius, y: CENTER_Y }, // Left
   ];
 
   let visitedKeyPoints = 0;
   for (const keyPoint of keyPoints) {
-    // 원은 꼭짓점을 정확히 지나갈 필요가 없으므로, 임계값을 약간 더 넉넉하게 설정 (예: 1.2배)
     if (
       path.some((p) => distance(p, keyPoint) < COMPLETENESS_THRESHOLD * 1.2)
     ) {
@@ -419,26 +425,46 @@ export const calculateStarMetrics = (
   return { deviation: totalDeviation, completeness };
 };
 
-// 다이아몬드 개선 로직 예시
+// 다이아몬드 로직
 export const calculateDiamondMetrics = (
   path: Point[]
 ): { deviation: number; completeness: number } => {
+  // 1. [수정] 새로운 다이아몬드 모양에 맞는 기준 좌표(vertices)를 생성합니다.
+  // 이 값들은 drawGuideShape 함수의 값과 완벽히 동일해야 합니다.
+  const size = 90;
+  const girdleRatio = 0.2;
+  const tableRatio = 0.6;
+
+  const halfWidth = size * 0.7;
+  const fullHeight = size * 2;
+
+  const topY = CENTER_Y - fullHeight / 2;
+  const girdleY = CENTER_Y - fullHeight / 2 + fullHeight * girdleRatio;
+  const bottomY = CENTER_Y + fullHeight / 2;
+
+  const tableWidth = halfWidth * 2 * tableRatio;
+
+  // 5개의 꼭짓점으로 구성된 새로운 배열
   const vertices = [
-    { x: CENTER_X, y: CENTER_Y - 85 },
-    { x: CENTER_X + 60, y: CENTER_Y },
-    { x: CENTER_X, y: CENTER_Y + 85 },
-    { x: CENTER_X - 60, y: CENTER_Y },
+    { x: CENTER_X - tableWidth / 2, y: topY }, // 0: 상단 왼쪽 (tableLeft)
+    { x: CENTER_X + tableWidth / 2, y: topY }, // 1: 상단 오른쪽 (tableRight)
+    { x: CENTER_X + halfWidth, y: girdleY }, // 2: 허리 오른쪽 (girdleRight)
+    { x: CENTER_X, y: bottomY }, // 3: 최하단 (bottom)
+    { x: CENTER_X - halfWidth, y: girdleY }, // 4: 허리 왼쪽 (girdleLeft)
   ];
 
+  // 2. [수정] 편차(Deviation) 계산: 5개의 선분과의 최소 거리를 계산합니다.
   let totalDeviation = 0;
   path.forEach((point) => {
     const d1 = distanceToLineSegment(point, vertices[0], vertices[1]);
     const d2 = distanceToLineSegment(point, vertices[1], vertices[2]);
     const d3 = distanceToLineSegment(point, vertices[2], vertices[3]);
-    const d4 = distanceToLineSegment(point, vertices[3], vertices[0]);
-    totalDeviation += Math.min(d1, d2, d3, d4);
+    const d4 = distanceToLineSegment(point, vertices[3], vertices[4]);
+    const d5 = distanceToLineSegment(point, vertices[4], vertices[0]); // 마지막 꼭짓점과 첫 꼭짓점을 잇는 선 추가
+    totalDeviation += Math.min(d1, d2, d3, d4, d5);
   });
 
+  // 3. [수정] 완성도(Completeness) 계산: 5개의 꼭짓점 방문 여부를 확인합니다.
   let visitedCorners = 0;
   for (const vertex of vertices) {
     if (path.some((p) => distance(p, vertex) < COMPLETENESS_THRESHOLD)) {
@@ -446,14 +472,17 @@ export const calculateDiamondMetrics = (
     }
   }
 
-  const completeness = visitedCorners / 4.0;
+  // 총 꼭짓점 개수인 5로 나눕니다. (vertices.length 사용 권장)
+  const completeness = visitedCorners / vertices.length;
+
   return { deviation: totalDeviation, completeness };
 };
 
 //  메인 점수 계산 함수 (Export)
 
 /**
- * 사용자가 그린 경로, 도형 종류, 시간을 바탕으로 최종 점수를 계산합니다.
+ * [수정됨] 사용자가 그린 경로, 도형 종류, 시간을 바탕으로 최종 점수를 계산합니다.
+ * 시간 보너스를 줄이고 정확도와 완성도 평가를 강화했습니다.
  * @param path 사용자가 그린 경로 (Point 배열)
  * @param shape 선택된 도형 종류
  * @param timeTakenMs 그림을 그리는 데 걸린 시간 (ms)
@@ -464,12 +493,10 @@ export const calculateScore = (
   shape: ShapeType,
   timeTakenMs: number
 ): number => {
-  // 기본적인 유효성 검사: 경로의 점이 너무 적으면 0점 처리
   if (path.length < 20) return 0;
 
   let metrics = { deviation: 0, completeness: 0 };
 
-  // 도형에 따라 적절한 계산 함수 호출
   switch (shape) {
     case "circle":
       metrics = calculateCircleMetrics(path);
@@ -480,48 +507,50 @@ export const calculateScore = (
     case "square":
       metrics = calculateSquareMetrics(path);
       break;
+    case "diamond":
+      metrics = calculateDiamondMetrics(path);
+      break;
     case "umbrella":
       metrics = calculateUmbrellaMetrics(path);
       break;
     case "star":
       metrics = calculateStarMetrics(path);
       break;
-    case "diamond":
-      metrics = calculateDiamondMetrics(path);
-      break;
+
     default:
-      return 0; // 알 수 없는 도형은 0점
+      return 0;
   }
 
   const { deviation, completeness } = metrics;
 
-  // 1. 기본 정확도 점수 계산
+  // 1. 기본 정확도 점수 계산 (기준 강화)
   const averageDeviation = deviation / path.length;
-  // 난이도에 따른 최대 편차 값을 조정하여 점수를 더 관대하게 책정
-  const maxDeviation = 30 + SHAPES[shape].difficulty * 20;
+  // 최대 편차 기준을 낮춰서 정확도에 더 민감하게 반응하도록 수정
+  const maxDeviation = 15 + SHAPES[shape].difficulty * 10;
 
   let accuracyScore = Math.max(
     0,
     100 - (averageDeviation / maxDeviation) * 100
   );
 
-  // 2. 완성도 페널티 적용
-  // 완성도 점수를 더 큰 폭으로 반영
+  // 2. 완성도 페널티 적용 (기존 로직 유지, 정확도 점수 자체가 낮아져 영향력 커짐)
   accuracyScore *= Math.pow(completeness, 2);
   if (completeness < 0.7) {
-    accuracyScore *= 0.6; // 완성도가 70% 미만이면 추가 페널티
+    accuracyScore *= 0.6;
   }
 
-  // 3. 시간 보너스 점수 계산
+  // 3. 시간 보너스 점수 계산 (보너스 대폭 감소)
   const timeTakenSeconds = timeTakenMs / 1000;
-  // 시간 보너스 기준을 12초로 늘리고, 보너스 점수 폭을 30점으로 확대
-  const maxTimeForBonus = 12;
-  const timeBonus = Math.max(0, 1 - timeTakenSeconds / maxTimeForBonus) * 30;
+  const maxTimeForBonus = 10; // 보너스를 받을 수 있는 최대 시간 감소
+  const timeBonus = Math.max(0, 1 - timeTakenSeconds / maxTimeForBonus) * 15; // 최대 보너스 점수를 15점으로 하향
 
-  // 4. 최종 점수 합산 (정확도 70% + 시간 보너스 30%)
-  const finalScore = accuracyScore * 0.7 + timeBonus;
+  // 4. 최종 점수 합산 (정확도 90% + 시간 보너스 10%)
+  const finalScore = accuracyScore * 0.9 + timeBonus;
 
-  return Math.min(100, finalScore); // 100점을 넘지 않도록 보정
+  // 5. 너무 오래 그리면 페널티 적용
+  const timePenalty = Math.max(0, timeTakenSeconds - 15) * 0.5;
+
+  return Math.max(0, Math.min(99.9, finalScore - timePenalty)); // 99.9점을 넘지 않도록 보정하고 음수 방지
 };
 
 export const shareScore = (

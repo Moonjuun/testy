@@ -109,6 +109,28 @@
     "recentResults": "Kết quả bài test gần đây",
     "reply": "Phát lại"
   },
+  "draw": {
+    "title1": "Thử thách Vẽ Nhanh",
+    "title2": "Vẽ hình nhanh và chính xác!",
+    "description": "Hãy vẽ nhanh các hình khác nhau và thi đấu với người khác!",
+    "canvasDescription": "Bạn vẽ tốt đến mức nào? Hãy kiểm tra tốc độ và độ chính xác!",
+    "start": "Bắt đầu",
+    "shape": {
+      "Triangle": "Hình tam giác",
+      "Square": "Hình vuông",
+      "Circle": "Hình tròn",
+      "Star": "Ngôi sao",
+      "Umbrella": "Cái ô",
+      "Heart": "Trái tim",
+      "Diamond": "Hình thoi"
+    },
+    "result": {
+      "score": "Điểm số",
+      "retry": "Thử lại",
+      "share": "Chia sẻ kết quả"
+    },
+    "message": {}
+  },
   "ladder": {
     "addParticipants": "Thêm người tham gia",
     "enterParticipants": "Nhập tên người tham gia (tối đa 15 người)",

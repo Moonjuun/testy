@@ -28,6 +28,16 @@ export const SHAPES: Record<ShapeType, ShapeConfig> = {
     strokeColor: "#DDA0DD",
     difficulty: 3,
   },
+
+  diamond: {
+    name: "Diamond",
+    emoji: "💎",
+    description: "Draw a brilliant diamond",
+    gradient: "from-cyan-200 via-sky-300 to-blue-400",
+    shadowColor: "rgba(56, 189, 248, 0.3)",
+    strokeColor: "#38BDF8",
+    difficulty: 2,
+  },
   umbrella: {
     name: "Umbrella",
     emoji: "☂️",
@@ -45,16 +55,6 @@ export const SHAPES: Record<ShapeType, ShapeConfig> = {
     shadowColor: "rgba(251, 191, 36, 0.3)",
     strokeColor: "#FBBF24",
     difficulty: 5, // 난이도가 높음
-  },
-  // --- 💎 다이아몬드 도형 추가 ---
-  diamond: {
-    name: "Diamond",
-    emoji: "💎",
-    description: "Draw a brilliant diamond",
-    gradient: "from-cyan-200 via-sky-300 to-blue-400",
-    shadowColor: "rgba(56, 189, 248, 0.3)",
-    strokeColor: "#38BDF8",
-    difficulty: 2,
   },
 };
 

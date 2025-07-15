@@ -43,7 +43,7 @@ export function Leaderboard({
         isVisible ? "block animate-fade-in" : "hidden"
       } mt-8 lg:mt-0`}
     >
-      <Card className="bg-gradient-to-br from-white/90 via-purple-50/50 to-pink-50/50 dark:from-gray-800/90 dark:via-purple-900/40 dark:to-pink-900/40 backdrop-blur-sm shadow-xl border-0 h-fit lg:sticky lg:top-8">
+      <Card className="mt-4 bg-gradient-to-br from-white/90 via-purple-50/50 to-pink-50/50 dark:from-gray-800/90 dark:via-purple-900/40 dark:to-pink-900/40 backdrop-blur-sm shadow-xl border-0 h-fit lg:sticky lg:top-8">
         <CardContent className="p-4 sm:p-6">
           <header className="flex items-center gap-3 mb-4">
             <div className="text-2xl">{currentShape.emoji}</div>

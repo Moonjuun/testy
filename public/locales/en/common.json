@@ -109,6 +109,28 @@
     "recentResults": "Recent Test Results",
     "reply": "Replay"
   },
+  "draw": {
+    "title1": "Speed Draw Challenge",
+    "title2": "Draw shapes fast and accurately!",
+    "description": "Draw various shapes quickly and compete with others!",
+    "canvasDescription": "How well can you draw? A test of speed and precision!",
+    "start": "Start",
+    "shape": {
+      "Triangle": "Triangle",
+      "Square": "Square",
+      "Circle": "Circle",
+      "Star": "Star",
+      "Umbrella": "Umbrella",
+      "Heart": "Heart",
+      "Diamond": "Diamond"
+    },
+    "result": {
+      "score": "Score",
+      "retry": "Retry",
+      "share": "Share result"
+    },
+    "message": {}
+  },
   "ladder": {
     "addParticipants": "Add Participants",
     "enterParticipants": "Enter participant names (up to 15)",

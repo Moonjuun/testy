@@ -6,7 +6,7 @@ import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SHAPES } from "@/constants/play/draw";
 import type { ShapeType, GameState } from "@/types/play/draw";
-
+import { useTranslation } from "react-i18next";
 interface ShapeSelectorProps {
   selectedShape: ShapeType;
   onShapeChange: (shape: ShapeType) => void;
@@ -18,6 +18,7 @@ export function ShapeSelector({
   onShapeChange,
   gameState,
 }: ShapeSelectorProps) {
+  const { t } = useTranslation("common");
   const isDisabled = gameState === "drawing" || gameState === "countdown";
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -57,10 +58,7 @@ export function ShapeSelector({
                 {shape.emoji}
               </div>
               <div className="font-bold text-xs sm:text-sm text-gray-800 dark:text-gray-100">
-                {shape.name}
-              </div>{" "}
-              <div className="hidden sm:block text-xs opacity-75 mt-1 truncate">
-                {shape.description}
+                {t(`draw.shape.${shape.name}`)}
               </div>
               {selectedShape === key && (
                 <div className="absolute -top-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-lg">

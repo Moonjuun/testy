@@ -109,6 +109,28 @@
     "recentResults": "최근 테스트 결과",
     "reply": "다시보기"
   },
+  "draw": {
+    "title1": "스피드 드로우 챌린지",
+    "title2": "도형을 빠르고, 정확하게!",
+    "description": "다양한 도형을 빠르게 그리고, 다른 사람들과 경쟁해보세요!",
+    "canvasDescription": "얼마나 잘 그릴 수 있을까요? 속도와 정밀도 테스트!",
+    "start": "시작하기",
+    "shape": {
+      "Triangle": "삼각형",
+      "Square": "사각형",
+      "Circle": "원",
+      "Star": "별",
+      "Umbrella": "우산",
+      "Heart": "하트",
+      "Diamond": "다이아몬드"
+    },
+    "result": {
+      "score": "점수",
+      "retry": "다시하기",
+      "share": "결과 공유하기"
+    },
+    "message": {}
+  },
   "ladder": {
     "addParticipants": "참가자 추가",
     "enterParticipants": "참가자 이름 입력 (최대 15명)",

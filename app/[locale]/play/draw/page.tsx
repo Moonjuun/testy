@@ -12,6 +12,7 @@ import {
   Heart,
   Star,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 // 우리가 분리한 훅과 유틸리티, 상수를 가져옵니다.
 
@@ -24,7 +25,7 @@ import { ShapeSelector } from "@/components/play/draw/ShapeSelector";
 import { ResultsPanel } from "@/components/play/draw/ResultsPanel";
 
 export default function DrawPage() {
-  // 게임의 모든 상태와 로직은 이 훅이 관리합니다.
+  const { t } = useTranslation("common");
   const game = useGameLogic("triangle");
   const currentShape = SHAPES[game.selectedShape];
 
@@ -47,14 +48,14 @@ export default function DrawPage() {
           <div className="inline-flex items-center gap-2 bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-full px-3 py-1.5 sm:px-4 sm:py-2 mb-4 shadow-sm">
             <Sparkles className="w-4 h-4 text-purple-500" />
             <span className="text-xs sm:text-sm font-medium text-purple-700 dark:text-purple-300">
-              Perfect Shape Challenge
+              {t("draw.title1")}
             </span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-sky-500 bg-clip-text text-transparent mb-2">
-            Draw Perfect Shapes
+            {t("draw.title2")}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base max-w-md mx-auto">
-            Test your precision and see how you rank against others! ✨
+            {t("draw.description")}
           </p>
         </header>
 
@@ -111,10 +112,10 @@ export default function DrawPage() {
                             {currentShape.emoji}
                           </div>
                           <h3 className="text-xl sm:text-4xl font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-sky-500 bg-clip-text text-transparent mb-2">
-                            {currentShape.description}
+                            {t(`draw.shape.${currentShape.name}`)}
                           </h3>
                           <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
-                            Draw as fast and accurately as you can!
+                            {t("draw.canvasDescription")}
                           </p>
                           <Button
                             onClick={game.startGame}
@@ -132,7 +133,7 @@ export default function DrawPage() {
   `}
                           >
                             <Play className="w-5 h-5 mr-2 text-purple-600 dark:text-purple-300" />
-                            Start Drawing
+                            {t("draw.start")}
                           </Button>
                         </div>
                       </div>
@@ -159,9 +160,6 @@ export default function DrawPage() {
                     selectedShape={game.selectedShape}
                     showComparison={game.showComparison}
                     onResetGame={game.resetGame}
-                    onShare={(platform) =>
-                      shareScore(platform, game.userScore, currentShape)
-                    }
                   />
                 )}
             </div>
@@ -187,13 +185,13 @@ export default function DrawPage() {
           </div>
 
           {/* 4. 리더보드 컴포넌트 */}
-          <Leaderboard
+          {/* <Leaderboard
             rankings={game.rankings[game.selectedShape] || []}
             selectedShape={game.selectedShape}
             userRank={game.userRank}
             userScore={game.userScore}
             isVisible={game.showMobileRankings}
-          />
+          /> */}
         </main>
       </div>
     </div>

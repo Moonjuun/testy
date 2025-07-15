@@ -201,14 +201,16 @@ export default function LunchRecommendation({ allMenus }: Props) {
       )}
 
       <Card className="w-full max-w-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl shadow-2xl p-6 sm:p-8 border border-gray-100 dark:border-gray-700">
-        <CardHeader className="text-center mb-8">
-          <CardTitle className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight">
-            {t("lunch.title")}
-          </CardTitle>
-          <p className="text-lg text-gray-600 dark:text-gray-400 mt-2">
-            {t("lunch.description")}
-          </p>
-        </CardHeader>
+        {!recommendedMenu && (
+          <CardHeader className="text-center mb-8">
+            <CardTitle className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight">
+              {t("lunch.title")}
+            </CardTitle>
+            <p className="text-lg text-gray-600 dark:text-gray-400 mt-2">
+              {t("lunch.description")}
+            </p>
+          </CardHeader>
+        )}
 
         <CardContent className="space-y-8">{renderContent()}</CardContent>
       </Card>

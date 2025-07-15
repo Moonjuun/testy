@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ProfileModal } from "@/components/modal/profile-modal";
 import { useTheme } from "@/contexts/theme-context";
-import { User, Menu, X, Moon, Sun, Globe } from "lucide-react";
+import { User, Menu, X, Moon, Sun, Globe, ChevronDown } from "lucide-react";
 import { useActiveCategories } from "@/hooks/useActiveCategories";
 import { Skeleton } from "./ui/skeleton";
 import { useLanguageStore } from "@/store/useLanguageStore";
@@ -13,10 +13,15 @@ import { useUserStore } from "@/store/useUserStore";
 import { getAllLabel, languages } from "@/constants/Header";
 import { useTranslation } from "react-i18next";
 import { AuthModal } from "./modal/auth-modal";
-// 1. next/navigation에서 useRouter와 usePathname을 임포트합니다.
 import { useRouter, usePathname } from "next/navigation";
 import { Language } from "@/store/useLanguageStore";
 import { useAlert } from "./modal/alert-context";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface HeaderProps {
   locale: string;
@@ -26,7 +31,6 @@ export function Header({ locale }: HeaderProps) {
   const { t, i18n } = useTranslation("common");
   const customAlert = useAlert();
 
-  // 2. router와 pathname 인스턴스를 생성합니다.
   const router = useRouter();
   const pathname = usePathname();
 
@@ -44,13 +48,9 @@ export function Header({ locale }: HeaderProps) {
   const { categories, loading } = useActiveCategories(locale as Language);
   const [mounted, setMounted] = useState(false);
 
-  const profileRef = useRef<HTMLDivElement>(null);
-  const [showLogout, setShowLogout] = useState(false); // 이 상태는 현재 사용되지 않는 것 같아 보입니다.
-
   const currentLanguageName =
     languages.find((l) => l.code === locale)?.name ?? "English";
 
-  // 3. 언어 변경을 처리하는 전용 함수를 만듭니다.
   const handleLanguageChange = async (newLocale: Language) => {
     if (!pathname) {
       return;
@@ -60,21 +60,18 @@ export function Header({ locale }: HeaderProps) {
 
     if (pathname.includes("/result")) {
       const confirmed = await customAlert({
-        // 바로 사용 가능
         title: t("alert.changeLangOnResultTitle"),
         message: t("alert.changeLangOnResultMessaage"),
         confirmText: t("alert.confirm"),
         cancelText: t("alert.cancel"),
       });
 
-      // ✅ 에러 없이 정상 동작
       if (confirmed) {
         setLanguage(newLocale);
         i18n.changeLanguage(newLocale);
         router.push(`/${newLocale}`);
       }
     } else {
-      // 그 외 모든 페이지의 경우
       setLanguage(newLocale);
       i18n.changeLanguage(newLocale);
 
@@ -91,12 +88,6 @@ export function Header({ locale }: HeaderProps) {
       if (langRef.current && !langRef.current.contains(e.target as Node)) {
         setIsLangOpen(false);
       }
-      if (
-        profileRef.current &&
-        !profileRef.current.contains(e.target as Node)
-      ) {
-        setShowLogout(false);
-      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -105,6 +96,85 @@ export function Header({ locale }: HeaderProps) {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const playgroundMenu = (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          className="px-4 py-2 text-[15px] font-semibold text-gray-800 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+        >
+          {t("header.playground")} <ChevronDown className="w-4 h-4 ml-1" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="min-w-[160px] rounded-xl shadow-lg bg-white dark:bg-zinc-900 py-2">
+        <DropdownMenuItem asChild>
+          <Link
+            href={`/${locale}/play/draw`}
+            className="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-md"
+          >
+            {t("header.speedDraw")}
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link
+            href={`/${locale}/play/ladder`}
+            className="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-md"
+          >
+            {t("header.ladder")}
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link
+            href={`/${locale}/play/lunch`}
+            className="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-md"
+          >
+            {t("header.lunch")}
+          </Link>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+
+  const testMenu = (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          className="px-4 py-2 text-[15px] font-semibold text-gray-800 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+        >
+          {t("header.test")}
+          <ChevronDown className="w-4 h-4 ml-1" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="min-w-[180px] rounded-xl shadow-lg bg-white dark:bg-zinc-900 py-2">
+        <DropdownMenuItem asChild>
+          <Link
+            href={`/${locale}/test/list`}
+            className="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-md"
+          >
+            {getAllLabel(locale)}
+          </Link>
+        </DropdownMenuItem>
+        {loading
+          ? Array.from({ length: 5 }).map((_, i) => (
+              <DropdownMenuItem key={i} disabled>
+                <Skeleton className="h-4 w-16 mx-4 my-2" />
+              </DropdownMenuItem>
+            ))
+          : categories.map((category) => (
+              <DropdownMenuItem key={category.id} asChild>
+                <Link
+                  href={`/${locale}/category/${category.code}`}
+                  className="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-md"
+                >
+                  {category.name}
+                </Link>
+              </DropdownMenuItem>
+            ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 
   return (
     <>
@@ -120,28 +190,10 @@ export function Header({ locale }: HeaderProps) {
               </span>
             </Link>
 
+            {/* Desktop Menu */}
             <nav className="hidden lg:flex items-center space-x-1">
-              <Link
-                href={`/${locale}/test/list`}
-                className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
-              >
-                {getAllLabel(locale)}
-              </Link>
-              {loading
-                ? Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="px-3 py-2">
-                      <Skeleton className="h-4 w-16" />
-                    </div>
-                  ))
-                : categories.map((category) => (
-                    <Link
-                      key={category.id}
-                      href={`/${locale}/category/${category.code}`}
-                      className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
-                    >
-                      {category.name}
-                    </Link>
-                  ))}
+              {testMenu}
+              {playgroundMenu}
             </nav>
 
             <div className="flex items-center gap-3">
@@ -161,7 +213,6 @@ export function Header({ locale }: HeaderProps) {
                     {languages.map((lang) => (
                       <button
                         key={lang.code}
-                        // 4. 새로 만든 핸들러 함수를 호출합니다.
                         onClick={() =>
                           handleLanguageChange(lang.code as Language)
                         }
@@ -225,33 +276,72 @@ export function Header({ locale }: HeaderProps) {
             </div>
           </div>
 
+          {/* Mobile Menu */}
           {isMobileMenuOpen && (
             <div className="lg:hidden py-4 border-t border-gray-200 dark:border-gray-700">
-              <nav className="grid grid-cols-2 gap-2 px-3">
-                <Link
-                  href={`/${locale}/test/list`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 text-center"
-                >
-                  {getAllLabel(locale)}
-                </Link>
-
-                {loading
-                  ? Array.from({ length: 5 }).map((_, i) => (
-                      <div key={i} className="px-3 py-2">
-                        <Skeleton className="h-4 w-20 mx-auto" />
-                      </div>
-                    ))
-                  : categories.map((category) => (
-                      <Link
-                        key={category.id}
-                        href={`/${locale}/category/${category.code}`}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 text-center"
-                      >
-                        {category.name}
-                      </Link>
-                    ))}
+              <nav className="flex flex-col items-start gap-2 px-3">
+                {/* 테스트 드롭다운 */}
+                <details className="w-full group">
+                  <summary className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+                    {t("header.test")}
+                    <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
+                  </summary>
+                  <div className="pl-4 mt-2 space-y-2">
+                    <Link
+                      href={`/${locale}/test/list`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      {getAllLabel(locale)}
+                    </Link>
+                    {loading
+                      ? Array.from({ length: 5 }).map((_, i) => (
+                          <div key={i} className="px-3 py-2">
+                            <Skeleton className="h-4 w-20" />
+                          </div>
+                        ))
+                      : categories.map((category) => (
+                          <Link
+                            key={category.id}
+                            href={`/${locale}/category/${category.code}`}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+                          >
+                            {category.name}
+                          </Link>
+                        ))}
+                  </div>
+                </details>
+                {/* 놀이터 드롭다운 */}
+                <details className="w-full group">
+                  <summary className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+                    {t("header.playground")}
+                    <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
+                  </summary>
+                  <div className="pl-4 mt-2 space-y-2">
+                    <Link
+                      href={`/${locale}/play/draw`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      {t("header.speedDraw")}
+                    </Link>
+                    <Link
+                      href={`/${locale}/play/ladder`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      {t("header.ladder")}
+                    </Link>
+                    <Link
+                      href="#"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      {t("header.lunch")}
+                    </Link>
+                  </div>
+                </details>
               </nav>
             </div>
           )}
