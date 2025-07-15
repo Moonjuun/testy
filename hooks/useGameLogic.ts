@@ -18,10 +18,8 @@ const generateMockRankings = (shapeType: ShapeType): Player[] => {
  * 그림 그리기 게임의 모든 상태와 로직을 관리하는 커스텀 훅
  * @param initialShape 초기 도형 설정
  */
-export const useGameLogic = (initialShape: ShapeType = "circle") => {
-  // =======================================================
+export const useGameLogic = (initialShape: ShapeType = "triangle") => {
   // ===== 상태 관리 (State & Ref) =========================
-  // =======================================================
   const [gameState, setGameState] = useState<GameState>("idle");
   const [selectedShape, setSelectedShape] = useState<ShapeType>(initialShape);
   const [userPath, setUserPath] = useState<Point[]>([]);
@@ -57,7 +55,6 @@ export const useGameLogic = (initialShape: ShapeType = "circle") => {
       triangle: generateMockRankings("triangle"),
       square: generateMockRankings("square"),
       umbrella: generateMockRankings("umbrella"),
-      // --- 새로운 도형 랭킹 생성 추가 ---
       star: generateMockRankings("star"),
       diamond: generateMockRankings("diamond"),
     };

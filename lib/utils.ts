@@ -101,19 +101,20 @@ export const drawGuideShape = (
       ctx.rect(CENTER_X - sqSize / 2, CENTER_Y - sqSize / 2, sqSize, sqSize);
       break;
     case "umbrella":
-      ctx.arc(CENTER_X, CENTER_Y - 25, 60, Math.PI, 0);
-      ctx.moveTo(CENTER_X - 60, CENTER_Y - 25);
-      ctx.lineTo(CENTER_X + 60, CENTER_Y - 25);
-      ctx.moveTo(CENTER_X, CENTER_Y - 25);
+      // 우산 덮개 (반원)
+      ctx.beginPath();
+      ctx.arc(CENTER_X, CENTER_Y - 40, 60, Math.PI, 0, false);
+
+      // 좌우 끝 연결
+      ctx.moveTo(CENTER_X - 60, CENTER_Y - 40);
+      ctx.lineTo(CENTER_X + 60, CENTER_Y - 40);
+
+      // 손잡이 직선
+      ctx.moveTo(CENTER_X, CENTER_Y - 40);
       ctx.lineTo(CENTER_X, CENTER_Y + 50);
-      ctx.arc(
-        CENTER_X + 15,
-        CENTER_Y + 62,
-        12,
-        -Math.PI / 2,
-        Math.PI / 2,
-        false
-      );
+
+      // 손잡이 아래쪽 갈고리 (왼쪽으로 휘어진 반원)
+      ctx.arc(CENTER_X - 15, CENTER_Y + 50, 15, 0, Math.PI / 2, false);
     case "star":
       drawStar(ctx, CENTER_X, CENTER_Y, 5, 85, 40);
       break;
