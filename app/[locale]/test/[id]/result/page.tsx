@@ -218,7 +218,7 @@ export default function ResultPage({
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
                 {t("resultPage.youAre")}{" "}
                 <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  "{result.title}"
+                  "{formatBoldText(result.title)}"
                 </span>
               </h1>
               <p className="text-md text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-line text-left">

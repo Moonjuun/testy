@@ -115,8 +115,8 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
         onClick={onClose}
       />
 
-      <div className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-2xl w-full max-w-md sm:max-w-lg flex flex-col max-h-[95vh] h-[95vh]">
-        <div className="flex items-center justify-between p-4 sm:p-5 bg-gradient-to-r from-purple-700 to-pink-600 text-white shadow-md">
+      <div className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-2xl w-full max-w-md sm:max-w-lg flex flex-col max-h-[85vh] h-[85vh]">
+        <div className="flex items-center justify-between px-4 py-2 sm:px-5 sm:py-2 bg-gradient-to-r from-purple-700 to-pink-600 text-white shadow-md rounded-t-xl">
           <h2 className="text-xl font-bold flex items-center gap-2">
             <User className="w-5 h-5" /> {t("header.profile")}
           </h2>

@@ -39,7 +39,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         {/* Decorative Header */}
         <div className="relative bg-gradient-to-r from-purple-600 to-pink-600 p-6 text-white">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-600/90 to-pink-600/90" />
-          <div className="absolute top-4 right-4">
+          <div className="absolute top-4 right-4 z-10">
             <Button
               variant="ghost"
               size="sm"
@@ -96,7 +96,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
               className="w-full h-12 rounded-xl font-medium transition-all bg-black text-white hover:bg-gray-900"
             >
               <span className="mr-3 text-lg"></span>
-              {t("modal.continueWithApple")} {/* 번역 키 사용 */}
+              {t("modal.continueWithApple")}
             </Button>
 
             {/* Facebook 로그인 */}
@@ -112,7 +112,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
               className="w-full h-12 rounded-xl font-medium transition-all bg-blue-600 hover:bg-blue-700 text-white"
             >
               <FaFacebook className="w-6 h-6 mr-3" />
-              {t("modal.continueWithFacebook")} {/* 번역 키 사용 */}
+              {t("modal.continueWithFacebook")}
             </Button>
           </div>
         </div>
