@@ -334,7 +334,7 @@ export function Header({ locale }: HeaderProps) {
                       {t("header.ladder")}
                     </Link>
                     <Link
-                      href="#"
+                      href={`/${locale}/play/lunch`}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
