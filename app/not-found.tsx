@@ -3,8 +3,9 @@
 
 import Link from "next/link";
 import { Sparkles, Compass } from "lucide-react"; // 귀여운 분위기에 어울리는 아이콘 추가
-
+import { useTranslation } from "react-i18next";
 export default function NotFound() {
+  const { t } = useTranslation("common");
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20 text-gray-900 dark:text-white p-4">
       <div className="text-center">
@@ -32,9 +33,9 @@ export default function NotFound() {
         </p>
 
         <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-lg mx-auto">
-          여기는 아직 아무것도 없는 미지의 공간이에요.
+          {t("error.notFound")}
           <br />
-          준비 중이니 조금 더 기다려주세요~
+          {t("error.waitPlease")}
         </p>
 
         <Link
@@ -42,7 +43,7 @@ export default function NotFound() {
           className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-lg shadow-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105"
         >
           <Compass className="w-5 h-5 mr-3" />
-          Testy 홈으로 돌아가기
+          Testy {t("error.goHome")}
         </Link>
       </div>
 

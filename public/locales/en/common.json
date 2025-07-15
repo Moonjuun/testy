@@ -184,5 +184,10 @@
       "full_meal": "Full Meal",
       "dish": "Light Dish"
     }
+  },
+  "error": {
+    "notFound": "This is still an unexplored space with nothing here yet.",
+    "waitPlease": "We’re preparing things. Please wait a little longer~",
+    "gotoHome": "Go back to Home"
   }
 }

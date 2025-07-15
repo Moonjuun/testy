@@ -184,5 +184,10 @@
       "full_meal": "Bữa ăn đầy đủ",
       "dish": "Món ăn nhẹ"
     }
+  },
+  "error": {
+    "notFound": "Đây vẫn là một không gian chưa được khám phá với chẳng có gì cả.",
+    "waitPlease": "Chúng tôi đang chuẩn bị. Vui lòng đợi thêm một chút nữa~",
+    "gotoHome": "Quay lại trang chủ"
   }
 }
