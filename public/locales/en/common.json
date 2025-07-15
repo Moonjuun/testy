@@ -109,6 +109,24 @@
     "recentResults": "Recent Test Results",
     "reply": "Replay"
   },
+  "ladder": {
+    "addParticipants": "Add Participants",
+    "enterParticipants": "Enter participant names (up to 15)",
+    "participants": "Participants",
+    "winners": "Number of Winners",
+    "setLadder": "Set Ladder →",
+    "settingLadder": "Ladder Settings",
+    "randomize": "Generate Randomly",
+    "readyGame": "Game Ready! →",
+    "startGame": "Start Game!",
+    "checkResults": "Check Results",
+    "clickParticipant": "Click a participant to see the result",
+    "resultsAutoOpen": "Results will be revealed automatically...",
+    "startGameOnClick": "Click the start button to begin the game!",
+    "newGame": "Start New Game",
+    "winner": "Winner",
+    "loser": "Miss"
+  },
   "lunch": {
     "title": "What's for lunch today? 😋",
     "description": "Get lunch menu suggestions with just a few taps!",

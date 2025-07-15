@@ -109,6 +109,24 @@
     "recentResults": "Kết quả bài test gần đây",
     "reply": "Phát lại"
   },
+  "ladder": {
+    "addParticipants": "Thêm người tham gia",
+    "enterParticipants": "Nhập tên người tham gia (tối đa 15 người)",
+    "participants": "Người tham gia",
+    "winners": "Số người trúng",
+    "setLadder": "Thiết lập thang →",
+    "settingLadder": "Cài đặt thang",
+    "randomize": "Tạo ngẫu nhiên",
+    "readyGame": "Sẵn sàng chơi! →",
+    "startGame": "Bắt đầu trò chơi!",
+    "checkResults": "Xem kết quả",
+    "clickParticipant": "Nhấp vào người tham gia để xem kết quả",
+    "resultsAutoOpen": "Kết quả sẽ được hiển thị tự động...",
+    "startGameOnClick": "Nhấn nút bắt đầu để chơi!",
+    "newGame": "Bắt đầu trò chơi mới",
+    "winner": "Trúng thưởng",
+    "loser": "Không trúng"
+  },
   "lunch": {
     "title": "Hôm nay ăn gì trưa nay? 😋",
     "description": "Chỉ cần vài lựa chọn đơn giản để nhận đề xuất món ăn trưa!",

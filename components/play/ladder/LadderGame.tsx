@@ -13,6 +13,7 @@ import {
   Moon,
   Sun,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 // Point 타입 정의
 interface Point {
@@ -63,6 +64,7 @@ const PLAYER_COLUMN_WIDTH = 80;
 const LADDER_CANVAS_HEIGHT = 256;
 
 export default function LadderGame() {
+  const { t } = useTranslation("common");
   const [gameState, setGameState] = useState<GameState>("setup");
   const [players, setPlayers] = useState<Player[]>([]);
   const [newPlayerName, setNewPlayerName] = useState("");
@@ -183,8 +185,8 @@ export default function LadderGame() {
 
   // 당첨/꽝 결과를 생성하는 로직
   const generateResults = () => {
-    const winningResults = ["🎉 당첨!", "🎁 행운!", "🌟 성공!", "🏆 승리!"];
-    const losingResultText = "😥 꽝";
+    const winningResults = [`🎉${t("ladder.winner")} `];
+    const losingResultText = `😥${t("ladder.loser")}`;
 
     const shuffledWinning = [...winningResults].sort(() => 0.5 - Math.random());
 
@@ -420,12 +422,14 @@ export default function LadderGame() {
         {gameState === "setup" && (
           <Card className="shadow-lg bg-white dark:bg-slate-800/80 dark:border-slate-700 max-w-md mx-auto">
             <CardContent className="p-6 space-y-4">
-              <h2 className="text-xl font-semibold mb-4">👥 참가자 추가</h2>
+              <h2 className="text-xl font-semibold mb-4">
+                👥 {t("ladder.addParticipants")}
+              </h2>
               <div className="flex gap-2">
                 <Input
                   value={newPlayerName}
                   onChange={(e) => setNewPlayerName(e.target.value)}
-                  placeholder="참가자 이름 입력 (최대 15명)"
+                  placeholder={t("ladder.enterParticipants")}
                   onKeyPress={(e) => e.key === "Enter" && addPlayer()}
                   className="flex-1 rounded-full border-2 border-gray-200 focus:border-blue-400 dark:bg-slate-700 dark:border-slate-600"
                 />
@@ -440,9 +444,9 @@ export default function LadderGame() {
               {players.length > 0 && (
                 <div className="space-y-2">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    참가자 ({players.length}/15)
+                    {t("ladder.participants")} ({players.length}/15)
                   </p>
-                  <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto p-1">
+                  <div className="grid grid-cols-1 gap-2 max-h-48 md:max-h-72 overflow-y-auto p-1">
                     {players.map((player) => (
                       <div
                         key={player.id}
@@ -471,11 +475,12 @@ export default function LadderGame() {
                   htmlFor="winnerCount"
                   className="font-medium text-gray-700 dark:text-gray-300"
                 >
-                  🏆 당첨 갯수
+                  🏆 {t("ladder.winners")}
                 </label>
                 <Input
                   id="winnerCount"
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
                   value={winnerCount}
                   onChange={(e) => {
                     const count = parseInt(e.target.value, 10);
@@ -501,7 +506,7 @@ export default function LadderGame() {
                   }}
                   className="w-full rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 text-lg font-semibold"
                 >
-                  사다리 설정하기 →
+                  {t("ladder.setLadder")}
                 </Button>
               )}
             </CardContent>
@@ -512,14 +517,16 @@ export default function LadderGame() {
           <Card className="shadow-lg bg-white dark:bg-slate-800/80 dark:border-slate-700">
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold">🎯 사다리 설정</h2>
+                <h2 className="text-xl font-semibold">
+                  🎯 {t("ladder.settingLadder")}
+                </h2>
                 <Button
                   onClick={generateRandomLadder}
                   variant="outline"
                   size="sm"
                   className="rounded-full bg-transparent dark:border-slate-600 dark:hover:bg-slate-700"
                 >
-                  <Shuffle className="w-4 h-4 mr-2" /> 랜덤 생성
+                  <Shuffle className="w-4 h-4 mr-2" /> {t("ladder.randomize")}
                 </Button>
               </div>
               <div className="flex justify-center">
@@ -606,7 +613,7 @@ export default function LadderGame() {
                 }}
                 className="w-full rounded-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white py-3 text-lg font-semibold"
               >
-                게임 준비 완료! →
+                {t("ladder.readyGame")}
               </Button>
             </CardContent>
           </Card>
@@ -617,14 +624,16 @@ export default function LadderGame() {
             <CardContent className="p-6 space-y-4">
               <div className="text-center mb-4">
                 <h2 className="text-xl font-semibold">
-                  {gameState === "ready" ? "🎮 게임 시작!" : "🎯 결과 확인"}
+                  {gameState === "ready"
+                    ? `🎮 ${t("ladder.startGame")}`
+                    : `🎯 ${t("ladder.checkResults")}`}
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   {gameState === "playing" && revealMode === "one-by-one"
-                    ? "참가자를 클릭해서 결과를 확인하세요!"
+                    ? `${t("ladder.clickParticipant")}`
                     : gameState === "playing"
-                    ? "결과가 자동으로 공개됩니다..."
-                    : "아래 버튼으로 게임을 시작하세요!"}
+                    ? `${t("ladder.resultsAutoOpen")}`
+                    : `${t("ladder.startGameOnClick")}`}
                 </p>
               </div>
 
@@ -733,7 +742,7 @@ export default function LadderGame() {
                     onClick={startGame}
                     className="w-full rounded-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white py-4 text-xl font-bold shadow-lg"
                   >
-                    <Play className="w-5 h-5 mr-2" /> 게임 시작!
+                    <Play className="w-5 h-5 mr-2" /> {t("ladder.startGame")}
                   </Button>
                 )}
                 {gameState === "playing" &&
@@ -782,7 +791,9 @@ export default function LadderGame() {
                                     : "bg-gray-300 text-gray-700 dark:bg-slate-600 dark:text-slate-300"
                                 }`}
                               >
-                                {result.isWinner ? "🎉 당첨" : "꽝"}
+                                {result.isWinner
+                                  ? `🎉 ${t("ladder.winner")}`
+                                  : `🎉 ${t("ladder.loser")}`}
                               </span>
                             )}
                           </Button>
@@ -797,7 +808,8 @@ export default function LadderGame() {
                       variant="outline"
                       className="w-full rounded-full border-2 border-gray-300 dark:border-slate-600 mt-4 bg-transparent dark:hover:bg-slate-700"
                     >
-                      <RotateCcw className="w-4 h-4 mr-2" /> 새 게임 시작
+                      <RotateCcw className="w-4 h-4 mr-2" />{" "}
+                      {t("ladder.newGame")}
                     </Button>
                   )}
               </div>
