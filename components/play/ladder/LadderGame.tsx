@@ -342,11 +342,6 @@ export default function LadderGame() {
     });
   };
 
-  // 전체 결과 공개
-  const revealAll = () => {
-    if (players.length > 0) revealPlayerResult(players[0].id, 0);
-  };
-
   // 캔버스 그리기 useEffect
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -477,25 +472,39 @@ export default function LadderGame() {
                 >
                   🏆 {t("ladder.winners")}
                 </label>
-                <Input
-                  id="winnerCount"
-                  type="text"
-                  inputMode="numeric"
-                  value={winnerCount}
-                  onChange={(e) => {
-                    const count = parseInt(e.target.value, 10);
-                    if (
-                      !isNaN(count) &&
-                      count >= 1 &&
-                      (players.length === 0 || count < players.length)
-                    )
-                      setWinnerCount(count);
-                  }}
-                  min={1}
-                  max={players.length > 1 ? players.length - 1 : 1}
-                  disabled={players.length < 2}
-                  className="w-full rounded-full border-2 border-gray-200 focus:border-blue-400 dark:bg-slate-700 dark:border-slate-600"
-                />
+                <div className="flex items-center justify-center space-x-4 p-2 rounded-full border-2 border-gray-200 dark:border-slate-600">
+                  <Button
+                    onClick={() =>
+                      setWinnerCount((prev) => Math.max(1, prev - 1))
+                    }
+                    // 참가자가 2명 미만이거나, 당첨자가 1명이면 감소 버튼 비활성화
+                    disabled={players.length < 2 || winnerCount <= 1}
+                    variant="ghost"
+                    size="sm"
+                    className="rounded-full text-lg"
+                  >
+                    -
+                  </Button>
+                  <span className="text-lg font-semibold w-8 text-center">
+                    {winnerCount}
+                  </span>
+                  <Button
+                    onClick={() =>
+                      setWinnerCount((prev) =>
+                        Math.min(players.length - 1, prev + 1)
+                      )
+                    }
+                    // 참가자가 2명 미만이거나, 당첨자 수가 (참가자 수 - 1) 이상이면 증가 버튼 비활성화
+                    disabled={
+                      players.length < 2 || winnerCount >= players.length - 1
+                    }
+                    variant="ghost"
+                    size="sm"
+                    className="rounded-full text-lg"
+                  >
+                    +
+                  </Button>
+                </div>
               </div>
 
               {players.length >= 2 && (
