@@ -17,17 +17,22 @@ import {
   BadgeInfo,
   Trash2,
   Trophy,
-  Loader2, // Loader2 아이콘 추가
+  Loader2,
 } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { useConfirm } from "@/hooks/useConfirm";
 import { formatDateByStyle } from "@/lib/utils";
-import { signOut, deleteUserAccount } from "@/lib/supabase/action"; // deleteUserAccount 임포트
+import {
+  signOut,
+  deleteUserAccount,
+  updateUserNickname,
+} from "@/lib/supabase/action";
 import { TestHistoryTab } from "../profile/TestHistoryTab";
 import { getTestResultById } from "@/lib/supabase/getTestResultById";
 import { TestHistoryPreview } from "../profile/TestHistoryPreview";
 import { useTranslation } from "react-i18next";
+import { useAlert } from "./alert-context";
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -41,14 +46,16 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const [previewTest, setPreviewTest] = useState<any | null>(null);
   const { t } = useTranslation();
 
-  const user = useUserStore((state) => state.user);
+  const { user, setUser } = useUserStore();
   const { customConfirm, ConfirmComponent } = useConfirm();
+  const customAlert = useAlert();
   const language = useLanguageStore((state) => state.currentLanguage);
 
   const initialNickname = user?.user_metadata?.nickname || "";
   const [nickname, setNickname] = useState(initialNickname);
-  const [isNicknameSet, setIsNicknameSet] = useState(initialNickname !== "");
-  const [isDeleting, setIsDeleting] = useState(false); // 삭제 로딩 상태 추가
+  const [isNicknameSet, setIsNicknameSet] = useState(!!initialNickname);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isSavingNickname, setIsSavingNickname] = useState(false);
 
   const name =
     user?.user_metadata?.name ||
@@ -80,10 +87,38 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
     }
   };
 
-  const handleSaveNickname = () => {
-    console.log("닉네임 저장:", nickname);
-    setIsNicknameSet(true);
-    alert(t("profile.nicknameSaved"));
+  const handleSaveNickname = async () => {
+    if (nickname.trim() === "") return;
+
+    setIsSavingNickname(true);
+    // 서버 액션에 locale 전달
+    const { error } = await updateUserNickname(nickname, language);
+    setIsSavingNickname(false);
+
+    if (error) {
+      await customAlert({
+        title: t("profile.notification"),
+        message: "failed to update nickname",
+        confirmText: t("alert.confirm"),
+      });
+    } else {
+      setIsNicknameSet(true);
+      // 성공 시 Zustand 스토어의 user 객체 메타데이터도 직접 업데이트
+      if (user) {
+        const updatedUser = {
+          ...user,
+          user_metadata: {
+            ...user.user_metadata,
+            nickname: nickname,
+          },
+        };
+        setUser(updatedUser);
+      }
+      await customAlert({
+        title: t("profile.nicknameSaved"),
+        confirmText: t("alert.confirm"),
+      });
+    }
   };
 
   const handleDeleteAccount = async () => {
@@ -106,13 +141,12 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
         });
         setIsDeleting(false);
       } else {
-        await customConfirm({
-          title: t("profile.notification"),
-          message: t("profile.accountDeleted"),
+        await customAlert({
+          title: t("profile.accountDeleted"),
           confirmText: t("alert.confirm"),
         });
         onClose();
-        window.location.href = "/"; // 홈페이지로 리디렉션
+        window.location.href = "/";
       }
     }
   };
@@ -213,25 +247,27 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                       <Edit2 className="w-4 h-4 text-blue-500" />
                     )}
                   </Label>
-                  <Input
-                    id="nickname"
-                    value={nickname}
-                    onChange={(e) => setNickname(e.target.value)}
-                    readOnly={isNicknameSet}
-                    placeholder={t("profile.nicknamePlaceholder")}
-                    className={`bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 ${
-                      isNicknameSet ? "cursor-not-allowed" : "cursor-text"
-                    }`}
-                  />
-                  {!isNicknameSet && (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="nickname"
+                      value={nickname}
+                      onChange={(e) => setNickname(e.target.value)}
+                      placeholder={t("profile.nicknamePlaceholder")}
+                      className={`bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200`}
+                    />
                     <Button
-                      className="mt-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1.5 rounded-lg flex items-center justify-center gap-2 w-full text-sm"
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1.5 rounded-lg flex items-center justify-center gap-2 text-sm flex-shrink-0"
                       onClick={handleSaveNickname}
-                      disabled={nickname.trim() === ""}
+                      disabled={isSavingNickname || nickname.trim() === ""}
                     >
-                      <Edit2 className="w-4 h-4" /> {t("profile.saveNickname")}
+                      {isSavingNickname ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Edit2 className="w-4 h-4" />
+                      )}
+                      {isSavingNickname ? "저장 중" : t("profile.saveNickname")}
                     </Button>
-                  )}
+                  </div>
                 </div>
               </div>
 
