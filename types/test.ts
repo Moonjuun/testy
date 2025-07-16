@@ -139,3 +139,10 @@ export interface TestJsonInsertData {
   questions: TestQuestion[];
   results: TestResultItem[];
 }
+
+/** 점심 메뉴 데이터 타입 */
+export interface LunchMenu {
+  id: number;
+  name: string;
+  image_url: string | null;
+}

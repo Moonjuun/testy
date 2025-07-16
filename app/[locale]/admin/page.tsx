@@ -1,4 +1,4 @@
-// pages/admin/index.tsx
+// app/[locale]/admin/page.tsx
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
@@ -12,9 +12,10 @@ import ResultImageUploader from "@/components/admin/ResultImageUploader";
 import UploadedImageManager from "@/components/admin/UploadedImageManager";
 import TestJsonUploader from "@/components/admin/TestJsonUploader";
 import SnackBar from "@/components/SnackBar";
+import LunchImageUploader from "@/components/admin/LunchImageUploader"; // 점심 메뉴 이미지 업로더 컴포넌트
 
 // 타입
-import type { TestResult, TestForUpload } from "@/types/test";
+import type { TestResult, TestForUpload, LunchMenu } from "@/types/test"; // LunchMenu 타입 임포트
 
 // Supabase 함수
 import {
@@ -25,13 +26,18 @@ import {
   loadTestsWithoutThumbnails,
   loadTestsWithThumbnails,
 } from "@/lib/supabase/adminTest";
+import {
+  loadLunchMenusWithoutImages,
+  loadLunchMenusWithImages,
+} from "@/lib/supabase/admin/adminLunch"; // lunch-menu 관련 함수 임포트
 
 type AdminTab =
   | "json"
   | "thumbnail-upload"
   | "result-upload"
   | "thumbnail-manage"
-  | "result-manage";
+  | "result-manage"
+  | "lunch-image"; // lunch-image 탭 추가
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<AdminTab>("json");
@@ -50,6 +56,12 @@ export default function AdminPage() {
   const [testsWithThumbnails, setTestsWithThumbnails] = useState<
     TestForUpload[]
   >([]);
+  const [lunchMenusWithoutImages, setLunchMenusWithoutImages] = useState<
+    LunchMenu[]
+  >([]);
+  const [lunchMenusWithImages, setLunchMenusWithImages] = useState<LunchMenu[]>(
+    []
+  );
 
   const showSnackBar = (msg: string) => {
     setSnackBarMessage(msg);
@@ -93,6 +105,26 @@ export default function AdminPage() {
     }
   }, []);
 
+  // ✅ 점심 메뉴 로딩 함수 추가
+  const reloadLunchMenusWithoutImages = useCallback(async () => {
+    try {
+      setLunchMenusWithoutImages(await loadLunchMenusWithoutImages());
+    } catch (e) {
+      console.error(e);
+      showSnackBar("❌ 이미지 없는 점심 메뉴 로딩 실패");
+    }
+  }, []);
+
+  // ✅ 이미지가 있는 런치 메뉴 로딩 함수 추가
+  const reloadLunchMenusWithImages = useCallback(async () => {
+    try {
+      setLunchMenusWithImages(await loadLunchMenusWithImages());
+    } catch (e) {
+      console.error(e);
+      showSnackBar("❌ 등록된 점심 메뉴 로딩 실패");
+    }
+  }, []);
+
   useEffect(() => {
     const loadInitialData = async () => {
       setLoading(true);
@@ -101,6 +133,8 @@ export default function AdminPage() {
         reloadTestsWithImages(),
         reloadTestsWithoutThumbnails(),
         reloadTestsWithThumbnails(),
+        reloadLunchMenusWithoutImages(),
+        reloadLunchMenusWithImages(),
       ]);
       setLoading(false);
     };
@@ -110,6 +144,8 @@ export default function AdminPage() {
     reloadTestsWithImages,
     reloadTestsWithoutThumbnails,
     reloadTestsWithThumbnails,
+    reloadLunchMenusWithoutImages,
+    reloadLunchMenusWithImages,
   ]);
 
   const renderContent = () => {
@@ -168,6 +204,17 @@ export default function AdminPage() {
             setSnackBarMessage={showSnackBar}
             testsWithImages={testsWithImages}
             reloadTestsWithImages={reloadTestsWithImages}
+          />
+        );
+      // ✅ 점심 메뉴 이미지 업로더 렌더링
+      case "lunch-image":
+        return (
+          <LunchImageUploader
+            setSnackBarMessage={showSnackBar}
+            lunchMenusWithoutImages={lunchMenusWithoutImages}
+            lunchMenusWithImages={lunchMenusWithImages}
+            reloadLunchMenusWithoutImages={reloadLunchMenusWithoutImages}
+            reloadLunchMenusWithImages={reloadLunchMenusWithImages}
           />
         );
       default:

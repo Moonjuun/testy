@@ -7,15 +7,17 @@ import {
   ImageIcon,
   ListChecks,
   GalleryHorizontal,
+  Utensils, // 점심 메뉴 아이콘 추가
 } from "lucide-react";
 
-// ✅ 5개 탭을 위한 타입 정의
+// ✅ 6개 탭을 위한 타입 정의
 type AdminTab =
   | "json"
   | "thumbnail-upload"
   | "result-upload"
   | "thumbnail-manage"
-  | "result-manage";
+  | "result-manage"
+  | "lunch-image"; // 런치 이미지 타입 추가
 
 interface Props {
   activeTab: AdminTab;
@@ -49,6 +51,12 @@ export default function AdminSidebar({ activeTab, setActiveTab }: Props) {
       key: "result-manage" as const,
       label: "5. 등록된 결과 이미지 관리",
       icon: <ListChecks />,
+    },
+    // ✅ 점심 메뉴 이미지 등록 탭 추가
+    {
+      key: "lunch-image" as const,
+      label: "6. 점심 메뉴 이미지 등록",
+      icon: <Utensils />,
     },
   ];
 
