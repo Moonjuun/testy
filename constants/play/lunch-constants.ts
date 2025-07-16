@@ -26,7 +26,7 @@ export interface LunchMenuItem {
   id: string;
   name: string;
   description: string;
-  image: string;
+  image_url: string;
   categories: {
     who: LunchCategoryValue[];
     cuisine: LunchCategoryValue[];

@@ -111,7 +111,7 @@ export default function LunchRecommendation({ allMenus }: Props) {
           <Card className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
             <div className="relative w-full h-64">
               <Image
-                src={recommendedMenu.image || "/image/no-image.png"}
+                src={recommendedMenu.image_url || "/image/no-image.png"}
                 alt={recommendedMenu.name}
                 fill
                 style={{ objectFit: "cover" }}

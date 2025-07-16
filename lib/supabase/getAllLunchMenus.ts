@@ -33,7 +33,7 @@ export async function getAllLunchMenus(
       menu.description_translations?.[language] ||
       menu.description_translations?.["ko"] ||
       "",
-    image: menu.image_url,
+    image_url: menu.image_url,
     categories: {
       who: menu.category_who || [],
       cuisine: menu.category_cuisine || [],
