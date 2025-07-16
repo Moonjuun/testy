@@ -38,4 +38,17 @@ const signOut = async (locale: string) => {
   await supabase.auth.signOut();
 };
 
+export async function deleteUserAccount() {
+  const supabase = await createClientForServer();
+  const { error } = await supabase.rpc("delete_user_account");
+
+  if (error) {
+    console.error("Error deleting user account:", error);
+    return { error };
+  }
+
+  await supabase.auth.signOut();
+  return { error: null };
+}
+
 export { signInWithGoogle, signOut };

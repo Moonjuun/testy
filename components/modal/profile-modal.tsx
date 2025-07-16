@@ -1,3 +1,5 @@
+// components/modal/profile-modal.tsx
+
 "use client";
 
 import { useState } from "react";
@@ -15,12 +17,13 @@ import {
   BadgeInfo,
   Trash2,
   Trophy,
+  Loader2, // Loader2 아이콘 추가
 } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { useConfirm } from "@/hooks/useConfirm";
 import { formatDateByStyle } from "@/lib/utils";
-import { signOut } from "@/lib/supabase/action";
+import { signOut, deleteUserAccount } from "@/lib/supabase/action"; // deleteUserAccount 임포트
 import { TestHistoryTab } from "../profile/TestHistoryTab";
 import { getTestResultById } from "@/lib/supabase/getTestResultById";
 import { TestHistoryPreview } from "../profile/TestHistoryPreview";
@@ -45,6 +48,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const initialNickname = user?.user_metadata?.nickname || "";
   const [nickname, setNickname] = useState(initialNickname);
   const [isNicknameSet, setIsNicknameSet] = useState(initialNickname !== "");
+  const [isDeleting, setIsDeleting] = useState(false); // 삭제 로딩 상태 추가
 
   const name =
     user?.user_metadata?.name ||
@@ -92,9 +96,24 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
     });
 
     if (confirmed) {
-      console.log("계정 삭제 실행");
-      alert(t("profile.accountDeleted"));
-      onClose();
+      setIsDeleting(true);
+      const { error } = await deleteUserAccount();
+      if (error) {
+        await customConfirm({
+          title: t("profile.notification"),
+          message: "failed to delete account",
+          confirmText: t("alert.confirm"),
+        });
+        setIsDeleting(false);
+      } else {
+        await customConfirm({
+          title: t("profile.notification"),
+          message: t("profile.accountDeleted"),
+          confirmText: t("alert.confirm"),
+        });
+        onClose();
+        window.location.href = "/"; // 홈페이지로 리디렉션
+      }
     }
   };
 
@@ -272,8 +291,14 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   variant="outline"
                   className="w-full mt-2 text-red-700 dark:text-red-400"
                   onClick={handleDeleteAccount}
+                  disabled={isDeleting}
                 >
-                  <Trash2 className="w-4 h-4" /> {t("profile.deleteAccount")}
+                  {isDeleting ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Trash2 className="w-4 h-4" />
+                  )}
+                  {isDeleting ? "삭제 중..." : t("profile.deleteAccount")}
                 </Button>
               </div>
             </div>
