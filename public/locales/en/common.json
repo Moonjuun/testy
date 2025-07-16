@@ -19,10 +19,26 @@
     "googleLoginFailed": "Google login failed. Please try again.",
     "confirm": "Confirm",
     "unimplementedFeature": "Feature Not Implemented",
-    "loginPrompt": "Easily log in using the options below",
     "continueWithGoogle": "Continue with Google",
     "continueWithApple": "Continue with Apple",
-    "continueWithFacebook": "Continue with Facebook"
+    "continueWithFacebook": "Continue with Facebook",
+    "unlockFeatures": "Get started easily and unlock more features",
+    "loginPrompt": "Track your activity and get the latest updates.",
+    "feature1": {
+      "title": "Manage Your Test History",
+      "description": "Review your past test results anytime, anywhere."
+    },
+    "feature2": {
+      "title": "New Content & Update Alerts",
+      "description": "Be the first to know when new tests or features are added."
+    },
+    "feature3": {
+      "title": "Exclusive Features & Content",
+      "description": "Get early access to special features available only to members."
+    },
+    "termsPrefix": "By continuing, you agree to the following:",
+    "termsLink": "Terms of Service",
+    "privacyLink": "Privacy Policy"
   },
   "home": {
     "weeklyUpdate": "New tests updated every week!",

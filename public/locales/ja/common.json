@@ -19,10 +19,26 @@
     "googleLoginFailed": "Googleログインに失敗しました。再度お試しください。",
     "confirm": "確認",
     "unimplementedFeature": "未実装機能",
-    "loginPrompt": "以下の方法で簡単にログインできます",
     "continueWithGoogle": "Googleで続行",
     "continueWithApple": "Appleで続行",
-    "continueWithFacebook": "Facebookで続行"
+    "continueWithFacebook": "Facebookで続行",
+    "unlockFeatures": "手軽に始めて、すべての機能を利用しましょう",
+    "loginPrompt": "アクティビティを記録し、最新情報を受け取りましょう。",
+    "feature1": {
+      "title": "テスト履歴の管理",
+      "description": "いつでもどこでも、過去のテスト結果を再度確認できます。"
+    },
+    "feature2": {
+      "title": "新規コンテンツとアップデート通知",
+      "description": "新しいテストや機能が追加された際に、いち早くお知らせします。"
+    },
+    "feature3": {
+      "title": "会員限定の機能とコンテンツ",
+      "description": "登録メンバーのみに提供される特別な機能を、いち早く体験しましょう。"
+    },
+    "termsPrefix": "続行することにより、以下の内容に同意したものとみなされます。",
+    "termsLink": "利用規約",
+    "privacyLink": "プライバシーポリシー"
   },
   "home": {
     "weeklyUpdate": "毎週新しいテストを追加！",

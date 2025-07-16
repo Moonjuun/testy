@@ -19,10 +19,26 @@
     "googleLoginFailed": "Đăng nhập Google thất bại. Vui lòng thử lại.",
     "confirm": "Xác nhận",
     "unimplementedFeature": "Tính năng chưa được triển khai",
-    "loginPrompt": "Hãy đăng nhập dễ dàng bằng các phương thức dưới đây",
     "continueWithGoogle": "Tiếp tục với Google",
     "continueWithApple": "Tiếp tục với Apple",
-    "continueWithFacebook": "Tiếp tục với Facebook"
+    "continueWithFacebook": "Tiếp tục với Facebook",
+    "unlockFeatures": "Bắt đầu dễ dàng và khám phá thêm các tính năng",
+    "loginPrompt": "Theo dõi hoạt động của bạn và nhận các cập nhật mới nhất.",
+    "feature1": {
+      "title": "Quản lý Lịch sử Kiểm tra",
+      "description": "Xem lại kết quả các bài kiểm tra trước đây mọi lúc, mọi nơi."
+    },
+    "feature2": {
+      "title": "Thông báo về Nội dung & Cập nhật mới",
+      "description": "Hãy là người đầu tiên biết khi có bài kiểm tra hoặc tính năng mới."
+    },
+    "feature3": {
+      "title": "Tính năng & Nội dung độc quyền",
+      "description": "Trải nghiệm sớm các tính năng đặc biệt chỉ dành cho thành viên."
+    },
+    "termsPrefix": "Bằng cách tiếp tục, bạn đồng ý với các điều khoản sau:",
+    "termsLink": "Điều khoản Dịch vụ",
+    "privacyLink": "Chính sách Bảo mật"
   },
   "home": {
     "weeklyUpdate": "Test mới được cập nhật hàng tuần!",
