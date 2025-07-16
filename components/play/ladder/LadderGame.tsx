@@ -43,7 +43,7 @@ type GameState = "setup" | "ladder-setup" | "ready" | "playing";
 type RevealMode = "one-by-one" | "show-all";
 
 const PLAYER_EMOJIS = [
-  "�",
+  "😀",
   "🎯",
   "🌟",
   "🎉",
@@ -67,7 +67,7 @@ export default function LadderGame() {
   const { t } = useTranslation("common");
   const [gameState, setGameState] = useState<GameState>("setup");
   const [players, setPlayers] = useState<Player[]>([]);
-  const [newPlayerName, setNewPlayerName] = useState("");
+  const [participantCount, setParticipantCount] = useState(2); // 참가자 수 상태
   const [ladderConnections, setLadderConnections] = useState<
     LadderConnection[]
   >([]);
@@ -82,6 +82,16 @@ export default function LadderGame() {
   const [animationPath, setAnimationPath] = useState<Point[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  // [수정] 참가자 수 변경 시 players 배열 자동 생성
+  useEffect(() => {
+    const newPlayers = Array.from({ length: participantCount }, (_, i) => ({
+      id: `player-${i + 1}`,
+      name: `${i + 1}`,
+      emoji: PLAYER_EMOJIS[i % PLAYER_EMOJIS.length],
+    }));
+    setPlayers(newPlayers);
+  }, [participantCount, t]);
+
   // 참가자 수 변경 시 당첨 갯수 유효성 검사
   useEffect(() => {
     if (winnerCount >= players.length && players.length > 1) {
@@ -90,24 +100,6 @@ export default function LadderGame() {
       setWinnerCount(1);
     }
   }, [players.length, winnerCount]);
-
-  // 참가자 추가
-  const addPlayer = () => {
-    if (newPlayerName.trim() && players.length < 15) {
-      const newPlayer: Player = {
-        id: Date.now().toString(),
-        name: newPlayerName.trim(),
-        emoji: PLAYER_EMOJIS[players.length % PLAYER_EMOJIS.length],
-      };
-      setPlayers([...players, newPlayer]);
-      setNewPlayerName("");
-    }
-  };
-
-  // 참가자 제거
-  const removePlayer = (playerId: string) => {
-    setPlayers(players.filter((p) => p.id !== playerId));
-  };
 
   // [수정됨] 랜덤 사다리 생성 로직
   const generateRandomLadder = () => {
@@ -225,7 +217,7 @@ export default function LadderGame() {
   // 게임 리셋
   const resetGame = () => {
     setGameState("setup");
-    setPlayers([]);
+    setParticipantCount(2); // 참가자 수 초기화
     setLadderConnections([]);
     setResults([]);
     setDestinationResults([]);
@@ -416,56 +408,49 @@ export default function LadderGame() {
       <div className="max-w-4xl mx-auto space-y-6">
         {gameState === "setup" && (
           <Card className="shadow-lg bg-white dark:bg-slate-800/80 dark:border-slate-700 max-w-md mx-auto">
-            <CardContent className="p-6 space-y-4">
-              <h2 className="text-xl font-semibold mb-4">
-                👥 {t("ladder.addParticipants")}
+            <CardContent className="p-6 space-y-6">
+              <h2 className="text-xl font-semibold text-center">
+                ⚙️ {t("ladder.gameSettings", "게임 설정")}
               </h2>
-              <div className="flex gap-2">
-                <Input
-                  value={newPlayerName}
-                  onChange={(e) => setNewPlayerName(e.target.value)}
-                  placeholder={t("ladder.enterParticipants")}
-                  onKeyPress={(e) => e.key === "Enter" && addPlayer()}
-                  className="flex-1 rounded-full border-2 border-gray-200 focus:border-blue-400 dark:bg-slate-700 dark:border-slate-600"
-                />
-                <Button
-                  onClick={addPlayer}
-                  disabled={!newPlayerName.trim() || players.length >= 15}
-                  className="rounded-full bg-blue-500 hover:bg-blue-600 text-white px-6"
+              {/* [수정] 참가자 수 선택 UI */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="participantCount"
+                  className="font-medium text-gray-700 dark:text-gray-300"
                 >
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-              {players.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {t("ladder.participants")} ({players.length}/15)
-                  </p>
-                  <div className="grid grid-cols-1 gap-2 max-h-48 md:max-h-72 overflow-y-auto p-1">
-                    {players.map((player) => (
-                      <div
-                        key={player.id}
-                        className="flex items-center justify-between bg-gray-50 dark:bg-slate-700/50 rounded-lg p-3"
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="text-2xl">{player.emoji}</span>
-                          <span className="font-medium">{player.name}</span>
-                        </div>
-                        <Button
-                          onClick={() => removePlayer(player.id)}
-                          variant="ghost"
-                          size="sm"
-                          className="text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-full"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
+                  👥 {t("ladder.participants")}
+                </label>
+                <div className="flex items-center justify-center space-x-4 p-2 rounded-full border-2 border-gray-200 dark:border-slate-600">
+                  <Button
+                    onClick={() =>
+                      setParticipantCount((prev) => Math.max(2, prev - 1))
+                    }
+                    disabled={participantCount <= 2}
+                    variant="ghost"
+                    size="sm"
+                    className="rounded-full text-lg"
+                  >
+                    -
+                  </Button>
+                  <span className="text-lg font-semibold w-8 text-center">
+                    {participantCount}
+                  </span>
+                  <Button
+                    onClick={() =>
+                      setParticipantCount((prev) => Math.min(15, prev + 1))
+                    }
+                    disabled={participantCount >= 15}
+                    variant="ghost"
+                    size="sm"
+                    className="rounded-full text-lg"
+                  >
+                    +
+                  </Button>
                 </div>
-              )}
+              </div>
 
-              <div className="space-y-2 pt-2">
+              {/* 당첨자 수 선택 UI */}
+              <div className="space-y-2">
                 <label
                   htmlFor="winnerCount"
                   className="font-medium text-gray-700 dark:text-gray-300"
@@ -477,7 +462,6 @@ export default function LadderGame() {
                     onClick={() =>
                       setWinnerCount((prev) => Math.max(1, prev - 1))
                     }
-                    // 참가자가 2명 미만이거나, 당첨자가 1명이면 감소 버튼 비활성화
                     disabled={players.length < 2 || winnerCount <= 1}
                     variant="ghost"
                     size="sm"
@@ -494,7 +478,6 @@ export default function LadderGame() {
                         Math.min(players.length - 1, prev + 1)
                       )
                     }
-                    // 참가자가 2명 미만이거나, 당첨자 수가 (참가자 수 - 1) 이상이면 증가 버튼 비활성화
                     disabled={
                       players.length < 2 || winnerCount >= players.length - 1
                     }
@@ -513,7 +496,7 @@ export default function LadderGame() {
                     generateRandomLadder();
                     setGameState("ladder-setup");
                   }}
-                  className="w-full rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 text-lg font-semibold"
+                  className="w-full rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 text-lg font-semibold !mt-8"
                 >
                   {t("ladder.setLadder")}
                 </Button>
@@ -616,6 +599,7 @@ export default function LadderGame() {
                   </div>
                 </div>
               </div>
+
               <Button
                 onClick={() => {
                   setGameState("ready");
@@ -792,7 +776,7 @@ export default function LadderGame() {
                               >
                                 {result.isWinner
                                   ? `🎉 ${t("ladder.winner")}`
-                                  : `🎉 ${t("ladder.loser")}`}
+                                  : `😥 ${t("ladder.loser")}`}
                               </span>
                             )}
                           </Button>
