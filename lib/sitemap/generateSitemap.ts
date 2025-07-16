@@ -16,7 +16,10 @@ export async function generateSitemapXml() {
   // 3. 정적 페이지 URL을 모든 언어에 대해 생성합니다.
   const staticUrls: SitemapUrl[] = locales.flatMap((locale) => [
     { loc: `${baseUrl}/${locale}` }, // 각 언어의 홈페이지
-    { loc: `${baseUrl}/${locale}/test/list` }, // 각 언어의 전체 테스트 목록
+    { loc: `${baseUrl}/${locale}/test/list` },
+    { loc: `${baseUrl}/${locale}/play/draw` },
+    { loc: `${baseUrl}/${locale}/play/ladder` },
+    { loc: `${baseUrl}/${locale}/play/lunch` },
   ]);
 
   // 4. 동적 페이지(카테고리, 테스트) URL을 모든 언어에 대해 생성합니다.
