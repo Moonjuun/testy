@@ -13,27 +13,43 @@ function getLocale(request: NextRequest): string {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // ✅ 1. SEO 관련 경로는 미들웨어에서 제외
+  const excludedPaths = [
+    "/robots.txt",
+    "/sitemap.xml",
+    "/sitemap-ko.xml",
+    "/sitemap-en.xml",
+    "/sitemap-ja.xml",
+    "/sitemap-vi.xml",
+  ];
+  if (excludedPaths.includes(pathname)) {
+    return NextResponse.next(); // 미들웨어 무시하고 통과
+  }
+
+  // ✅ 2. API 경로는 세션 처리만 하고 locale 리디렉션 제외
+  if (pathname.startsWith("/api")) {
+    return await updateSession(request);
+  }
+
+  // ✅ 3. 이미 locale이 붙은 경로면 세션만 업데이트
   const pathnameHasLocale = locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
-
-  // API 경로를 로케일 처리 대상에서 제외
-  if (pathname.startsWith("/api")) {
-    return await updateSession(request); // API 경로는 세션 업데이트만 수행하고 로케일 처리 건너뛰기
-  }
-
   if (pathnameHasLocale) {
     return await updateSession(request);
   }
 
+  // ✅ 4. locale 없을 경우 브라우저 언어 감지 후 리디렉션
   const locale = getLocale(request);
   request.nextUrl.pathname = `/${locale}${pathname}`;
   return NextResponse.redirect(request.nextUrl);
 }
 
+// ✅ 5. matcher에서 SEO 파일들은 정규식으로 예외 처리
 export const config = {
   matcher: [
-    // API 라우트 및 robots.txt, sitemap.xml 등 특정 파일을 제외합니다.
-    "/((?!_next/static|_next/image|favicon.ico|robots\\.txt|sitemap\\.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|api).*)",
+    // 정적 파일, 이미지, SEO 파일, API 등을 제외하고 처리
+    "/((?!_next/static|_next/image|favicon.ico|robots\\.txt|sitemap.*\\.xml|.*\\.(svg|png|jpg|jpeg|gif|webp)$|api).*)",
   ],
 };
