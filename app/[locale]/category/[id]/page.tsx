@@ -7,24 +7,37 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: { id: string; locale: string };
 }) {
-  const { id } = await params;
+  const { id, locale } = params;
   const supabase = createClient();
 
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("categories")
     .select("name_ko, name_en, name_ja, name_vi")
     .eq("code", id)
     .maybeSingle();
 
-  const name = data?.name_ko ?? id;
+  const name =
+    locale === "en"
+      ? data?.name_en
+      : locale === "ja"
+      ? data?.name_ja
+      : locale === "vi"
+      ? data?.name_vi
+      : data?.name_ko ?? id;
 
   return {
     title: `${name} 테스트 모음 | Testy`,
     description: `${name} 관련 심리 테스트, 성향 테스트를 한 곳에 모아봤어요.`,
     alternates: {
-      canonical: `https://testy.im/category/${id}`,
+      canonical: `https://testy.im/${locale}/category/${id}`,
+      languages: {
+        "ko-KR": `https://testy.im/ko/category/${id}`,
+        "en-US": `https://testy.im/en/category/${id}`,
+        "ja-JP": `https://testy.im/ja/category/${id}`,
+        "vi-VN": `https://testy.im/vi/category/${id}`,
+      },
     },
   };
 }

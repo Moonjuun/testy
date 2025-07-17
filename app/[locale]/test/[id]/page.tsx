@@ -15,9 +15,40 @@ export async function generateMetadata({
   const { id, locale } = await params;
   const url = `https://testy.im/${locale}/test/${id}`;
 
+  const metadataByLocale = {
+    ko: {
+      title: `테스트 결과 보기 | Testy`,
+      description: `흥미로운 심리 테스트 결과를 확인해보세요.`,
+    },
+    en: {
+      title: `View Your Test Result | Testy`,
+      description: `Check out your personality or psychological test result.`,
+    },
+    ja: {
+      title: `テスト結果を見る | Testy`,
+      description: `面白い心理テストの結果をチェックしよう。`,
+    },
+    vi: {
+      title: `Xem kết quả bài kiểm tra | Testy`,
+      description: `Khám phá kết quả bài kiểm tra tâm lý thú vị của bạn.`,
+    },
+  };
+
+  const meta =
+    metadataByLocale[locale as keyof typeof metadataByLocale] ??
+    metadataByLocale.ko;
+
   return {
+    title: meta.title,
+    description: meta.description,
     alternates: {
       canonical: url,
+      languages: {
+        "ko-KR": `https://testy.im/ko/test/${id}`,
+        "en-US": `https://testy.im/en/test/${id}`,
+        "ja-JP": `https://testy.im/ja/test/${id}`,
+        "vi-VN": `https://testy.im/vi/test/${id}`,
+      },
     },
   };
 }

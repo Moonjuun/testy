@@ -110,10 +110,10 @@ export async function generateMetadata({
     alternates: {
       canonical: url,
       languages: {
-        ko: "https://testy.im/ko",
-        en: "https://testy.im/en",
-        ja: "https://testy.im/ja",
-        vi: "https://testy.im/vi",
+        "ko-KR": "https://testy.im/ko",
+        "en-US": "https://testy.im/en",
+        "ja-JP": "https://testy.im/ja",
+        "vi-VN": "https://testy.im/vi",
       },
     },
   };
