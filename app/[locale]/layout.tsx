@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import ClientLayout from "@/components/ClientLayout";
 import { createClientForServer } from "@/lib/supabase/server";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -137,6 +138,7 @@ export default async function LocaleLayout({
     <div lang={locale} className={inter.className} suppressHydrationWarning>
       <ClientLayout user={user} locale={locale}>
         {children}
+        <Analytics />
       </ClientLayout>
     </div>
   );
