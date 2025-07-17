@@ -148,11 +148,35 @@ export default function ResultPage({
         backgroundColor: "#fff",
         useCORS: true,
       });
-      const dataUrl = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.href = dataUrl;
-      link.download = `result-${id}.png`;
-      link.click();
+
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
+        const file = new File([blob], `result-${id}.png`, { type: blob.type });
+
+        // 지원여부 체크
+        if (navigator.canShare?.({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: result?.title,
+              text: shareText,
+            });
+          } catch (err: any) {
+            if (err.name === "AbortError") {
+              // 사용자가 공유를 취소했으니 조용히 무시
+              return;
+            }
+            console.error("share failed:", err);
+          }
+        } else {
+          // fallback: 기존 다운로드
+          const dataUrl = canvas.toDataURL("image/png");
+          const link = document.createElement("a");
+          link.href = dataUrl;
+          link.download = `result-${id}.png`;
+          link.click();
+        }
+      }, "image/png");
     }
   };
 
