@@ -3,62 +3,90 @@ import { getActiveCategories } from "@/lib/supabase/getActiveCategories";
 import { Language } from "@/store/useLanguageStore";
 
 type SitemapUrl = {
-  loc: string;
+  path: string; // locale 포함한 상대 경로
   lastmod?: string;
 };
 
-// 1. 함수가 특정 언어를 인자로 받지 않도록 수정합니다.
 export async function generateSitemapXml() {
   const baseUrl = "https://testy.im";
-  // 2. 지원하는 모든 언어 목록을 정의합니다.
   const locales: Language[] = ["en", "ko", "ja", "vi"];
 
-  // 3. 정적 페이지 URL을 모든 언어에 대해 생성합니다.
-  const staticUrls: SitemapUrl[] = locales.flatMap((locale) => [
-    { loc: `${baseUrl}/${locale}` }, // 각 언어의 홈페이지
-    { loc: `${baseUrl}/${locale}/test/list` },
-    { loc: `${baseUrl}/${locale}/play/draw` },
-    { loc: `${baseUrl}/${locale}/play/ladder` },
-    { loc: `${baseUrl}/${locale}/play/lunch` },
-  ]);
+  // static urls
+  const staticPaths = [
+    "", // homepage
+    "test/list",
+    "play/draw",
+    "play/ladder",
+    "play/lunch",
+  ];
 
-  // 4. 동적 페이지(카테고리, 테스트) URL을 모든 언어에 대해 생성합니다.
-  const dynamicUrlsPromises = locales.map(async (locale) => {
+  const staticUrls: SitemapUrl[] = locales.flatMap((locale) =>
+    staticPaths.map((path) => ({
+      path: `/${locale}/${path}`.replace(/\/+$/, ""), // 중복 슬래시 제거
+    }))
+  );
+
+  // dynamic urls
+  const dynamicUrls: SitemapUrl[] = [];
+
+  for (const locale of locales) {
     const [tests, categories] = await Promise.all([
       getAllTests(locale),
       getActiveCategories(locale),
     ]);
 
-    const categoryUrls: SitemapUrl[] = categories.map((cat) => ({
-      loc: `${baseUrl}/${locale}/category/${cat.code}`,
-    }));
+    categories.forEach((cat) => {
+      dynamicUrls.push({
+        path: `/${locale}/category/${cat.code}`,
+      });
+    });
 
-    const testUrls: SitemapUrl[] = tests.map((test) => ({
-      loc: `${baseUrl}/${locale}/test/${test.id}`,
-      lastmod: new Date(test.created_at).toISOString(),
-    }));
+    tests.forEach((test) => {
+      dynamicUrls.push({
+        path: `/${locale}/test/${test.id}`,
+        lastmod: new Date(test.created_at).toISOString(),
+      });
+    });
+  }
 
-    return [...categoryUrls, ...testUrls];
-  });
-
-  // Promise 배열을 실행하고, 결과를 하나의 배열로 합칩니다.
-  const dynamicUrlsArrays = await Promise.all(dynamicUrlsPromises);
-  const allDynamicUrls = dynamicUrlsArrays.flat();
-
-  const allUrls: SitemapUrl[] = [...staticUrls, ...allDynamicUrls];
+  const allUrls = [...staticUrls, ...dynamicUrls];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  ${allUrls
-    .map(
-      ({ loc, lastmod }) => `<url>
-    <loc>${loc}</loc>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${allUrls
+  .map(({ path, lastmod }) => {
+    const absoluteUrl = `${baseUrl}${path}`;
+
+    // 동일 path의 다국어 페이지들을 cross-link
+    const hreflangLinks = locales
+      .map(
+        (lang) => `
+    <xhtml:link 
+      rel="alternate" 
+      hreflang="${
+        lang === "en"
+          ? "en-US"
+          : lang === "ko"
+          ? "ko-KR"
+          : lang === "ja"
+          ? "ja-JP"
+          : "vi-VN"
+      }" 
+      href="${baseUrl}/${lang}${path.replace(/^\/[a-z]{2}/, "")}" />`
+      )
+      .join("");
+
+    return `
+  <url>
+    <loc>${absoluteUrl}</loc>
     ${lastmod ? `<lastmod>${lastmod}</lastmod>` : ""}
-  </url>`
-    )
-    .join("\n")}
-</urlset>
-  `.trim();
+    ${hreflangLinks}
+  </url>`;
+  })
+  .join("\n")}
+</urlset>`.trim();
 
   return xml;
 }
