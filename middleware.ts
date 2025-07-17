@@ -49,14 +49,7 @@ export async function middleware(request: NextRequest) {
 // ✅ 5. matcher에서 SEO 파일들은 정규식으로 예외 처리
 export const config = {
   matcher: [
-    /*
-      아래와 같은 예외 패턴들 제외
-      - static assets
-      - image optimization
-      - favicon
-      - robots.txt, sitemap*.xml
-      - API routes
-    */
-    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|sitemap-ko.xml|sitemap-en.xml|sitemap-ja.xml|sitemap-vi.xml|.*\\.(svg|png|jpg|jpeg|gif|webp)$).*)",
+    // locale prefix 없는 루트 경로들만 대상으로 지정
+    "/((?!_next/|favicon.ico|robots.txt|sitemap.xml|sitemap-ko.xml|sitemap-en.xml|sitemap-ja.xml|sitemap-vi.xml|api).*)",
   ],
 };
