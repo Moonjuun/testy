@@ -43,7 +43,7 @@ export default function NotFound() {
           className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-lg shadow-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105"
         >
           <Compass className="w-5 h-5 mr-3" />
-          Testy {t("error.goHome")}
+          Testy {t("error.gotoHome")}
         </Link>
       </div>
 

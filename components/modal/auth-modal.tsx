@@ -14,7 +14,6 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ isOpen, onClose }: AuthModalProps) {
-  const [isLoading, setIsLoading] = useState(false); // 로딩 상태는 추후 확장성을 위해 유지
   const language = useLanguageStore((state) => state.currentLanguage);
   const { t } = useTranslation("common");
 
@@ -116,14 +115,18 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
           <p className="mt-6 text-center text-xs text-gray-500 dark:text-gray-400">
             {t("modal.termsPrefix")}{" "}
             <a
-              href="/terms"
+              href={`/${language}/terms`} // ✨ 현재 언어에 맞는 동적 경로로 수정
+              target="_blank" // 새 탭에서 열리도록 추가
+              rel="noopener noreferrer"
               className="underline hover:text-gray-800 dark:hover:text-white"
             >
               {t("modal.termsLink")}
             </a>{" "}
             &{" "}
             <a
-              href="/privacy"
+              href={`/${language}/privacy`} // ✨ 현재 언어에 맞는 동적 경로로 수정
+              target="_blank" // 새 탭에서 열리도록 추가
+              rel="noopener noreferrer"
               className="underline hover:text-gray-800 dark:hover:text-white"
             >
               {t("modal.privacyLink")}
