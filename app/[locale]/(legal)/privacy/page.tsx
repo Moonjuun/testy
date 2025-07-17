@@ -7,14 +7,15 @@ interface Props {
   params: { locale?: string };
 }
 
-export default function TermsPage({ params }: Props) {
-  const lang = params.locale || "en";
+export default async function TermsPage({ params }: Props) {
+  const { locale } = await params;
+
   const filePath = path.join(
     process.cwd(),
     "public",
     "content",
     "privacy",
-    `privacy-${lang}.md`
+    `privacy-${locale}.md`
   );
   let markdown: string;
 
