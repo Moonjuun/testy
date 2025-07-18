@@ -15,14 +15,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // ✅ 1. SEO 관련 경로는 미들웨어에서 제외
-  const excludedPaths = [
-    "/robots.txt",
-    "/sitemap.xml",
-    "/sitemap-ko.xml",
-    "/sitemap-en.xml",
-    "/sitemap-ja.xml",
-    "/sitemap-vi.xml",
-  ];
+  const excludedPaths = ["/robots.txt", "/sitemap.xml"];
   if (excludedPaths.includes(pathname)) {
     return NextResponse.next(); // 미들웨어 무시하고 통과
   }
@@ -40,13 +33,22 @@ export async function middleware(request: NextRequest) {
     return await updateSession(request);
   }
 
-  // ✅ 4. locale 없을 경우 브라우저 언어 감지 후 리디렉션
+  // 4. 삭제 된 경로는 리디렉션
+  const url = request.nextUrl.clone();
+  const lang = url.searchParams.get("lang");
+  if (lang && locales.includes(lang)) {
+    url.searchParams.delete("lang");
+    url.pathname = `/${lang}${pathname}`;
+    return NextResponse.redirect(url, 301);
+  }
+
+  // ✅ 5. locale 없을 경우 브라우저 언어 감지 후 리디렉션
   const locale = getLocale(request);
   request.nextUrl.pathname = `/${locale}${pathname}`;
   return NextResponse.redirect(request.nextUrl);
 }
 
-// ✅ 5. matcher에서 SEO 파일들은 정규식으로 예외 처리
+// ✅ 6. matcher에서 SEO 파일들은 정규식으로 예외 처리
 export const config = {
   matcher: [
     // locale prefix 없는 루트 경로들만 대상으로 지정
