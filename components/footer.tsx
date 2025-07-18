@@ -116,12 +116,26 @@ export function Footer() {
             </a>
           </div>
 
-          <div className="flex justify-center gap-6 text-sm text-gray-400">
+          <div className="flex flex-col gap-6 text-sm text-gray-400">
             <Link
-              href="/sitemap"
+              href="/sitemap.xml"
               className="hover:text-white transition-colors"
             >
               사이트맵
+            </Link>
+
+            <Link
+              href="/terms"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              이용약관
+            </Link>
+
+            <Link
+              href="/privacy"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              개인정보처리방침
             </Link>
           </div>
         </div>
