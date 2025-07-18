@@ -1,7 +1,0 @@
-# *
-User-agent: *
-Allow: /
-Disallow: /admin/
-
-# Sitemaps
-Sitemap: https://testy.im/sitemap.xml
