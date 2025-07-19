@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/client";
 import TestView from "@/components/test/TestView";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { absoluteUrl } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,7 @@ export async function generateMetadata({
   params: { id: string; locale: string };
 }): Promise<Metadata> {
   const { id, locale } = await params;
+  const origin = absoluteUrl(); // e.g. "https://testy.im"
   const url = `https://testy.im/${locale}/test/${id}`;
 
   const metadataByLocale = {
