@@ -1,4 +1,4 @@
-// api/test/[id].page.tsx
+// app/test/[id]/page.tsx
 import { createClient } from "@/lib/supabase/client";
 import TestView from "@/components/test/TestView";
 import { notFound } from "next/navigation";
@@ -36,7 +36,7 @@ export async function generateMetadata({
 
   const meta =
     metadataByLocale[locale as keyof typeof metadataByLocale] ??
-    metadataByLocale.ko;
+    metadataByLocale.en;
 
   return {
     title: meta.title,
@@ -44,10 +44,11 @@ export async function generateMetadata({
     alternates: {
       canonical: url,
       languages: {
-        "ko-KR": `https://testy.im/ko/test/${id}`,
-        "en-US": `https://testy.im/en/test/${id}`,
-        "ja-JP": `https://testy.im/ja/test/${id}`,
-        "vi-VN": `https://testy.im/vi/test/${id}`,
+        ko: `${origin}/ko/test/${id}`,
+        en: `${origin}/en/test/${id}`,
+        ja: `${origin}/ja/test/${id}`,
+        vi: `${origin}/vi/test/${id}`,
+        "x-default": `${origin}/en/test/${id}`,
       },
     },
   };

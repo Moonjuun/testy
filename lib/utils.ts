@@ -7,6 +7,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function absoluteUrl(): string {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  // 끝에 슬래시가 있으면 제거
+  return siteUrl.replace(/\/$/, "");
+}
+
 // utils/formatDateByStyle.ts
 export type DateFormatStyle =
   | "dot" // 2025.07.06
