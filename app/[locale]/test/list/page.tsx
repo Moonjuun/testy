@@ -1,8 +1,11 @@
-// app/test/list/page.tsx
+// app/[locale]/test/list/page.tsx
+import { absoluteUrl } from "@/lib/utils";
 import { TestListClient } from "./test-list-client";
 
 export function generateMetadata({ params }: { params: { locale: string } }) {
   const { locale } = params;
+  const origin = absoluteUrl(); // e.g. "https://testy.im"
+
   const metadataByLocale = {
     ko: {
       title: "테스트 전체 목록 | Testy",
@@ -26,7 +29,7 @@ export function generateMetadata({ params }: { params: { locale: string } }) {
 
   const meta =
     metadataByLocale[locale as keyof typeof metadataByLocale] ??
-    metadataByLocale.ko;
+    metadataByLocale.en;
 
   const url = `https://testy.im/${locale}/test/list`;
 
@@ -36,10 +39,11 @@ export function generateMetadata({ params }: { params: { locale: string } }) {
     alternates: {
       canonical: url,
       languages: {
-        "ko-KR": "https://testy.im/ko/test/list",
-        "en-US": "https://testy.im/en/test/list",
-        "ja-JP": "https://testy.im/ja/test/list",
-        "vi-VN": "https://testy.im/vi/test/list",
+        ko: `${origin}/ko/test/list`,
+        en: `${origin}/en/test/list`,
+        ja: `${origin}/ja/test/list`,
+        vi: `${origin}/vi/test/list`,
+        "x-default": `${origin}/en/test/list`,
       },
     },
   };
