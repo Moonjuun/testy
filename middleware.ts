@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // ✅ 1. SEO 관련 경로는 미들웨어에서 제외
-  const excludedPaths = ["/robots.txt", "/sitemap.xml", "/ads.txt"];
+  const excludedPaths = ["/robots.txt", "/sitemap.xml"];
   if (excludedPaths.includes(pathname)) {
     return NextResponse.next(); // 미들웨어 무시하고 통과
   }
@@ -52,6 +52,6 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // locale prefix 없는 루트 경로들만 대상으로 지정
-    "/((?!_next/|favicon.ico|robots.txt|sitemap.xml|ads.txt|sitemap-ko.xml|sitemap-en.xml|sitemap-ja.xml|sitemap-vi.xml|api).*)",
+    "/((?!_next/|favicon.ico|robots.txt|sitemap.xml|sitemap-ko.xml|sitemap-en.xml|sitemap-ja.xml|sitemap-vi.xml|api).*)",
   ],
 };
