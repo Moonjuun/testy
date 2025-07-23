@@ -113,25 +113,31 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
           {/* 약관 안내 */}
           <p className="mt-6 text-center text-xs text-gray-500 dark:text-gray-400">
-            {t("modal.termsPrefix")}{" "}
-            <a
-              href={`/${language}/terms`} // ✨ 현재 언어에 맞는 동적 경로로 수정
-              target="_blank" // 새 탭에서 열리도록 추가
-              rel="noopener noreferrer"
-              className="underline hover:text-gray-800 dark:hover:text-white"
-            >
-              {t("modal.termsLink")}
-            </a>{" "}
-            &{" "}
-            <a
-              href={`/${language}/privacy`} // ✨ 현재 언어에 맞는 동적 경로로 수정
-              target="_blank" // 새 탭에서 열리도록 추가
-              rel="noopener noreferrer"
-              className="underline hover:text-gray-800 dark:hover:text-white"
-            >
-              {t("modal.privacyLink")}
-            </a>
-            .
+            {/* 약관 문구 */}
+            {t("modal.termsPrefix")}
+            <br />
+
+            {/* 약관 & 개인정보처리방침 링크 */}
+            <span>
+              <a
+                href={`/${language}/terms`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-gray-800 dark:hover:text-white"
+              >
+                {t("modal.termsLink")}
+              </a>{" "}
+              &{" "}
+              <a
+                href={`/${language}/privacy`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-gray-800 dark:hover:text-white"
+              >
+                {t("modal.privacyLink")}
+              </a>
+              .
+            </span>
           </p>
         </div>
       </div>

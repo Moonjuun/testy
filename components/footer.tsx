@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { Heart, Mail, MessageCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export function Footer() {
+  const { t } = useTranslation();
   return (
     <footer className="bg-gray-900 dark:bg-gray-950 text-white py-12">
       <div className="container mx-auto px-4">
@@ -128,14 +130,14 @@ export function Footer() {
               href="/terms"
               className="text-gray-400 hover:text-white transition-colors"
             >
-              이용약관
+              {t("modal.termsLink")}
             </Link>
 
             <Link
               href="/privacy"
               className="text-gray-400 hover:text-white transition-colors"
             >
-              개인정보처리방침
+              {t("modal.privacyLink")}
             </Link>
           </div>
         </div>
