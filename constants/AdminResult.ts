@@ -158,6 +158,8 @@ ID | code        | name_ko     | name_en
 -- | ----------- | ----------- | ---------  
 1  | personality | 성격        | Personality  
 2  | love        | 연애        | Love & Dating  
+3  | mbti        | MBTI       | MBTI
+7  | animal        | 동물      | Animals
 8  | fun         | 재미        | Just for Fun  
 
 ---
