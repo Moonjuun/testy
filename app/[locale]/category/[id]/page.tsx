@@ -9,7 +9,7 @@ export async function generateMetadata({
 }: {
   params: { id: string; locale: string };
 }) {
-  const { id, locale } = params;
+  const { id, locale } = await params;
   const supabase = createClient();
 
   const { data } = await supabase
