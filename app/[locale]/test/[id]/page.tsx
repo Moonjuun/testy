@@ -13,7 +13,7 @@ export async function generateMetadata({
 }: {
   params: { id: string; locale: string };
 }): Promise<Metadata> {
-  const { id, locale } = params; // await 제거 (params는 이미 프로미스가 아님)
+  const { id, locale } = await params; // await 제거 (params는 이미 프로미스가 아님)
   const origin = absoluteUrl();
   const url = `${origin}/${locale}/test/${id}`; // absoluteUrl을 사용하여 전체 URL 생성
 
@@ -97,7 +97,7 @@ export default async function TestPage({
 }: {
   params: { id: string; locale: string };
 }) {
-  const { id, locale } = params;
+  const { id, locale } = await params;
 
   const supabase = createClient();
 
