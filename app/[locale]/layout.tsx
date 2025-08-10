@@ -12,43 +12,53 @@ const inter = Inter({ subsets: ["latin"] });
 // 1. 이미지 경로 및 alt 텍스트 추가
 const metadataTranslations = {
   ko: {
-    title: "Testy 테스티 - 가볍게 해보는 성향 테스트",
+    // ✨ 변경된 부분: 핵심 콘텐츠를 제목에 포함
+    title: "Testy 테스티 - MBTI, 사다리게임, 성향 테스트",
+    // ✨ 변경된 부분: 제공하는 게임/테스트 종류를 명확히 나열
     description:
-      "간단한 질문들로 숨겨진 나의 모습을 발견해보세요. 성격, 연애, 진로 등 다양한 테스트를 제공합니다.",
-    twitterTitle: "Testy 테스티 - 성향 테스트 플랫폼",
+      "MBTI, 사다리게임, 점심 메뉴 고르기, 스피드 드로우 등 다양한 테스트와 게임을 즐겨보세요! 성격, 연애, 진로를 탐색하며 숨겨진 나를 발견하는 즐거움.",
+    twitterTitle: "Testy 테스티 - 성향 테스트 & 미니게임 플랫폼",
     twitterDescription:
-      "테스트로 나를 알아가는 즐거움. 가볍게 재미있게 시작해보세요!",
+      "MBTI부터 사다리게임까지, 테스트로 나를 알아가는 즐거움. 지금 바로 시작해보세요!",
     ogImage: "/og-image-ko.png",
-    ogImageAlt: "Testy 테스티 한국어 대표 이미지",
+    ogImageAlt: "Testy 테스티(MBTI, 사다리게임) 한국어 대표 이미지",
   },
   en: {
-    title: "Testy - Lighthearted Personality Tests",
+    // ✨ Changed: Included key content in the title
+    title: "Testy - MBTI, Ladder Game & Personality Tests",
+    // ✨ Changed: Clearly listed the types of games/tests offered
     description:
-      "Discover your hidden self with simple questions. We offer various tests including personality, relationships, and career paths.",
-    twitterTitle: "Testy - Personality Test Platform",
+      "Enjoy various tests and games like MBTI, Ladder Game, Lunch Picker, and Speed Draw. Discover your hidden self by exploring personality, relationships, and career paths.",
+    twitterTitle: "Testy - Personality Tests & Mini-Games Platform",
     twitterDescription:
-      "The joy of discovering yourself through tests. Start lightly and have fun!",
+      "From MBTI to the Ladder Game, discover the joy of getting to know yourself. Start now!",
     ogImage: "/og-image-en.png",
-    ogImageAlt: "Testy - Main promotional image in English",
+    ogImageAlt: "Testy (MBTI, Ladder Game) - Main promotional image in English",
   },
   ja: {
-    title: "Testy テスティ - 気軽にできる性格テスト",
+    // ✨ 変更点: 主要なコンテンツをタイトルに含める
+    title: "Testy テスティ - MBTI、あみだくじ、性格テスト",
+    // ✨ 変更点: 提供するゲーム・テストの種類を明確にリストアップ
     description:
-      "簡単な質問で隠れた自分を発見してみましょう。性格、恋愛、進路など、様々なテストを提供しています。",
-    twitterTitle: "Testy テスティ - 性格テストプラットフォーム",
-    twitterDescription: "テストで自分を知る楽しさ。気軽に始めてみましょう！",
+      "MBTI、あみだくじ、ランチルーレット、スピードドローなど、様々なテストやゲームを楽しんでください！性格、恋愛、進路を探りながら、隠れた自分を発見する楽しさを。",
+    twitterTitle: "Testy テスティ - 性格テスト＆ミニゲームプラットフォーム",
+    twitterDescription:
+      "MBTIからあみだくじまで、テストで自分を知る楽しさ。今すぐ始めてみましょう！",
     ogImage: "/og-image-ja.png",
-    ogImageAlt: "Testy テスティ 日本語版の代表画像",
+    ogImageAlt: "Testy テスティ (MBTI, あみだくじ) 日本語版の代表画像",
   },
   vi: {
-    title: "Testy - Bài kiểm tra tính cách nhẹ nhàng",
+    // ✨ Thay đổi: Bao gồm nội dung chính trong tiêu đề
+    title: "Testy - Kiểm tra MBTI, Trò chơi bậc thang & Tính cách",
+    // ✨ Thay đổi: Liệt kê rõ ràng các loại trò chơi/bài kiểm tra được cung cấp
     description:
-      "Khám phá bản thân ẩn giấu của bạn với những câu hỏi đơn giản. Chúng tôi cung cấp nhiều bài kiểm tra khác nhau bao gồm tính cách, tình yêu và định hướng nghề nghiệp.",
-    twitterTitle: "Testy - Nền tảng kiểm tra tính cách",
+      "Thưởng thức các bài kiểm tra và trò chơi đa dạng như MBTI, Trò chơi bậc thang, Chọn bữa trưa và Vẽ nhanh. Khám phá bản thân ẩn giấu qua việc tìm hiểu tính cách, các mối quan hệ và con đường sự nghiệp.",
+    twitterTitle: "Testy - Nền tảng kiểm tra tính cách & Trò chơi nhỏ",
     twitterDescription:
-      "Niềm vui khám phá bản thân qua các bài kiểm tra. Hãy bắt đầu nhẹ nhàng và vui vẻ!",
+      "Từ MBTI đến Trò chơi bậc thang, hãy khám phá niềm vui khi tìm hiểu về bản thân. Bắt đầu ngay bây giờ!",
     ogImage: "/og-image-vi.png",
-    ogImageAlt: "Hình ảnh đại diện Testy bằng tiếng Việt",
+    ogImageAlt:
+      "Hình ảnh đại diện Testy (MBTI, Trò chơi bậc thang) bằng tiếng Việt",
   },
 };
 
@@ -71,7 +81,7 @@ export async function generateMetadata({
 
   const translatedMetadata =
     metadataTranslations[locale as keyof typeof metadataTranslations] ||
-    metadataTranslations.ko;
+    metadataTranslations.en;
 
   const title = translatedMetadata.title;
   const description = translatedMetadata.description;
