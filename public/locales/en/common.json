@@ -55,7 +55,8 @@
     "progressCompleted": "{{percent}}% Completed",
     "previous": "Previous",
     "next": "Next",
-    "viewResults": "View Results"
+    "viewResults": "View Results",
+    "allAnswered": "All Answered"
   },
   "resultPage": {
     "analyzingResults": "Analyzing your results...",

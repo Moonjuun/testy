@@ -75,6 +75,7 @@ export default function TestViewMbti({
   //   }
   // }, [testCode]);
 
+  // MBTI 결과 계산 및 점수 변환 로직 (상세 점수 포함)
   const calculateAndProcessResult = useCallback(() => {
     const rawScores = { I: 0, N: 0, F: 0, P: 0 };
 
@@ -88,7 +89,26 @@ export default function TestViewMbti({
       }
     });
 
-    const maxScorePerDimension = 25 * 2;
+    const maxScorePerDimension = 25 * 2; // Each dimension has a max raw score of 50
+
+    // Helper function to amplify the difference from the 50% midpoint
+    const amplifyScore = (rawScore: number) => {
+      // 1. Calculate the initial percentage (0-100)
+      const initialPercent =
+        ((rawScore + maxScorePerDimension) / (maxScorePerDimension * 2)) * 100;
+
+      // 2. Calculate deviation from the midpoint (50)
+      const deviation = initialPercent - 50;
+
+      // 3. Amplify the deviation. Adjust this factor to control the "stretch".
+      // 1.0 is no change. 2.0 is a very strong change. 1.7 is a good starting point.
+      const gainFactor = 1.7;
+      const amplifiedDeviation = deviation * gainFactor;
+
+      // 4. Calculate the new percentage and clamp it between 0 and 100
+      const finalPercent = 50 + amplifiedDeviation;
+      return Math.max(0, Math.min(100, Math.round(finalPercent)));
+    };
 
     const finalScores = {
       score_e: 0,
@@ -101,30 +121,20 @@ export default function TestViewMbti({
       score_p: 0,
     };
 
-    const eiTotal = rawScores.I;
-    finalScores.score_i = Math.round(
-      ((eiTotal + maxScorePerDimension) / (maxScorePerDimension * 2)) * 100
-    );
+    // Calculate amplified scores for each dimension
+    finalScores.score_i = amplifyScore(rawScores.I);
     finalScores.score_e = 100 - finalScores.score_i;
 
-    const snTotal = rawScores.N;
-    finalScores.score_n = Math.round(
-      ((snTotal + maxScorePerDimension) / (maxScorePerDimension * 2)) * 100
-    );
+    finalScores.score_n = amplifyScore(rawScores.N);
     finalScores.score_s = 100 - finalScores.score_n;
 
-    const tfTotal = rawScores.F;
-    finalScores.score_f = Math.round(
-      ((tfTotal + maxScorePerDimension) / (maxScorePerDimension * 2)) * 100
-    );
+    finalScores.score_f = amplifyScore(rawScores.F);
     finalScores.score_t = 100 - finalScores.score_f;
 
-    const jpTotal = rawScores.P;
-    finalScores.score_p = Math.round(
-      ((jpTotal + maxScorePerDimension) / (maxScorePerDimension * 2)) * 100
-    );
+    finalScores.score_p = amplifyScore(rawScores.P);
     finalScores.score_j = 100 - finalScores.score_p;
 
+    // Determine final MBTI type
     const mbtiType = [
       finalScores.score_e > finalScores.score_i ? "E" : "I",
       finalScores.score_s > finalScores.score_n ? "S" : "N",

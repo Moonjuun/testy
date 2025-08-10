@@ -55,7 +55,8 @@
     "progressCompleted": "{{percent}}% 완료",
     "previous": "이전",
     "next": "다음",
-    "viewResults": "결과 보기"
+    "viewResults": "결과 보기",
+    "allAnswered": "모두 답변됨"
   },
   "resultPage": {
     "analyzingResults": "결과를 분석하고 있어요...",
@@ -212,5 +213,17 @@
     "neutral": "보통이다",
     "disagree": "아니다",
     "stronglyDisagree": "매우 아니다"
+  },
+  "mbti": {
+    "score": "점수",
+    "bestChem": "환상의 케미",
+    "worstChem": "환장의 케미",
+    "keywords": "성격 키워드",
+    "dateStyle": "연애 스타일",
+    "guide": "성격 가이드",
+    "strengths": "강점",
+    "weaknesses": "약점",
+    "careers": "추천 직업",
+    "items": "추천 아이템"
   }
 }

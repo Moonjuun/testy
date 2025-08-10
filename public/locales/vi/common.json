@@ -55,7 +55,8 @@
     "progressCompleted": "Hoàn thành {{percent}}%",
     "previous": "Trước",
     "next": "Tiếp",
-    "viewResults": "Xem kết quả"
+    "viewResults": "Xem kết quả",
+    "allAnswered": "Đã trả lời tất cả"
   },
   "resultPage": {
     "analyzingResults": "Đang phân tích kết quả...",
