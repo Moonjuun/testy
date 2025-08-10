@@ -230,25 +230,32 @@ export default function TestViewMbti({
             <ArrowLeft className="w-4 h-4 mr-2" />
             {t("testView.backToList")}
           </Link>
-          {initialTestData.thumbnail_url && (
-            <div className="relative mb-4 rounded-2xl overflow-hidden shadow-xl">
-              <img
-                src={initialTestData.thumbnail_url}
-                alt="Test thumbnail"
-                className="w-full h-64 object-cover brightness-75"
-              />
-              <div className="absolute inset-0 flex flex-col justify-end p-6 bg-gradient-to-t from-black/60 to-transparent">
-                <h1 className="text-2xl font-bold text-white">
-                  {initialTestData.title}
-                </h1>
-                {initialTestData.description && (
-                  <p className="text-sm text-white/80 mt-1">
-                    {initialTestData.description}
-                  </p>
-                )}
-              </div>
+
+          <div className="relative mb-4 rounded-2xl overflow-hidden shadow-xl">
+            <img
+              src={initialTestData.thumbnail_url}
+              alt="Test thumbnail"
+              className="w-full h-64 object-cover brightness-75"
+            />
+            <div className="absolute inset-0 flex flex-col justify-end p-6 bg-gradient-to-t from-black/60 to-transparent">
+              <h1 className="text-2xl font-bold text-white">
+                {initialTestData.title}
+              </h1>
+              {initialTestData.description && (
+                <p className="text-sm text-white/80 mt-1">
+                  {initialTestData.description
+                    .split("\n")
+                    .map((line, index) => (
+                      <span key={index}>
+                        {line}
+                        <br />
+                      </span>
+                    ))}
+                </p>
+              )}
             </div>
-          )}
+          </div>
+
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
             <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-4">
               <span>

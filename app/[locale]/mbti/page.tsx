@@ -14,24 +14,39 @@ export async function generateMetadata({
   params: { locale: string };
 }): Promise<Metadata> {
   const { locale } = await params;
-  const url = `https://your-domain.com/${locale}/mbti`; // TODO: 실제 도메인 주소로 변경해주세요.
+  const url = `https://testy.im/${locale}/mbti`;
 
   const metadataByLocale = {
     ko: {
-      title: `MBTI 성격 유형 검사 | Testy`,
-      description: `100개의 질문으로 알아보는 나의 진짜 성격 유형!`,
+      title: "MBTI 성격 유형 검사 - 나의 진짜 성향은? | Testy",
+      description:
+        "100개의 질문으로 알아보는 16가지 성격 유형! Testy에서 무료 MBTI 성향 테스트를 통해 숨겨진 나의 모습을 발견해보세요.",
+      ogTitle: "MBTI 성격 유형 검사 | Testy",
+      ogDescription:
+        "과연 나의 진짜 성격 유형은 무엇일까요? 지금 바로 확인해보세요!",
     },
     en: {
-      title: `MBTI Personality Test | Testy`,
-      description: `Find out your true personality type with 100 questions!`,
+      title: "MBTI Personality Test - What's My True Type? | Testy",
+      description:
+        "Discover your hidden self with our 16 personality types test based on 100 questions. Find your type on Testy for free!",
+      ogTitle: "MBTI Personality Test | Testy",
+      ogDescription: "What is your true personality type? Find out now!",
     },
     ja: {
-      title: `MBTI性格診断テスト | Testy`,
-      description: `100の質問でわかる、あなたの本当の性格タイプ！`,
+      title: "MBTI性格診断 - 私の本当のタイプは？ | Testy",
+      description:
+        "100の質問でわかる16タイプの性格診断！Testyで無料のMBTI傾向テストを通じて、隠れた自分を発見しましょう。",
+      ogTitle: "MBTI性格診断 | Testy",
+      ogDescription:
+        "果たして私の本当の性格タイプは何でしょう？今すぐチェック！",
     },
     vi: {
-      title: `Bài kiểm tra tính cách MBTI | Testy`,
-      description: `Tìm ra loại tính cách thực sự của bạn với 100 câu hỏi!`,
+      title:
+        "Bài kiểm tra tính cách MBTI - Loại tính cách thực sự của tôi là gì? | Testy",
+      description:
+        "Khám phá bản thân ẩn giấu của bạn với bài kiểm tra 16 loại tính cách dựa trên 100 câu hỏi. Tìm loại của bạn trên Testy miễn phí!",
+      ogTitle: "Bài kiểm tra tính cách MBTI | Testy",
+      ogDescription: "Loại tính cách thực sự của bạn là gì? Tìm hiểu ngay!",
     },
   };
 

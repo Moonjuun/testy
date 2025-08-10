@@ -176,6 +176,21 @@ export function Header({ locale }: HeaderProps) {
     </DropdownMenu>
   );
 
+  const mbtiMenu = (
+    <Button
+      variant="ghost"
+      className="px-4 py-2 text-[15px] font-semibold text-gray-800 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+    >
+      <Link
+        href={`/${locale}/mbti`}
+        onClick={() => setIsMobileMenuOpen(false)}
+        className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+      >
+        MBTI
+      </Link>
+    </Button>
+  );
+
   return (
     <>
       <header className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 shadow-sm">
@@ -193,6 +208,7 @@ export function Header({ locale }: HeaderProps) {
             {/* Desktop Menu */}
             <nav className="hidden lg:flex items-center space-x-1">
               {testMenu}
+              {mbtiMenu}
               {playgroundMenu}
             </nav>
 
@@ -341,6 +357,18 @@ export function Header({ locale }: HeaderProps) {
                       {t("header.lunch")}
                     </Link>
                   </div>
+                </details>
+                {/* MBTI */}
+                <details className="w-full group">
+                  <summary className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+                    <Link
+                      href={`/${locale}/mbti`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      MBTI
+                    </Link>
+                  </summary>
                 </details>
               </nav>
             </div>
