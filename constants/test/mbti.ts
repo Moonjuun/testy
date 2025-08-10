@@ -451,7 +451,7 @@ const mbtiQuestions: MbtiQuestion[] = [
 ];
 
 export const mbtiTestData: MbtiTestData = {
-  title: "정식 MBTI 성격 유형 검사",
+  title: "MBTI 성격 유형 검사",
   description:
     "100개의 질문을 통해 당신의 성격 유형을 심도있게 분석합니다. 각 질문에 솔직하게 답변하여 자신을 더 깊이 이해하는 시간을 가져보세요.",
   thumbnail_url: "https://source.unsplash.com/random/800x600/?personality",

@@ -205,5 +205,12 @@
     "notFound": "ここはまだ何もない未知の空間です。",
     "waitPlease": "準備中です。もう少しお待ちください〜",
     "gotoHome": "ホームに戻る"
+  },
+  "mbtiAnswers": {
+    "stronglyAgree": "とてもそう思う",
+    "agree": "そう思う",
+    "neutral": "どちらでもない",
+    "disagree": "そう思わない",
+    "stronglyDisagree": "まったくそう思わない"
   }
 }

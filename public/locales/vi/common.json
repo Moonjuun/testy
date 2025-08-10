@@ -205,5 +205,12 @@
     "notFound": "Đây vẫn là một không gian chưa được khám phá với chẳng có gì cả.",
     "waitPlease": "Chúng tôi đang chuẩn bị. Vui lòng đợi thêm một chút nữa~",
     "gotoHome": "Quay lại trang chủ"
+  },
+  "mbtiAnswers": {
+    "stronglyAgree": "Hoàn toàn đồng ý",
+    "agree": "Đồng ý",
+    "neutral": "Bình thường",
+    "disagree": "Không đồng ý",
+    "stronglyDisagree": "Hoàn toàn không đồng ý"
   }
 }

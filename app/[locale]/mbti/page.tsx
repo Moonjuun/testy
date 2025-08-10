@@ -1,41 +1,43 @@
-// app/mbti/[id]/page.tsx
+// app/[locale]/mbti/page.tsx
 
 import TestViewMbti from "./TestViewMbti";
-import type { Metadata } from "next";
-import { mbtiTestData } from "@/constants/test/mbti";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { getMbtiTest } from "@/lib/supabase/mbti/getMbtiTest"; // 데이터 호출 함수 import
 
-// 1. generateMetadata: MBTI 테스트에 맞게 메타데이터를 수정합니다.
+export const dynamic = "force-dynamic";
+
+// 1. generateMetadata: 하드코딩된 메타데이터를 사용합니다.
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string; locale: string };
+  params: { locale: string };
 }): Promise<Metadata> {
-  const { id, locale } = await params;
-  const url = `https://testy.im/${locale}/mbti/${id}`;
+  const { locale } = await params;
+  const url = `https://your-domain.com/${locale}/mbti`; // TODO: 실제 도메인 주소로 변경해주세요.
 
   const metadataByLocale = {
     ko: {
       title: `MBTI 성격 유형 검사 | Testy`,
-      description: `100개의 질문으로 알아보는 나의 진짜 성격 유형! Testy에서 MBTI를 확인해보세요.`,
+      description: `100개의 질문으로 알아보는 나의 진짜 성격 유형!`,
     },
     en: {
       title: `MBTI Personality Test | Testy`,
-      description: `Find out your true personality type with 100 questions! Check your MBTI on Testy.`,
+      description: `Find out your true personality type with 100 questions!`,
     },
     ja: {
       title: `MBTI性格診断テスト | Testy`,
-      description: `100の質問でわかる、あなたの本当の性格タイプ！TestyでMBTIを確認してみましょう。`,
+      description: `100の質問でわかる、あなたの本当の性格タイプ！`,
     },
     vi: {
       title: `Bài kiểm tra tính cách MBTI | Testy`,
-      description: `Tìm ra loại tính cách thực sự của bạn với 100 câu hỏi! Kiểm tra MBTI của bạn trên Testy.`,
+      description: `Tìm ra loại tính cách thực sự của bạn với 100 câu hỏi!`,
     },
   };
 
   const meta =
     metadataByLocale[locale as keyof typeof metadataByLocale] ??
-    metadataByLocale.en;
+    metadataByLocale.ko;
 
   return {
     title: meta.title,
@@ -43,34 +45,39 @@ export async function generateMetadata({
     alternates: {
       canonical: url,
       languages: {
-        "ko-KR": `https://testy.im/ko/mbti/${id}`,
-        "en-US": `https://testy.im/en/mbti/${id}`,
-        "ja-JP": `https://testy.im/ja/mbti/${id}`,
-        "vi-VN": `https://testy.im/vi/mbti/${id}`,
+        "ko-KR": `${url.replace(locale, "ko")}`,
+        "en-US": `${url.replace(locale, "en")}`,
+        "ja-JP": `${url.replace(locale, "ja")}`,
+        "vi-VN": `${url.replace(locale, "vi")}`,
       },
     },
   };
 }
 
-// 2. 페이지 컴포넌트: 정적 MBTI 데이터를 TestViewMbti 컴포넌트로 전달합니다.
+// 2. 페이지 컴포넌트: getMbtiTest 함수를 사용하여 'original_v1' 테스트 데이터를 가져옵니다.
 export default async function MbtiTestPage({
   params,
 }: {
-  params: { id: string; locale: string };
+  params: { locale: string };
 }) {
-  const { id, locale } = await params;
+  const { locale } = await params;
+  const testCode = "original_v1"; // 테스트 코드를 고정값으로 사용
 
-  // DB 호출 대신, 미리 정의된 MBTI 질문 데이터를 사용합니다.
-  // 이 데이터는 lib/mbti-data.ts 와 같은 파일에 분리하여 관리하는 것이 좋습니다.
-  const testData = mbtiTestData;
+  // 분리된 함수를 호출하여 테스트 데이터를 한번에 가져옵니다.
+  const testData = await getMbtiTest(testCode, locale);
 
-  if (!testData || !testData.questions) {
-    // 데이터가 없는 경우 404 페이지를 표시합니다.
-    console.error("MBTI test data could not be loaded.");
-    return notFound();
+  // testData가 null이면 404 페이지를 보여줍니다.
+  if (!testData) {
+    notFound();
   }
 
+  const { testInfo, questions } = testData;
+
   return (
-    <TestViewMbti initialTestData={testData} testId={id} locale={locale} />
+    <TestViewMbti
+      initialTestData={{ ...testInfo, questions }}
+      testCode={testCode}
+      locale={locale}
+    />
   );
 }

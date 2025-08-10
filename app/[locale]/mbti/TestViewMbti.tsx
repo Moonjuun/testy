@@ -4,20 +4,21 @@
 
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { useTestResultStore } from "@/store/testResultStore";
+import { useMbtiTestResultStore } from "@/store/testMbtiResultStore";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { MobileAdBanner } from "@/components/banner/mobile-ad-banner";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
-import { incrementTestViewCount } from "@/lib/supabase/incrementViewCount";
+// import { incrementTestViewCount } from "@/lib/supabase/incrementViewCount";
 
-// MBTI 데이터 타입을 정의합니다.
+// 데이터 타입 정의 (DB에서 받아오는 데이터 타입과 일치)
 interface MbtiQuestion {
   id: number;
   text: string;
-  type: "EI" | "SN" | "TF" | "JP";
+  dimension: "EI" | "SN" | "TF" | "JP";
+  direction: "I" | "N" | "F" | "P";
 }
 
 interface MbtiTestData {
@@ -27,39 +28,38 @@ interface MbtiTestData {
   questions: MbtiQuestion[];
 }
 
+// ✅ Props 타입 수정: testId를 제거하고 testCode로 통일합니다.
 interface Props {
   initialTestData: MbtiTestData;
-  testId: string;
+  testCode: string;
   locale: string;
 }
 
-// 답변 선택지와 점수
+// 답변 선택지와 점수 (다국어 키 사용)
 const ANSWER_OPTIONS = [
-  { text: "매우 그렇다", score: 2 },
-  { text: "그렇다", score: 1 },
-  { text: "보통이다", score: 0 },
-  { text: "아니다", score: -1 },
-  { text: "전혀 아니다", score: -2 },
+  { textKey: "mbtiAnswers.stronglyAgree", score: 2 },
+  { textKey: "mbtiAnswers.agree", score: 1 },
+  { textKey: "mbtiAnswers.neutral", score: 0 },
+  { textKey: "mbtiAnswers.disagree", score: -1 },
+  { textKey: "mbtiAnswers.stronglyDisagree", score: -2 },
 ];
 
 export default function TestViewMbti({
   initialTestData,
-  testId,
+  testCode,
   locale,
 }: Props) {
   const router = useRouter();
-
+  const setResult = useMbtiTestResultStore((state) => state.setResult);
   const [showContent, setShowContent] = useState(false);
   const { t } = useTranslation("common");
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  // 각 질문에 대한 답변 index를 저장합니다. (-1은 아직 답변 안 함)
   const [answers, setAnswers] = useState<number[]>(() =>
     Array(initialTestData.questions.length).fill(-1)
   );
 
   const totalQuestions = initialTestData.questions.length;
-  const progress = (currentQuestion / totalQuestions) * 100;
   const currentQuestionData = initialTestData.questions[currentQuestion];
   const selectedOption = answers[currentQuestion];
 
@@ -68,30 +68,71 @@ export default function TestViewMbti({
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    if (testId) {
-      incrementTestViewCount(testId);
-    }
-  }, [testId]);
+  // useEffect(() => {
+  //   if (testCode) {
+  //     // ✅ incrementTestViewCount가 testId(number) 대신 testCode(string)를 받을 수 있도록 수정 필요
+  //     incrementTestViewCount(testCode);
+  //   }
+  // }, [testCode]);
 
-  // MBTI 결과 계산 로직
-  const calculateMbtiResult = useCallback(() => {
-    const scores = { EI: 0, SN: 0, TF: 0, JP: 0 };
+  const calculateAndProcessResult = useCallback(() => {
+    const rawScores = { I: 0, N: 0, F: 0, P: 0 };
 
     initialTestData.questions.forEach((question, index) => {
       const answerIndex = answers[index];
       if (answerIndex !== -1) {
         const score = ANSWER_OPTIONS[answerIndex].score;
-        scores[question.type] += score;
+        if (rawScores.hasOwnProperty(question.direction)) {
+          rawScores[question.direction as keyof typeof rawScores] += score;
+        }
       }
     });
 
-    const eiResult = scores.EI >= 0 ? "I" : "E";
-    const snResult = scores.SN >= 0 ? "N" : "S";
-    const tfResult = scores.TF >= 0 ? "F" : "T";
-    const jpResult = scores.JP >= 0 ? "P" : "J";
+    const maxScorePerDimension = 25 * 2;
 
-    return `${eiResult}${snResult}${tfResult}${jpResult}`;
+    const finalScores = {
+      score_e: 0,
+      score_i: 0,
+      score_s: 0,
+      score_n: 0,
+      score_t: 0,
+      score_f: 0,
+      score_j: 0,
+      score_p: 0,
+    };
+
+    const eiTotal = rawScores.I;
+    finalScores.score_i = Math.round(
+      ((eiTotal + maxScorePerDimension) / (maxScorePerDimension * 2)) * 100
+    );
+    finalScores.score_e = 100 - finalScores.score_i;
+
+    const snTotal = rawScores.N;
+    finalScores.score_n = Math.round(
+      ((snTotal + maxScorePerDimension) / (maxScorePerDimension * 2)) * 100
+    );
+    finalScores.score_s = 100 - finalScores.score_n;
+
+    const tfTotal = rawScores.F;
+    finalScores.score_f = Math.round(
+      ((tfTotal + maxScorePerDimension) / (maxScorePerDimension * 2)) * 100
+    );
+    finalScores.score_t = 100 - finalScores.score_f;
+
+    const jpTotal = rawScores.P;
+    finalScores.score_p = Math.round(
+      ((jpTotal + maxScorePerDimension) / (maxScorePerDimension * 2)) * 100
+    );
+    finalScores.score_j = 100 - finalScores.score_p;
+
+    const mbtiType = [
+      finalScores.score_e > finalScores.score_i ? "E" : "I",
+      finalScores.score_s > finalScores.score_n ? "S" : "N",
+      finalScores.score_t > finalScores.score_f ? "T" : "F",
+      finalScores.score_j > finalScores.score_p ? "P" : "J",
+    ].join("");
+
+    return { mbtiType, scores: finalScores };
   }, [answers, initialTestData.questions]);
 
   const handleAnswer = (optionIndex: number) => {
@@ -99,7 +140,6 @@ export default function TestViewMbti({
     newAnswers[currentQuestion] = optionIndex;
     setAnswers(newAnswers);
 
-    // 답변 후 0.3초 뒤 자동으로 다음 문제로 이동
     setTimeout(() => {
       if (currentQuestion < totalQuestions - 1) {
         setCurrentQuestion(currentQuestion + 1);
@@ -111,16 +151,15 @@ export default function TestViewMbti({
     if (currentQuestion < totalQuestions - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      // 마지막 질문이면 결과 계산 및 페이지 이동
-      const mbtiType = calculateMbtiResult();
-      const resultData = {
-        title: "당신의 MBTI 유형",
-        description: `당신의 성격 유형은 ${mbtiType} 입니다.`,
-        mbti: mbtiType,
-        test_id: testId,
-        test_title: initialTestData.title,
-        category: "mbti",
-      };
+      const { mbtiType, scores } = calculateAndProcessResult();
+
+      setResult({
+        mbtiType,
+        scores,
+        testCode,
+        title: initialTestData.title,
+      });
+
       router.push(`/${locale}/mbti/result`);
     }
   };
@@ -138,7 +177,12 @@ export default function TestViewMbti({
   const canGoPrevious = useMemo(() => currentQuestion > 0, [currentQuestion]);
   const isCompleted = useMemo(() => !answers.includes(-1), [answers]);
 
-  // 로딩 화면
+  const answeredCount = useMemo(
+    () => answers.filter((a) => a !== -1).length,
+    [answers]
+  );
+  const displayProgress = (answeredCount / totalQuestions) * 100;
+
   if (!showContent) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
@@ -165,7 +209,6 @@ export default function TestViewMbti({
     );
   }
 
-  // 테스트 UI
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
       <div className="container mx-auto px-4 py-8">
@@ -184,8 +227,10 @@ export default function TestViewMbti({
                 alt="Test thumbnail"
                 className="w-full h-64 object-cover brightness-75"
               />
-              <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
-                <h1 className="text-2xl font-bold">{initialTestData.title}</h1>
+              <div className="absolute inset-0 flex flex-col justify-end p-6 bg-gradient-to-t from-black/60 to-transparent">
+                <h1 className="text-2xl font-bold text-white">
+                  {initialTestData.title}
+                </h1>
                 {initialTestData.description && (
                   <p className="text-sm text-white/80 mt-1">
                     {initialTestData.description}
@@ -204,24 +249,16 @@ export default function TestViewMbti({
               </span>
               <span>
                 {t("testView.progressCompleted", {
-                  percent: Math.round(
-                    (answers.filter((a) => a !== -1).length / totalQuestions) *
-                      100
-                  ),
+                  percent: Math.round(displayProgress),
                 })}
               </span>
             </div>
-            <Progress
-              value={
-                (answers.filter((a) => a !== -1).length / totalQuestions) * 100
-              }
-              className="h-2"
-            />
+            <Progress value={displayProgress} className="h-2" />
           </div>
         </div>
         <div className="max-w-2xl mx-auto">
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
-            <h2 className="text-xl font-bold text-center text-gray-900 dark:text-white mb-6">
+            <h2 className="text-lg sm:text-xl font-bold text-center text-gray-900 dark:text-white mb-6">
               {currentQuestionData.text}
             </h2>
             <div className="space-y-4">
@@ -236,7 +273,7 @@ export default function TestViewMbti({
                   }`}
                 >
                   <span className="font-medium text-gray-900 dark:text-white">
-                    {option.text}
+                    {t(option.textKey)}
                   </span>
                 </button>
               ))}
@@ -266,7 +303,7 @@ export default function TestViewMbti({
             {isCompleted && (
               <div className="text-center mt-6">
                 <p className="text-green-600 dark:text-green-400 font-semibold">
-                  모든 질문에 답변했습니다! 결과 보기 버튼을 눌러주세요.
+                  {t("testView.allAnswered")}
                 </p>
               </div>
             )}
