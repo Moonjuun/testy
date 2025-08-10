@@ -11,7 +11,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticUrls = locales.flatMap((locale) => [
     { url: `${baseUrl}/${locale}`, lastModified: new Date() },
     { url: `${baseUrl}/${locale}/test/list`, lastModified: new Date() },
-    // …etc
+    { url: `${baseUrl}/${locale}/mbti`, lastModified: new Date() },
+    { url: `${baseUrl}/${locale}/play/draw`, lastModified: new Date() },
+    { url: `${baseUrl}/${locale}/play/ladder`, lastModified: new Date() },
+    { url: `${baseUrl}/${locale}/play/lunch`, lastModified: new Date() },
   ]);
 
   // 2) 동적 URL
