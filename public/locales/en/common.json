@@ -97,7 +97,8 @@
   },
   "testCard": {
     "popular": "Popular",
-    "category": "Category"
+    "category": "Category",
+    "new": "New"
   },
   "profile": {
     "anonymous": "Anonymous User",

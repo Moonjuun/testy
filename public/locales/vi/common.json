@@ -97,7 +97,8 @@
   },
   "testCard": {
     "popular": "Phổ biến",
-    "category": "Danh mục"
+    "category": "Danh mục",
+    "new": "Mới"
   },
   "profile": {
     "anonymous": "Người dùng ẩn danh",

@@ -43,15 +43,11 @@ export default function HomePage({ locale, initialTests }: HomePageProps) {
           <div className="inline-flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full px-4 py-2 mb-6 shadow-sm">
             <Sparkles className="w-4 h-4 text-purple-500" />
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              {/* 4. isMounted가 true일 때만 번역 텍스트를 렌더링합니다. */}
               {isMounted ? t("home.weeklyUpdate") : "\u00A0"}
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-            <span>
-              {/* 다른 텍스트에도 동일하게 적용할 수 있습니다. */}
-              {isMounted ? t("home.heroTitlePart1") : "\u00A0"}
-            </span>{" "}
+            <span>{isMounted ? t("home.heroTitlePart1") : "\u00A0"}</span>{" "}
             <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               {isMounted ? t("home.heroTitlePart2") : ""}
             </span>
@@ -62,7 +58,6 @@ export default function HomePage({ locale, initialTests }: HomePageProps) {
         </div>
       </section>
 
-      {/* ... 이하 코드는 동일 ... */}
       <section className="px-4 pb-20">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-3 mb-8">

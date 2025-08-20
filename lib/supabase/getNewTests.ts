@@ -4,7 +4,7 @@ import { createClient } from "./client";
 
 export async function getNewTests(
   language: "ko" | "en" | "ja" | "vi" = "ko",
-  limit: number = 20
+  limit: number = 12
 ): Promise<NewTest[]> {
   const supabase = createClient();
   const nameField = `name_${language}`;
@@ -33,7 +33,7 @@ export async function getNewTests(
     `
     )
     .eq("is_visible", true)
-    .eq("test_translations.language", language) // ✅ 해당 언어만 조인
+    .eq("test_translations.language", language)
     .order("created_at", { ascending: false })
     .limit(limit);
 

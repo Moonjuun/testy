@@ -97,7 +97,7 @@ export function CategoryTestList({ categoryId }: Props) {
       </div>
 
       {/* 테스트 카드 */}
-      <div className="grid grid-cols-[repeat(auto-fit,_minmax(220px,_1fr))] gap-4 md:gap-6 xl:gap-8">
+      <div className="grid grid-cols-[repeat(auto-fit,_minmax(220px,_1fr))] gap-4 md:gap-6 xl:gap-8 mb-8">
         {paginatedTests.map((test) => (
           <TestCard key={test.id} test={test} />
         ))}

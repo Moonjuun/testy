@@ -2,8 +2,12 @@
 import { absoluteUrl } from "@/lib/utils";
 import { TestListClient } from "./test-list-client";
 
-export function generateMetadata({ params }: { params: { locale: string } }) {
-  const { locale } = params;
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}) {
+  const { locale } = await params;
   const origin = absoluteUrl(); // e.g. "https://testy.im"
 
   const metadataByLocale = {

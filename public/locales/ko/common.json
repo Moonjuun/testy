@@ -97,7 +97,8 @@
   },
   "testCard": {
     "popular": "인기",
-    "category": "카테고리"
+    "category": "카테고리",
+    "new": "최신"
   },
   "profile": {
     "anonymous": "익명 사용자",

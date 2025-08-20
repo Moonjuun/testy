@@ -97,7 +97,8 @@
   },
   "testCard": {
     "popular": "人気",
-    "category": "カテゴリ"
+    "category": "カテゴリ",
+    "new": "新着"
   },
   "profile": {
     "anonymous": "匿名ユーザー",
