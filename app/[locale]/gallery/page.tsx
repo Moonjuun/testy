@@ -18,7 +18,7 @@ const galleryMetadata = {
     twitterTitle: "Testy AI 이미지 갤러리",
     twitterDescription:
       "AI가 그려낸 당신의 또 다른 모습! Testy 갤러리에서 다른 사람들의 결과도 확인해보세요.",
-    ogImage: "/og-image-ko.png", // 갤러리 전용 OG 이미지
+    ogImage: "https://testy.im/og-image-ko.png",
     ogImageAlt: "Testy AI 이미지 갤러리 - 다양한 AI 생성 결과 이미지들",
   },
   en: {
@@ -28,7 +28,7 @@ const galleryMetadata = {
     twitterTitle: "Testy AI Image Gallery",
     twitterDescription:
       "Another version of you, drawn by AI! Check out others' results in the Testy Gallery.",
-    ogImage: "/og-image-en.png", // Gallery-specific OG image
+    ogImage: "https://testy.im/og-image-en.png", // Gallery-specific OG image
     ogImageAlt: "Testy AI Image Gallery - Various AI-generated result images",
   },
   ja: {
@@ -38,7 +38,7 @@ const galleryMetadata = {
     twitterTitle: "Testy AI画像ギャラリー",
     twitterDescription:
       "AIが描いたあなたのもう一つの姿！Testyギャラリーで他の人の結果もチェックしてみてください。",
-    ogImage: "/og-image-ja.png", // ギャラリー専用OG画像
+    ogImage: "https://testy.im/og-image-ja.png", // ギャラリー専用OG画像
     ogImageAlt: "Testy AI画像ギャラリー - 様々なAI生成結果画像",
   },
   vi: {
@@ -48,7 +48,7 @@ const galleryMetadata = {
     twitterTitle: "Thư viện ảnh AI của Testy",
     twitterDescription:
       "Một phiên bản khác của bạn, được vẽ bởi AI! Hãy xem kết quả của những người khác trong Thư viện Testy.",
-    ogImage: "/og-image-vi.png", // Hình ảnh OG dành riêng cho thư viện
+    ogImage: "https://testy.im/og-image-vi.png", // Hình ảnh OG dành riêng cho thư viện
     ogImageAlt:
       "Thư viện ảnh AI của Testy - Nhiều hình ảnh kết quả do AI tạo ra",
   },
