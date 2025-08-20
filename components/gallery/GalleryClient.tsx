@@ -13,6 +13,7 @@ import { Category, GalleryImage } from "@/types/gallery/gallery";
 import { Language } from "@/store/useLanguageStore";
 import { ExternalLink, Filter, Heart, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { formatBoldText } from "@/utils/formatBoldText";
 
 import GalleryModal from "../modal/gallery-modal";
 
@@ -177,7 +178,7 @@ export default function GalleryClient({
       <div className="hidden sm:block">
         <CardContent className="p-4 bg-white dark:bg-gray-800">
           <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
-            {image.title}
+            {formatBoldText(image.title)}
           </h3>
           <div className="flex flex-wrap gap-1 mb-3">
             {image.tags?.slice(0, 2).map((tag) => (

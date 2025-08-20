@@ -60,7 +60,7 @@ export async function generateMetadata({
 }: {
   params: { locale: string };
 }): Promise<Metadata> {
-  const { locale } = params;
+  const { locale } = await params;
   const url = `https://testy.im/${locale}/gallery`;
 
   const meta =
@@ -114,7 +114,7 @@ export default async function GalleryPage({
 }: {
   params: { locale: string };
 }) {
-  const { locale } = params;
+  const { locale } = await params;
 
   const [initialImages, initialCategories] = await Promise.all([
     getGalleryImages(locale as Language, 1, "all"),

@@ -15,6 +15,7 @@ import { Language } from "@/store/useLanguageStore";
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "./alert-context";
 import { useTranslation } from "react-i18next";
+import { formatBoldText } from "@/utils/formatBoldText";
 
 interface ImageModalProps {
   image: GalleryImage;
@@ -208,7 +209,7 @@ export default function GalleryModal({
           <div className="space-y-3">
             <div>
               <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2">
-                {image.title}
+                {formatBoldText(image.title)}
               </h2>
               <div className="flex flex-wrap gap-1 mb-2">
                 {image.tags.slice(0, 3).map((tag) => (
