@@ -20,6 +20,7 @@ export async function generateSitemapXml() {
     { loc: `${baseUrl}/${locale}/play/draw` },
     { loc: `${baseUrl}/${locale}/play/ladder` },
     { loc: `${baseUrl}/${locale}/play/lunch` },
+    { loc: `${baseUrl}/${locale}/gallery` },
   ]);
 
   // 4. 동적 페이지(카테고리, 테스트) URL을 모든 언어에 대해 생성합니다.

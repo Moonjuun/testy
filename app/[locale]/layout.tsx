@@ -9,12 +9,9 @@ import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// 1. 이미지 경로 및 alt 텍스트 추가
 const metadataTranslations = {
   ko: {
-    // ✨ 변경된 부분: 핵심 콘텐츠를 제목에 포함
     title: "Testy 테스티 - MBTI, 사다리게임, 성향 테스트",
-    // ✨ 변경된 부분: 제공하는 게임/테스트 종류를 명확히 나열
     description:
       "MBTI, 사다리게임, 점심 메뉴 고르기, 스피드 드로우 등 다양한 테스트와 게임을 즐겨보세요! 성격, 연애, 진로를 탐색하며 숨겨진 나를 발견하는 즐거움.",
     twitterTitle: "Testy 테스티 - 성향 테스트 & 미니게임 플랫폼",
@@ -24,9 +21,7 @@ const metadataTranslations = {
     ogImageAlt: "Testy 테스티(MBTI, 사다리게임) 한국어 대표 이미지",
   },
   en: {
-    // ✨ Changed: Included key content in the title
     title: "Testy - MBTI, Ladder Game & Personality Tests",
-    // ✨ Changed: Clearly listed the types of games/tests offered
     description:
       "Enjoy various tests and games like MBTI, Ladder Game, Lunch Picker, and Speed Draw. Discover your hidden self by exploring personality, relationships, and career paths.",
     twitterTitle: "Testy - Personality Tests & Mini-Games Platform",
@@ -36,9 +31,7 @@ const metadataTranslations = {
     ogImageAlt: "Testy (MBTI, Ladder Game) - Main promotional image in English",
   },
   ja: {
-    // ✨ 変更点: 主要なコンテンツをタイトルに含める
     title: "Testy テスティ - MBTI、あみだくじ、性格テスト",
-    // ✨ 変更点: 提供するゲーム・テストの種類を明確にリストアップ
     description:
       "MBTI、あみだくじ、ランチルーレット、スピードドローなど、様々なテストやゲームを楽しんでください！性格、恋愛、進路を探りながら、隠れた自分を発見する楽しさを。",
     twitterTitle: "Testy テスティ - 性格テスト＆ミニゲームプラットフォーム",
@@ -48,9 +41,7 @@ const metadataTranslations = {
     ogImageAlt: "Testy テスティ (MBTI, あみだくじ) 日本語版の代表画像",
   },
   vi: {
-    // ✨ Thay đổi: Bao gồm nội dung chính trong tiêu đề
     title: "Testy - Kiểm tra MBTI, Trò chơi bậc thang & Tính cách",
-    // ✨ Thay đổi: Liệt kê rõ ràng các loại trò chơi/bài kiểm tra được cung cấp
     description:
       "Thưởng thức các bài kiểm tra và trò chơi đa dạng như MBTI, Trò chơi bậc thang, Chọn bữa trưa và Vẽ nhanh. Khám phá bản thân ẩn giấu qua việc tìm hiểu tính cách, các mối quan hệ và con đường sự nghiệp.",
     twitterTitle: "Testy - Nền tảng kiểm tra tính cách & Trò chơi nhỏ",
