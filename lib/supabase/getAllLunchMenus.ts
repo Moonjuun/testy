@@ -27,11 +27,11 @@ export async function getAllLunchMenus(
     id: menu.id,
     name:
       menu.name_translations?.[language] ||
-      menu.name_translations?.["ko"] ||
+      menu.name_translations?.["en"] ||
       "이름 없음",
     description:
       menu.description_translations?.[language] ||
-      menu.description_translations?.["ko"] ||
+      menu.description_translations?.["en"] ||
       "",
     image_url: menu.image_url,
     categories: {

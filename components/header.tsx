@@ -46,7 +46,8 @@ export function Header({ locale }: HeaderProps) {
 
   const { theme, toggleTheme } = useTheme();
   const { categories, loading } = useActiveCategories(locale as Language);
-  const [mounted, setMounted] = useState(false);
+
+  const [isClient, setIsClient] = useState(false);
 
   const currentLanguageName =
     languages.find((l) => l.code === locale)?.name ?? "English";
@@ -94,7 +95,7 @@ export function Header({ locale }: HeaderProps) {
   }, []);
 
   useEffect(() => {
-    setMounted(true);
+    setIsClient(true);
   }, []);
 
   const playgroundMenu = (
@@ -104,7 +105,9 @@ export function Header({ locale }: HeaderProps) {
           variant="ghost"
           className="px-4 py-2 text-[15px] font-semibold text-gray-800 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
         >
-          {t("header.playground")} <ChevronDown className="w-4 h-4 ml-1" />
+          {/* *** 수정 2: 번역 텍스트를 isClient로 감싸기 *** */}
+          {isClient ? t("header.playground") : "Playground"}{" "}
+          <ChevronDown className="w-4 h-4 ml-1" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="min-w-[160px] rounded-xl shadow-lg bg-white dark:bg-zinc-900 py-2">
@@ -113,7 +116,7 @@ export function Header({ locale }: HeaderProps) {
             href={`/${locale}/play/draw`}
             className="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-md"
           >
-            {t("header.speedDraw")}
+            {isClient ? t("header.speedDraw") : "Speed Draw"}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
@@ -121,7 +124,7 @@ export function Header({ locale }: HeaderProps) {
             href={`/${locale}/play/ladder`}
             className="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-md"
           >
-            {t("header.ladder")}
+            {isClient ? t("header.ladder") : "Ladder Game"}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
@@ -129,7 +132,7 @@ export function Header({ locale }: HeaderProps) {
             href={`/${locale}/play/lunch`}
             className="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-md"
           >
-            {t("header.lunch")}
+            {isClient ? t("header.lunch") : "Lunch Roulette"}
           </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -143,7 +146,7 @@ export function Header({ locale }: HeaderProps) {
           variant="ghost"
           className="px-4 py-2 text-[15px] font-semibold text-gray-800 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
         >
-          {t("header.test")}
+          {isClient ? t("header.test") : "Test"}
           <ChevronDown className="w-4 h-4 ml-1" />
         </Button>
       </DropdownMenuTrigger>
@@ -153,7 +156,7 @@ export function Header({ locale }: HeaderProps) {
             href={`/${locale}/test/list`}
             className="block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-md"
           >
-            {getAllLabel(locale)}
+            {isClient ? getAllLabel(locale) : "All Tests"}
           </Link>
         </DropdownMenuItem>
         {loading
@@ -181,12 +184,22 @@ export function Header({ locale }: HeaderProps) {
       variant="ghost"
       className="px-4 py-2 text-[15px] font-semibold text-gray-800 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
     >
-      <Link
-        href={`/${locale}/mbti`}
-        onClick={() => setIsMobileMenuOpen(false)}
-        className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300"
-      >
+      <Link href={`/${locale}/mbti`} onClick={() => setIsMobileMenuOpen(false)}>
         MBTI
+      </Link>
+    </Button>
+  );
+
+  const galleryMenu = (
+    <Button
+      variant="ghost"
+      className="px-4 py-2 text-[15px] font-semibold text-gray-800 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+    >
+      <Link
+        href={`/${locale}/gallery`}
+        onClick={() => setIsMobileMenuOpen(false)}
+      >
+        {isClient ? t("header.gallery") : "Gallery"}
       </Link>
     </Button>
   );
@@ -205,11 +218,11 @@ export function Header({ locale }: HeaderProps) {
               </span>
             </Link>
 
-            {/* Desktop Menu */}
             <nav className="hidden lg:flex items-center space-x-1">
               {testMenu}
               {mbtiMenu}
               {playgroundMenu}
+              {galleryMenu}
             </nav>
 
             <div className="flex items-center gap-3">
@@ -247,7 +260,8 @@ export function Header({ locale }: HeaderProps) {
                 onClick={toggleTheme}
                 className="rounded-full p-2 bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
               >
-                {mounted ? (
+                {/* isClient를 사용하여 테마 아이콘 렌더링 */}
+                {isClient ? (
                   theme === "dark" ? (
                     <Sun className="w-4 h-4" />
                   ) : (
@@ -258,25 +272,31 @@ export function Header({ locale }: HeaderProps) {
                 )}
               </Button>
 
-              {user ? (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsProfileModalOpen(true)}
-                  className="rounded-full p-2"
-                >
-                  <User className="w-4 h-4" />
-                </Button>
+              {/* *** 수정 3: 사용자 상태에 따른 UI를 isClient로 감싸고, 초기 렌더링 시 Skeleton 표시 *** */}
+              {isClient ? (
+                user ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsProfileModalOpen(true)}
+                    className="rounded-full p-2"
+                  >
+                    <User className="w-4 h-4" />
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsAuthModalOpen(true)}
+                    className="rounded-full p-2"
+                  >
+                    <User className="w-4 h-4" />
+                  </Button>
+                )
               ) : (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsAuthModalOpen(true)}
-                  className="rounded-full p-2"
-                >
-                  <User className="w-4 h-4" />
-                </Button>
+                <Skeleton className="h-9 w-9 rounded-full" />
               )}
+
               <Button
                 variant="outline"
                 size="sm"
@@ -296,10 +316,9 @@ export function Header({ locale }: HeaderProps) {
           {isMobileMenuOpen && (
             <div className="lg:hidden py-4 border-t border-gray-200 dark:border-gray-700">
               <nav className="flex flex-col items-start gap-2 px-3">
-                {/* 테스트 드롭다운 */}
                 <details className="w-full group">
                   <summary className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
-                    {t("header.test")}
+                    {isClient ? t("header.test") : "Test"}
                     <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
                   </summary>
                   <div className="pl-4 mt-2 space-y-2">
@@ -308,7 +327,7 @@ export function Header({ locale }: HeaderProps) {
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                      {getAllLabel(locale)}
+                      {isClient ? getAllLabel(locale) : "All Tests"}
                     </Link>
                     {loading
                       ? Array.from({ length: 5 }).map((_, i) => (
@@ -328,10 +347,21 @@ export function Header({ locale }: HeaderProps) {
                         ))}
                   </div>
                 </details>
-                {/* 놀이터 드롭다운 */}
+
                 <details className="w-full group">
                   <summary className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
-                    {t("header.playground")}
+                    <Link
+                      href={`/${locale}/mbti`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      MBTI
+                    </Link>
+                  </summary>
+                </details>
+
+                <details className="w-full group">
+                  <summary className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+                    {isClient ? t("header.playground") : "Playground"}
                     <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
                   </summary>
                   <div className="pl-4 mt-2 space-y-2">
@@ -340,32 +370,32 @@ export function Header({ locale }: HeaderProps) {
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                      {t("header.speedDraw")}
+                      {isClient ? t("header.speedDraw") : "Speed Draw"}
                     </Link>
                     <Link
                       href={`/${locale}/play/ladder`}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                      {t("header.ladder")}
+                      {isClient ? t("header.ladder") : "Ladder Game"}
                     </Link>
                     <Link
                       href={`/${locale}/play/lunch`}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="block px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                      {t("header.lunch")}
+                      {isClient ? t("header.lunch") : "Lunch Roulette"}
                     </Link>
                   </div>
                 </details>
-                {/* MBTI */}
+
                 <details className="w-full group">
                   <summary className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
                     <Link
-                      href={`/${locale}/mbti`}
+                      href={`/${locale}/gallery`}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      MBTI
+                      {isClient ? t("header.gallery") : "Gallery"}
                     </Link>
                   </summary>
                 </details>

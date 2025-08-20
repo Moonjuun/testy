@@ -8,7 +8,8 @@
     "ladder": "Ladder Game",
     "lunch": "WFL?",
     "test": "Test",
-    "language": "Language"
+    "language": "Language",
+    "gallery": "Gallery"
   },
   "welcome": "Nice to meet you!",
   "description": "A fun and surprisingly accurate test to kill time!",
@@ -213,5 +214,21 @@
     "neutral": "Neutral",
     "disagree": "Disagree",
     "stronglyDisagree": "Strongly Disagree"
+  },
+  "gallery": {
+    "image": "Image",
+    "description": " Collection of result images",
+    "test": "Test",
+    "viewCount": "View Count",
+    "noImages": "No images available in this category.",
+    "selectAnotherCategory": "Please select another category.",
+    "aboutTest": "Related Test",
+    "gotoTest": "Go to Test",
+    "share": "share",
+    "download": "download",
+    "viewDetails": "view details",
+    "notice": "notice",
+    "watermarkedMessage": "You will receive the original image without watermark if you log in.",
+    "confirm": "confirm"
   }
 }

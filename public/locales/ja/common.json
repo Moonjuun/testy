@@ -8,7 +8,8 @@
     "ladder": "はしごゲーム",
     "lunch": "ランチ",
     "test": "テスト",
-    "language": "言語"
+    "language": "言語",
+    "gallery": "ギャラリー"
   },
   "welcome": "はじめまして！",
   "description": "暇つぶしにピッタリ、意外と当たるテスト！",
@@ -213,5 +214,21 @@
     "neutral": "どちらでもない",
     "disagree": "そう思わない",
     "stronglyDisagree": "まったくそう思わない"
+  },
+  "gallery": {
+    "image": "画像",
+    "description": " 結果画像のコレクション",
+    "test": "テスト",
+    "viewCount": "ビュー数",
+    "noImages": "このカテゴリには画像がありません。",
+    "selectAnotherCategory": "別のカテゴリを選択してください。",
+    "aboutTest": "関連テスト",
+    "gotoTest": "テストへ移動",
+    "share": "共有",
+    "download": "ダウンロード",
+    "viewDetails": "詳細を見る",
+    "notice": "お知らせ",
+    "watermarkedMessage": "ログインすると、透かしのないオリジナル画像を受け取ることができます。",
+    "confirm": "確認"
   }
 }

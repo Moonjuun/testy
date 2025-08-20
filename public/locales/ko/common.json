@@ -8,7 +8,8 @@
     "ladder": "사다리 게임",
     "lunch": "오점머?",
     "test": "테스트",
-    "language": "언어"
+    "language": "언어",
+    "gallery": "갤러리"
   },
   "welcome": "만나서 반가워요!",
   "description": "심심할 때 가볍게, 생각보다 잘 맞는 테스트!!",
@@ -225,5 +226,21 @@
     "weaknesses": "약점",
     "careers": "추천 직업",
     "items": "추천 아이템"
+  },
+  "gallery": {
+    "description": "에서 제작된 결과 이미지 모음",
+    "image": "이미지",
+    "test": "테스트",
+    "viewCount": "조회수",
+    "noImages": "해당 카테고리에 이미지가 없습니다.",
+    "selectAnotherCategory": "다른 카테고리를 선택해보세요",
+    "aboutTest": "관련 테스트",
+    "gotoTest": "지금 테스트 해보기",
+    "share": "공유하기",
+    "download": "다운로드",
+    "viewDetails": "자세히 보기",
+    "notice": "안내",
+    "watermarkedMessage": "로그인하시면 워터마크 없는 이미지를 받을 수 있습니다.",
+    "confirm": "확인"
   }
 }

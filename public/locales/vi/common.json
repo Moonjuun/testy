@@ -8,7 +8,8 @@
     "ladder": "Trò chơi thang",
     "lunch": "Ăn trưa?",
     "test": "Bài kiểm tra",
-    "language": "Ngôn ngữ"
+    "language": "Ngôn ngữ",
+    "gallery": "Thư viện"
   },
   "welcome": "Rất vui được gặp bạn!",
   "description": "Một bài test nhẹ nhàng, vui vẻ và chính xác bất ngờ!",
@@ -213,5 +214,21 @@
     "neutral": "Bình thường",
     "disagree": "Không đồng ý",
     "stronglyDisagree": "Hoàn toàn không đồng ý"
+  },
+  "gallery": {
+    "image": "Hình ảnh",
+    "description": " Bộ sưu tập hình ảnh kết quả",
+    "test": "Bài kiểm tra",
+    "viewCount": "Số lượt xem",
+    "noImages": "Không có hình ảnh nào trong danh mục này.",
+    "selectAnotherCategory": "Vui lòng chọn danh mục khác.",
+    "aboutTest": "Bài kiểm tra liên quan",
+    "gotoTest": "Đi đến bài kiểm tra",
+    "share": "Chia sẻ",
+    "download": "Tải xuống",
+    "viewDetails": "Xem chi tiết",
+    "notice": "Thông báo",
+    "watermarkedMessage": "Bạn sẽ nhận được hình ảnh gốc không có watermark nếu bạn đăng nhập.",
+    "confirm": "Xác nhận"
   }
 }

@@ -10,7 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatBoldText } from "@/utils/formatBoldText";
-import { useAlert } from "@/components/modal/alert-context";
+import { useShare } from "@/hooks/useShare";
+
 import {
   Target,
   Heart,
@@ -65,42 +66,13 @@ export default function MbtiResultPage({
   const [isLoading, setIsLoading] = useState(true);
   const { locale } = use(params);
   const { t } = useTranslation("common");
-  const customAlert = useAlert();
-  const captureRef = useRef<HTMLDivElement>(null);
 
-  // 공유 기능을 처리하는 함수입니다.
-  const handleShare = async (platform: string) => {
-    // 4. 공유 URL에도 locale을 포함합니다.
+  const { handleShare } = useShare();
+
+  const onShare = (platform: string) => {
     const shareUrl = `https://testy.im/${locale}/mbti`;
     const shareText = `MBTI ${t("home.heroTitlePart2")}`;
-
-    if (platform === "twitter") {
-      const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        shareText
-      )}&url=${encodeURIComponent(shareUrl)}`;
-      window.open(tweetUrl, "_blank", "noopener,noreferrer");
-    }
-    if (platform === "facebook") {
-      const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        shareUrl
-      )}`;
-      window.open(fbShareUrl, "_blank", "noopener,noreferrer");
-    }
-    if (platform === "copy") {
-      await navigator.clipboard.writeText(shareUrl);
-      await customAlert({
-        title: t("alert.copySuccessTitle"),
-        message: t("alert.copySuccessMessage"),
-        confirmText: t("alert.confirm"),
-      });
-    }
-    if (platform === "image") {
-      await customAlert({
-        title: t("profile.notification"),
-        message: t("error.waitPlease"),
-        confirmText: t("alert.confirm"),
-      });
-    }
+    handleShare(platform, { url: shareUrl, text: shareText });
   };
 
   useEffect(() => {
@@ -439,28 +411,28 @@ export default function MbtiResultPage({
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Button
-                  onClick={() => handleShare("facebook")}
+                  onClick={() => onShare("facebook")}
                   className="bg-gradient-to-tr from-blue-600 via-blue-500 to-blue-400 hover:opacity-90 text-white rounded-2xl font-semibold flex flex-col items-center justify-center gap-2 h-20 shadow-lg hover:shadow-xl transition-all"
                 >
                   <span className="text-2xl">📘</span>
                   <span className="text-sm">{t("resultPage.facebook")}</span>
                 </Button>
                 <Button
-                  onClick={() => handleShare("twitter")}
+                  onClick={() => onShare("twitter")}
                   className="bg-blue-400 hover:bg-blue-500 text-white rounded-2xl font-semibold flex flex-col items-center justify-center gap-2 h-20 shadow-lg hover:shadow-xl transition-all"
                 >
                   <span className="text-2xl">🐦</span>
                   <span className="text-sm">{t("resultPage.twitter")}</span>
                 </Button>
                 <Button
-                  onClick={() => handleShare("copy")}
+                  onClick={() => onShare("copy")}
                   className="bg-gradient-to-tr from-yellow-400 via-amber-400 to-orange-400 hover:opacity-90 text-white rounded-2xl font-semibold flex flex-col items-center justify-center gap-2 h-20 shadow-lg hover:shadow-xl transition-all"
                 >
                   <Share2 className="w-6 h-6" />
                   <span className="text-sm">{t("resultPage.copyLink")}</span>
                 </Button>
                 <Button
-                  onClick={() => handleShare("image")}
+                  onClick={() => onShare("image")}
                   className="bg-gradient-to-tr from-emerald-400 via-green-500 to-lime-400 hover:opacity-90 text-white rounded-2xl font-semibold flex flex-col items-center justify-center gap-2 h-20 shadow-lg hover:shadow-xl transition-all"
                 >
                   <span className="text-2xl">💾</span>

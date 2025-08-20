@@ -13,7 +13,7 @@ export async function generateMetadata({
 }: {
   params: { locale: string };
 }): Promise<Metadata> {
-  const { locale } = params;
+  const { locale } = await params;
   const url = `https://testy.im/${locale}/play/lunch`; // TODO: 실제 도메인 주소로 변경해주세요.
 
   // 언어별 메타데이터를 상세하게 정의합니다.
@@ -87,7 +87,7 @@ export default async function LunchPage({
 }: {
   params: { locale: string };
 }) {
-  const { locale } = params;
+  const { locale } = await params;
 
   const allMenus = await getAllLunchMenus(locale as Language);
   return <LunchRecommendation allMenus={allMenus} />;
