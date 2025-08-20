@@ -4,8 +4,9 @@ import TestView from "@/components/test/TestView";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { absoluteUrl } from "@/lib/utils";
-import { getTestMetadata } from "@/lib/supabase/test/getTestMetadata";
 
+// Next.js가 페이지와 메타데이터 함수 간의 동일한 데이터 요청을 자동으로 캐싱(deduping)하므로,
+// 두 함수에서 동일한 RPC를 호출해도 성능 저하는 거의 없습니다.
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
@@ -13,23 +14,33 @@ export async function generateMetadata({
 }: {
   params: { id: string; locale: string };
 }): Promise<Metadata> {
-  const { id, locale } = await params; // await 제거 (params는 이미 프로미스가 아님)
+  const { id, locale } = params;
   const origin = absoluteUrl();
-  const url = `${origin}/${locale}/test/${id}`; // absoluteUrl을 사용하여 전체 URL 생성
-
-  // 1. Supabase에서 해당 테스트의 메타데이터 가져오기
+  const url = `${origin}/${locale}/test/${id}`;
   const testId = Number(id);
-  const fetchedMetadata = await getTestMetadata(testId, locale);
+
+  // 1. 메타데이터 생성을 위해 테스트 데이터 직접 호출
+  const supabase = createClient();
+  const { data: testData, error } = await supabase.rpc("get_test_data", {
+    test_id_param: testId,
+    language_param: locale,
+  });
 
   let title = `테스트 결과 보기 | Testy`;
   let description = `흥미로운 심리 테스트 결과를 확인해보세요.`;
+  // thumnail_img_url이 없을 경우를 대비한 기본 이미지
+  let imageUrl = `${origin}/og-image-${locale}.png`;
 
-  // 가져온 메타데이터가 있다면 사용
-  if (fetchedMetadata) {
-    title = `${fetchedMetadata.title} | Testy`;
-    description = fetchedMetadata.description;
+  // 2. 데이터가 성공적으로 로드되면 해당 값으로 메타데이터 설정
+  if (testData && !error) {
+    title = `${testData.title} | Testy`;
+    description = testData.description;
+    // thumnail_img_url이 존재할 경우에만 해당 URL 사용
+    if (testData.thumbnail_url) {
+      imageUrl = testData.thumbnail_url;
+    }
   } else {
-    // 특정 locale에 대한 메타데이터가 없을 경우, 기본값 또는 fallback locale 사용
+    // 3. 데이터 로드 실패 시, 기존의 언어별 폴백 로직 사용
     const metadataByLocale = {
       ko: {
         title: `테스트 결과 보기 | Testy`,
@@ -50,14 +61,14 @@ export async function generateMetadata({
     };
     const meta =
       metadataByLocale[locale as keyof typeof metadataByLocale] ??
-      metadataByLocale.en; // 기본 fallback을 'en'으로 설정
+      metadataByLocale.en;
     title = meta.title;
     description = meta.description;
   }
 
   return {
-    title: title,
-    description: description,
+    title,
+    description,
     alternates: {
       canonical: url,
       languages: {
@@ -65,39 +76,37 @@ export async function generateMetadata({
         en: `${origin}/en/test/${id}`,
         ja: `${origin}/ja/test/${id}`,
         vi: `${origin}/vi/test/${id}`,
-        "x-default": `${origin}/en/test/${id}`, // x-default는 일반적으로 가장 일반적인 언어 버전으로 설정
+        "x-default": `${origin}/en/test/${id}`,
       },
     },
-    // 스키마 마크업 (JSON-LD) 추가 예시
-    // test_translations 테이블에서 직접 가져온 정보만으로 간단한 Article 스키마를 구성할 수 있습니다.
-    // 더 복잡한 스키마(예: Quiz, Question)는 `TestView` 컴포넌트 내부에서 `initialTestData`를 사용하여 구성하는 것이 좋습니다.
     openGraph: {
-      title: title,
-      description: description,
-      url: url,
-      type: "article", // 또는 "website", "quiz" 등 적절한 타입
+      title,
+      description,
+      url,
+      type: "article",
       images: [
         {
-          url: `${origin}/og-image.png`, // 기본 OG 이미지 또는 테스트별 이미지
+          url: imageUrl,
           alt: title,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: title,
-      description: description,
-      images: [`${origin}/twitter-image.png`], // 트위터 카드 이미지
+      title,
+      description,
+      images: [imageUrl],
     },
   };
 }
 
+// 페이지 컴포넌트는 변경할 필요가 없습니다.
 export default async function TestPage({
   params,
 }: {
   params: { id: string; locale: string };
 }) {
-  const { id, locale } = await params;
+  const { id, locale } = params;
 
   const supabase = createClient();
 
