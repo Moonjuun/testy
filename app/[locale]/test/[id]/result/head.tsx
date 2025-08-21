@@ -9,7 +9,7 @@ export async function generateMetadata({
 }: {
   params: { locale: string; id: string };
 }): Promise<Metadata> {
-  const { locale, id } = params;
+  const { locale, id } = await params;
   const origin = absoluteUrl(); // e.g. "https://testy.im"
 
   // 각 언어별 URL

@@ -14,7 +14,7 @@ export async function generateMetadata({
 }: {
   params: { id: string; locale: string };
 }): Promise<Metadata> {
-  const { id, locale } = params;
+  const { id, locale } = await params;
   const origin = absoluteUrl();
   const url = `${origin}/${locale}/test/${id}`;
   const testId = Number(id);
@@ -106,7 +106,7 @@ export default async function TestPage({
 }: {
   params: { id: string; locale: string };
 }) {
-  const { id, locale } = params;
+  const { id, locale } = await params;
 
   const supabase = createClient();
 

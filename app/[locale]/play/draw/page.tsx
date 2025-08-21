@@ -11,7 +11,7 @@ export async function generateMetadata({
 }: {
   params: { locale: string };
 }): Promise<Metadata> {
-  const { locale } = params;
+  const { locale } = await params;
   const url = `https://testy.im/${locale}/play/draw`;
 
   // '스피드 드로우' 컨셉에 맞게 언어별 메타데이터를 수정합니다.
