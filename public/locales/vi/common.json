@@ -61,9 +61,9 @@
     "startNow": "Bắt đầu ngay",
     "waitingForYou": "Đang chờ bạn",
     "startFirstTest": "Bắt đầu bài kiểm tra đầu tiên",
-    "popularTests": "Các bài kiểm tra phổ biến",
-    "popularTestsDescription": "Các bài kiểm tra được chọn nhiều nhất",
-    "gotoPopular": "Đi đến các bài kiểm tra phổ biến"
+    "popularTests": "Bài test phổ biến",
+    "popularTestsDescription": "Các bài test được chọn nhiều nhất",
+    "gotoPopular": "Đi đến bài test phổ biến"
   },
   "testView": {
     "loading": "Đang tải bài test...",

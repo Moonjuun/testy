@@ -3,7 +3,7 @@ import { createClient } from "./client";
 import { NewTest } from "@/types/test";
 
 export async function getAllTests(
-  language: "ko" | "en" | "ja" | "vi" = "ko"
+  language: "ko" | "en" | "ja" | "vi" = "en"
 ): Promise<NewTest[]> {
   const supabase = createClient();
   const nameField = `name_${language}`;
@@ -20,6 +20,7 @@ export async function getAllTests(
       thumbnail_url,
       is_visible,
       created_at,
+      view_count,
       test_translations (
         title,
         description,
@@ -56,6 +57,7 @@ export async function getAllTests(
       character: test.character,
       is_visible: test.is_visible,
       created_at: test.created_at,
+      view_count: test.view_count,
       category: test.categories
         ? {
             code: test.categories.code,

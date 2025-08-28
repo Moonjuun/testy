@@ -101,7 +101,7 @@ export default function HomePage({ initialTests }: HomePageProps) {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Link href="/popular">
+                <Link href="/test/list">
                   <Button
                     variant="ghost"
                     className="w-full text-orange-600 hover:text-orange-700 hover:bg-orange-50 dark:text-orange-400 dark:hover:text-orange-300 dark:hover:bg-orange-900/20 font-semibold"

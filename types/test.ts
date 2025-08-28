@@ -57,6 +57,7 @@ export interface NewTest {
   thumbnail_url: string;
   is_visible: boolean;
   created_at: string;
+  view_count: number;
   category: {
     code: string;
     name: string;
