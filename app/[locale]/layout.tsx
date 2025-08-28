@@ -6,7 +6,7 @@ import { Inter } from "next/font/google";
 import ClientLayout from "@/components/ClientLayout";
 import { createClientForServer } from "@/lib/supabase/server";
 import { Analytics } from "@vercel/analytics/next";
-
+import { SpeedInsights } from "@vercel/speed-insights/next";
 const inter = Inter({ subsets: ["latin"] });
 
 const metadataTranslations = {
@@ -140,6 +140,7 @@ export default async function LocaleLayout({
       <ClientLayout user={user} locale={locale}>
         {children}
         <Analytics />
+        <SpeedInsights />
       </ClientLayout>
     </div>
   );
