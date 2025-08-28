@@ -3,7 +3,7 @@ import { NewTest } from "@/types/test";
 import { createClient } from "./client";
 
 export async function getNewTests(
-  language: "ko" | "en" | "ja" | "vi" = "ko",
+  language: "ko" | "en" | "ja" | "vi" = "en",
   limit: number = 12
 ): Promise<NewTest[]> {
   const supabase = createClient();
