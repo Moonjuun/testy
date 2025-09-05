@@ -14,6 +14,10 @@ function getLocale(request: NextRequest): string {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  if (pathname === "/mockServiceWorker.js") {
+    return NextResponse.next();
+  }
+
   // ✅ 확장자 있는 정적 자산은 미들웨어를 타지 않도록
   if (/\.[a-zA-Z0-9]+$/.test(pathname)) {
     return NextResponse.next();
