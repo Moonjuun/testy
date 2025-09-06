@@ -10,140 +10,68 @@ import {
 } from "lucide-react";
 
 export const categories = [
-  { id: "love", name: "연애", icon: Heart, description: "사랑과 관계의 흐름" },
-  {
-    id: "marriage",
-    name: "결혼",
-    icon: Ring,
-    description: "결혼과 가족의 미래",
-  },
-  { id: "career", name: "직업", icon: FileText, description: "커리어와 성장" },
-  {
-    id: "business",
-    name: "사업",
-    icon: TrendingUp,
-    description: "사업과 투자",
-  },
-  {
-    id: "relationships",
-    name: "인간관계",
-    icon: Users,
-    description: "주변 사람들과의 관계",
-  },
-  {
-    id: "growth",
-    name: "자기성장",
-    icon: Lightbulb,
-    description: "내면의 성장과 발전",
-  },
-  {
-    id: "finance",
-    name: "재정/소비",
-    icon: Wallet,
-    description: "돈과 소비 패턴",
-  },
-  { id: "timing", name: "운/타이밍", icon: Star, description: "운세와 타이밍" },
+  { id: "love", icon: Heart },
+  { id: "marriage", icon: Ring },
+  { id: "career", icon: FileText },
+  { id: "business", icon: TrendingUp },
+  { id: "relationships", icon: Users },
+  { id: "growth", icon: Lightbulb },
+  { id: "finance", icon: Wallet },
+  { id: "timing", icon: Star },
 ];
 
+// /constants/tarot/TarotConstants.ts
 export const subcategories = {
   love: [
-    {
-      id: "start",
-      name: "새로운 시작",
-      description: "새로운 만남이나 관계의 시작",
-    },
-    {
-      id: "current",
-      name: "현재 진단",
-      description: "지금 관계의 상태와 흐름",
-    },
-    { id: "partner", name: "상대 속마음", description: "상대방의 진심과 감정" },
-    {
-      id: "future",
-      name: "앞으로 흐름",
-      description: "관계의 미래와 발전 방향",
-    },
-    {
-      id: "action",
-      name: "나의 행동",
-      description: "내가 취해야 할 행동과 태도",
-    },
+    { id: "start" },
+    { id: "current" },
+    { id: "partner" },
+    { id: "future" },
+    { id: "action" },
   ],
   marriage: [
-    { id: "timing", name: "결혼 타이밍", description: "결혼하기 좋은 시기" },
-    {
-      id: "partner",
-      name: "결혼 상대",
-      description: "미래의 배우자에 대한 통찰",
-    },
-    { id: "family", name: "가족 관계", description: "시댁, 친정과의 관계" },
-    {
-      id: "preparation",
-      name: "결혼 준비",
-      description: "결혼 준비 과정의 조언",
-    },
+    { id: "timing" },
+    { id: "partner" },
+    { id: "family" },
+    { id: "preparation" },
   ],
   career: [
-    {
-      id: "change",
-      name: "직업 변화",
-      description: "이직이나 전직에 대한 조언",
-    },
-    { id: "promotion", name: "승진/발전", description: "현재 직장에서의 성장" },
-    {
-      id: "workplace",
-      name: "직장 내 관계",
-      description: "동료, 상사와의 관계",
-    },
-    { id: "skills", name: "역량 개발", description: "필요한 스킬과 능력" },
+    { id: "change" },
+    { id: "promotion" },
+    { id: "workplace" },
+    { id: "skills" },
   ],
   business: [
-    { id: "startup", name: "창업", description: "새로운 사업 시작" },
-    { id: "investment", name: "투자", description: "투자 기회와 위험" },
-    {
-      id: "partnership",
-      name: "파트너십",
-      description: "사업 파트너와의 관계",
-    },
-    { id: "growth", name: "사업 확장", description: "사업 성장과 확장" },
+    { id: "startup" },
+    { id: "investment" },
+    { id: "partnership" },
+    { id: "growth" },
   ],
   relationships: [
-    { id: "friends", name: "친구 관계", description: "친구들과의 관계 개선" },
-    { id: "family", name: "가족 관계", description: "가족 구성원과의 관계" },
-    {
-      id: "conflicts",
-      name: "갈등 해결",
-      description: "인간관계의 갈등과 해결",
-    },
-    {
-      id: "networking",
-      name: "새로운 인맥",
-      description: "새로운 사람들과의 만남",
-    },
+    { id: "friends" },
+    { id: "family" },
+    { id: "conflicts" },
+    { id: "networking" },
   ],
   growth: [
-    { id: "purpose", name: "인생 목표", description: "삶의 방향과 목적" },
-    { id: "habits", name: "습관 개선", description: "좋은 습관 만들기" },
-    { id: "mindset", name: "마음가짐", description: "긍정적인 사고방식" },
-    { id: "healing", name: "내면 치유", description: "상처와 트라우마 극복" },
+    { id: "purpose" },
+    { id: "habits" },
+    { id: "mindset" },
+    { id: "healing" },
   ],
   finance: [
-    { id: "saving", name: "저축", description: "돈 모으기와 절약" },
-    { id: "spending", name: "소비 패턴", description: "지출 습관 개선" },
-    { id: "investment", name: "재테크", description: "투자와 자산 관리" },
-    { id: "debt", name: "부채 관리", description: "빚 정리와 관리" },
+    { id: "saving" },
+    { id: "spending" },
+    { id: "investment" },
+    { id: "debt" },
   ],
   timing: [
-    {
-      id: "decision",
-      name: "결정 타이밍",
-      description: "중요한 결정을 내릴 시기",
-    },
-    { id: "opportunity", name: "기회", description: "다가올 기회와 준비" },
-    { id: "luck", name: "운세", description: "전반적인 운의 흐름" },
-    { id: "caution", name: "주의사항", description: "조심해야 할 것들" },
+    { id: "decision" },
+    { id: "opportunity" },
+    { id: "luck" },
+    { id: "caution" },
   ],
-};
+} as const;
 
 export const fullTarotDeck = [
   // Major Arcana (22 cards)

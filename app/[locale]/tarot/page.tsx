@@ -91,9 +91,5 @@ export default async function TarotPage({
 }) {
   const { locale } = await params;
 
-  return (
-    <div className="tarot">
-      <Tarot locale={locale as Language} />
-    </div>
-  );
+  return <Tarot locale={locale as Language} />;
 }

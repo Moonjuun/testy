@@ -259,5 +259,201 @@
     "notice": "안내",
     "watermarkedMessage": "로그인하시면 워터마크 없는 이미지를 받을 수 있습니다.",
     "confirm": "확인"
+  },
+  "tarot": {
+    "typePage": {
+      "title": "구체적으로 어디가 궁금한가요?",
+      "subtitle": "선택한 주제를 좁혀보면, 카드 해석이 더 선명해집니다.",
+      "back": "돌아가기",
+      "currentCategoryChip": "{{name}}",
+      "situationTitle": "현재 상황을 간단히 적어주세요 (선택사항)",
+      "situationPlaceholder": "한두 문장으로 지금 상황을 적어주세요.",
+      "start": "카드 뽑기 시작하기",
+      "invalidType": "유효하지 않은 타입입니다. 올바른 링크로 다시 시도해주세요."
+    },
+    "categories": {
+      "love": {
+        "name": "연애",
+        "description": "그 사람과의 관계, 앞으로는?"
+      },
+      "marriage": {
+        "name": "결혼",
+        "description": "이 사람과의 결혼, 괜찮을까요?"
+      },
+      "career": {
+        "name": "직업",
+        "description": "내 커리어, 다음 단계는?"
+      },
+      "business": {
+        "name": "사업",
+        "description": "사업과 투자, 성공할 수 있을까?"
+      },
+      "relationships": {
+        "name": "인간관계",
+        "description": "꼬여버린 인간관계, 해결의 실마리"
+      },
+      "growth": {
+        "name": "자기성장",
+        "description": "정체된 나를 깨우는 조언"
+      },
+      "finance": {
+        "name": "재정/소비",
+        "description": "나의 재물운과 돈 관리법"
+      },
+      "timing": {
+        "name": "운/타이밍",
+        "description": "중요한 결정, 언제가 좋을까?"
+      }
+    },
+    "subcategories": {
+      "love": {
+        "start": {
+          "name": "새로운 시작",
+          "description": "썸, 짝사랑, 소개팅… 우리, 시작할 수 있을까요?"
+        },
+        "current": {
+          "name": "현재 진단",
+          "description": "요즘 우리 사이, 괜찮은 걸까요? 관계의 현주소를 진단해봐요."
+        },
+        "partner": {
+          "name": "상대 속마음",
+          "description": "그 사람은 나를 어떻게 생각할까? 상대방의 진짜 속마음."
+        },
+        "future": {
+          "name": "앞으로 흐름",
+          "description": "우리 관계, 앞으로 어떻게 될까요? 더 나은 미래를 위한 팁."
+        },
+        "action": {
+          "name": "나의 행동",
+          "description": "고백할까, 기다릴까? 지금 나에게 가장 필요한 행동은 무엇일까요."
+        }
+      },
+      "marriage": {
+        "timing": {
+          "name": "결혼 타이밍",
+          "description": "지금 이 사람과 결혼해도 될까요? 최적의 타이밍을 찾아봐요."
+        },
+        "partner": {
+          "name": "결혼 상대",
+          "description": "나의 결혼 상대는 어떤 사람일까요? 미래의 인연을 엿봐요."
+        },
+        "family": {
+          "name": "가족 관계",
+          "description": "결혼은 현실! 양가 가족과의 조화로운 관계를 위한 조언."
+        },
+        "preparation": {
+          "name": "결혼 준비",
+          "description": "결혼 준비, 막막하고 어렵나요? 과정 속 갈등을 해결해봐요."
+        }
+      },
+      "career": {
+        "change": {
+          "name": "직업 변화",
+          "description": "이직 준비 중인데, 괜찮을까요? 성공적인 커리어 전환을 위한 조언."
+        },
+        "promotion": {
+          "name": "승진/발전",
+          "description": "회사에서 인정받고 싶어요. 승진과 연봉 인상의 기회를 잡으세요."
+        },
+        "workplace": {
+          "name": "직장 내 관계",
+          "description": "상사 때문에, 동료 때문에… 힘든 직장 생활, 관계의 실마리를 찾아요."
+        },
+        "skills": {
+          "name": "역량 개발",
+          "description": "내 커리어 발전을 위해 지금 무엇을 준비해야 할까요?"
+        }
+      },
+      "business": {
+        "startup": {
+          "name": "창업",
+          "description": "창업을 꿈꾸고 있나요? 성공 가능성과 현실적인 조언을 확인하세요."
+        },
+        "investment": {
+          "name": "투자",
+          "description": "이곳에 투자해도 될까요? 기회와 위험 요소를 함께 살펴봐요."
+        },
+        "partnership": {
+          "name": "파트너십",
+          "description": "동업, 괜찮을까요? 파트너와의 궁합과 갈등 해결법."
+        },
+        "growth": {
+          "name": "사업 확장",
+          "description": "사업이 정체된 느낌인가요? 성장의 돌파구를 찾아보세요."
+        }
+      },
+      "relationships": {
+        "friends": {
+          "name": "친구 관계",
+          "description": "친구와 멀어진 것 같나요? 우정을 회복하고 발전시키는 방법."
+        },
+        "family": {
+          "name": "가족 관계",
+          "description": "가깝지만 어려운 가족, 서로를 이해하고 소통하는 지혜."
+        },
+        "conflicts": {
+          "name": "갈등 해결",
+          "description": "불편한 사람이 있나요? 갈등의 원인을 파악하고 해결책을 모색해요."
+        },
+        "networking": {
+          "name": "새로운 인맥",
+          "description": "좋은 인연을 만나고 싶어요. 나에게 도움이 될 새로운 관계는?"
+        }
+      },
+      "growth": {
+        "purpose": {
+          "name": "인생 목표",
+          "description": "요즘 내가 잘 살고 있는지 모르겠어요. 삶의 의미와 방향을 찾아서."
+        },
+        "habits": {
+          "name": "습관 개선",
+          "description": "나를 바꾸는 작은 습관, 어떤 것부터 시작하면 좋을까요?"
+        },
+        "mindset": {
+          "name": "마음가짐",
+          "description": "자꾸만 부정적인 생각이 들 때, 긍정적인 마음의 힘을 키워봐요."
+        },
+        "healing": {
+          "name": "내면 치유",
+          "description": "과거의 상처에서 벗어나고 싶어요. 내면의 아픔을 치유하는 시간."
+        }
+      },
+      "finance": {
+        "saving": {
+          "name": "저축",
+          "description": "돈이 모이지 않는 이유가 뭘까요? 종잣돈 마련을 위한 현실 조언."
+        },
+        "spending": {
+          "name": "소비 패턴",
+          "description": "자꾸만 과소비하게 돼요. 현명한 소비 습관을 만드는 방법."
+        },
+        "investment": {
+          "name": "재테크",
+          "description": "주식, 코인, 부동산… 나에게 맞는 재테크 방법은 무엇일까요?"
+        },
+        "debt": {
+          "name": "부채 관리",
+          "description": "대출과 빚, 어떻게 해결해야 할까요? 부채의 굴레에서 벗어나기."
+        }
+      },
+      "timing": {
+        "decision": {
+          "name": "결정 타이밍",
+          "description": "지금 결정하는 게 맞을까요? 인생의 중요한 선택, 최적의 타이밍."
+        },
+        "opportunity": {
+          "name": "기회",
+          "description": "나에게 어떤 기회가 오고 있을까요? 기회를 잡기 위한 준비."
+        },
+        "luck": {
+          "name": "운세",
+          "description": "요즘따라 일이 잘 안 풀리나요? 나의 전체적인 운의 흐름 체크."
+        },
+        "caution": {
+          "name": "주의사항",
+          "description": "지금 내가 가장 경계하고 주의해야 할 점은 무엇일까요?"
+        }
+      }
+    }
   }
 }

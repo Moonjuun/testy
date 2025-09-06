@@ -247,5 +247,201 @@
     "notice": "お知らせ",
     "watermarkedMessage": "ログインすると、透かしのないオリジナル画像を受け取ることができます。",
     "confirm": "確認"
+  },
+  "tarot": {
+    "typePage": {
+      "title": "具体的にどこが気になりますか？",
+      "subtitle": "選択したテーマを絞ることで、カードの解釈がより鮮明になります。",
+      "back": "戻る",
+      "currentCategoryChip": "{{name}}",
+      "situationTitle": "現在の状況を簡単に教えてください（任意）",
+      "situationPlaceholder": "一文か二文で今の状況を教えてください。",
+      "start": "カードを引くを始める",
+      "invalidType": "無効なタイプです。正しいリンクで再試行してください。"
+    },
+    "categories": {
+      "love": {
+        "name": "恋愛",
+        "description": "あの人との関係、この先は？"
+      },
+      "marriage": {
+        "name": "結婚",
+        "description": "この人との結婚、大丈夫？"
+      },
+      "career": {
+        "name": "職業",
+        "description": "私のキャリア、次のステップは？"
+      },
+      "business": {
+        "name": "ビジネス",
+        "description": "事業と投資、成功できる？"
+      },
+      "relationships": {
+        "name": "人間関係",
+        "description": "こじれた人間関係、解決の糸口"
+      },
+      "growth": {
+        "name": "自己成長",
+        "description": "停滞した自分を打ち破るヒント"
+      },
+      "finance": {
+        "name": "財政/消費",
+        "description": "私の財運とお金の管理術"
+      },
+      "timing": {
+        "name": "運/タイミング",
+        "description": "大事な決断、タイミングはいつ？"
+      }
+    },
+    "subcategories": {
+      "love": {
+        "start": {
+          "name": "新しい始まり",
+          "description": "サム、片思い、紹介…私たち、始められるかな？"
+        },
+        "current": {
+          "name": "現在診断",
+          "description": "最近私たちの関係、うまくいってるのかな？関係の現状を診断してみよう。"
+        },
+        "partner": {
+          "name": "相手の本心",
+          "description": "あの人は私のことをどう思っているの？相手の本当の気持ち。"
+        },
+        "future": {
+          "name": "今後の流れ",
+          "description": "私たちの関係、今後どうなるのでしょうか？より良い未来のためのヒント。"
+        },
+        "action": {
+          "name": "私の行動",
+          "description": "告白するべきか、待つべきか？今の私に最も必要な行動は何でしょうか。"
+        }
+      },
+      "marriage": {
+        "timing": {
+          "name": "結婚タイミング",
+          "description": "今この人と結婚してもいいのでしょうか？最適なタイミングを探ってみましょう。"
+        },
+        "partner": {
+          "name": "結婚相手",
+          "description": "私の結婚相手はどんな人なのでしょうか？未来の縁を覗いてみましょう。"
+        },
+        "family": {
+          "name": "家族関係",
+          "description": "結婚は現実！両家の家族との調和の取れた関係のためのアドバイス。"
+        },
+        "preparation": {
+          "name": "結婚準備",
+          "description": "結婚準備、まったく分からないし難しいですか？プロセスの中の対立を解決してみましょう。"
+        }
+      },
+      "career": {
+        "change": {
+          "name": "職業変化",
+          "description": "転職準備中ですが、大丈夫でしょうか？成功するキャリアチェンジのためのアドバイス。"
+        },
+        "promotion": {
+          "name": "昇進/発展",
+          "description": "会社で認められたいです。昇進と給与アップのチャンスをつかんでください。"
+        },
+        "workplace": {
+          "name": "職場内関係",
+          "description": "上司のせいで、同僚のせいで…厳しい職場生活、関係の糸口を探りましょう。"
+        },
+        "skills": {
+          "name": "スキル開発",
+          "description": "キャリアの発展のために今何を準備すべきでしょうか？"
+        }
+      },
+      "business": {
+        "startup": {
+          "name": "起業",
+          "description": "起業を夢見ていますか？成功の可能性と現実的なアドバイスを確認しましょう。"
+        },
+        "investment": {
+          "name": "投資",
+          "description": "ここに投資してもいいのでしょうか？機会とリスク要因を一緒に見てみましょう。"
+        },
+        "partnership": {
+          "name": "パートナーシップ",
+          "description": "共同経営、問題ないでしょうか？パートナーとの相性や対立解決法。"
+        },
+        "growth": {
+          "name": "事業拡大",
+          "description": "事業が停滞していると感じますか？成長の突破口を見つけてみましょう。"
+        }
+      },
+      "relationships": {
+        "friends": {
+          "name": "友人関係",
+          "description": "友達と疎遠になっている気がしますか？友情を回復し、発展させる方法。"
+        },
+        "family": {
+          "name": "家族関係",
+          "description": "近いけれど難しい家族、お互いを理解し合い、コミュニケーションを取る知恵。"
+        },
+        "conflicts": {
+          "name": "対立解決",
+          "description": "不快な人がいますか？対立の原因を把握し、解決策を模索しましょう。"
+        },
+        "networking": {
+          "name": "新しい人脈",
+          "description": "良い縁を見つけたいです。私に役立つ新しい関係は？"
+        }
+      },
+      "growth": {
+        "purpose": {
+          "name": "人生の目標",
+          "description": "最近自分がうまく生きているのか分からない。人生の意味と方向性を見つけましょう。"
+        },
+        "habits": {
+          "name": "習慣改善",
+          "description": "自分を変える小さな習慣、どれから始めればいいでしょうか？"
+        },
+        "mindset": {
+          "name": "心構え",
+          "description": "どうしてもネガティブな考えが浮かんでしまうとき、ポジティブな心の力を育ててみましょう。"
+        },
+        "healing": {
+          "name": "内面の癒し",
+          "description": "過去の傷から解放されたい。内なる痛みを癒す時間。"
+        }
+      },
+      "finance": {
+        "saving": {
+          "name": "貯蓄",
+          "description": "お金が貯まらない理由は何でしょうか？種銭を作るための現実的なアドバイス。"
+        },
+        "spending": {
+          "name": "消費パターン",
+          "description": "つい過剰消費してしまいます。賢い消費習慣を身につける方法。"
+        },
+        "investment": {
+          "name": "資産運用",
+          "description": "株式、仮想通貨、不動産…私に合った資産運用方法は何でしょうか？"
+        },
+        "debt": {
+          "name": "負債管理",
+          "description": "借入金や負債、どう解決すればいいのでしょうか？負債の呪縛から解放されるために。"
+        }
+      },
+      "timing": {
+        "decision": {
+          "name": "決定タイミング",
+          "description": "今決定するのが正しいのでしょうか？人生の重要な選択、最適なタイミング。"
+        },
+        "opportunity": {
+          "name": "機会",
+          "description": "私にどんな機会が訪れるのでしょうか？機会をつかむための準備。"
+        },
+        "luck": {
+          "name": "運勢",
+          "description": "最近仕事がうまくいかないですか？私の全体的な運の流れをチェックしましょう。"
+        },
+        "caution": {
+          "name": "注意事項",
+          "description": "今私が最も警戒し注意すべき点は何でしょうか？"
+        }
+      }
+    }
   }
 }

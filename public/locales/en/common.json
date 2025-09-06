@@ -247,5 +247,201 @@
     "notice": "notice",
     "watermarkedMessage": "You will receive the original image without watermark if you log in.",
     "confirm": "confirm"
+  },
+  "tarot": {
+    "typePage": {
+      "title": "Find Your Tarot Insight",
+      "subtitle": "Narrowing down your chosen theme will make the card interpretation clearer.",
+      "back": "Back",
+      "currentCategoryChip": "{{name}}",
+      "situationTitle": "Please briefly describe your current situation (optional)",
+      "situationPlaceholder": "Please describe your current situation in one or two sentences.",
+      "start": "Start Drawing Cards",
+      "invalidType": "Invalid type. Please try again with the correct link."
+    },
+    "categories": {
+      "love": {
+        "name": "Love",
+        "description": "Where is this relationship going?"
+      },
+      "marriage": {
+        "name": "Marriage",
+        "description": "Is this person the one?"
+      },
+      "career": {
+        "name": "Career",
+        "description": "What's next for your career?"
+      },
+      "business": {
+        "name": "Business",
+        "description": "Will my business venture succeed?"
+      },
+      "relationships": {
+        "name": "Relationships",
+        "description": "Navigating difficult relationships."
+      },
+      "growth": {
+        "name": "Personal Growth",
+        "description": "Unlocking your true potential."
+      },
+      "finance": {
+        "name": "Finance/Consumption",
+        "description": "Improving your financial flow."
+      },
+      "timing": {
+        "name": "Luck/Timing",
+        "description": "Big decisions: Is the timing right?"
+      }
+    },
+    "subcategories": {
+      "love": {
+        "start": {
+          "name": "New Beginnings",
+          "description": "Crushes, unrequited love, blind dates… Can we start something new?"
+        },
+        "current": {
+          "name": "Current Diagnosis",
+          "description": "How are we doing these days? Let's diagnose the current state of our relationship."
+        },
+        "partner": {
+          "name": "Partner's True Feelings",
+          "description": "What does that person think of me? Let's explore their true feelings."
+        },
+        "future": {
+          "name": "Future Flow",
+          "description": "What will happen to our relationship in the future? Tips for a better tomorrow."
+        },
+        "action": {
+          "name": "My Actions",
+          "description": "Should I confess or wait? What action do I need to take right now?"
+        }
+      },
+      "marriage": {
+        "timing": {
+          "name": "Marriage Timing",
+          "description": "Is it okay to marry this person now? Let's find the optimal timing."
+        },
+        "partner": {
+          "name": "Future Partner",
+          "description": "What kind of person will my future spouse be? Let's take a peek into the future."
+        },
+        "family": {
+          "name": "Family Relationships",
+          "description": "Marriage is reality! Advice for harmonious relationships with both families."
+        },
+        "preparation": {
+          "name": "Marriage Preparation",
+          "description": "Feeling overwhelmed by wedding preparations? Let's resolve conflicts in the process."
+        }
+      },
+      "career": {
+        "change": {
+          "name": "Career Change",
+          "description": "Is it okay to prepare for a job change? Advice for a successful career transition."
+        },
+        "promotion": {
+          "name": "Promotion/Advancement",
+          "description": "I want to be recognized at work. Seize opportunities for promotion and salary increases."
+        },
+        "workplace": {
+          "name": "Workplace Relationships",
+          "description": "Difficulties with bosses or colleagues? Let's find clues to improve workplace dynamics."
+        },
+        "skills": {
+          "name": "Skills Development",
+          "description": "What should I prepare now for my career advancement?"
+        }
+      },
+      "business": {
+        "startup": {
+          "name": "Startup",
+          "description": "Are you dreaming of starting your own business? Check the potential for success and realistic advice."
+        },
+        "investment": {
+          "name": "Investment",
+          "description": "Is it okay to invest here? Let's take a look at the opportunities and risks."
+        },
+        "partnership": {
+          "name": "Partnership",
+          "description": "Is co-owning a business a good idea? Let's explore compatibility with your partner and conflict resolution strategies."
+        },
+        "growth": {
+          "name": "Business Growth",
+          "description": "Does your business feel stagnant? Let's find breakthroughs for growth."
+        }
+      },
+      "relationships": {
+        "friends": {
+          "name": "Friendship",
+          "description": "Do you feel distant from your friends? Here are ways to restore and enhance your friendships."
+        },
+        "family": {
+          "name": "Family Relationships",
+          "description": "Close yet challenging family ties, wisdom for understanding and communicating with each other."
+        },
+        "conflicts": {
+          "name": "Conflict Resolution",
+          "description": "Is there someone you're uncomfortable with? Let's identify the causes of conflict and seek solutions."
+        },
+        "networking": {
+          "name": "Networking",
+          "description": "I want to meet good connections. What new relationships can help me?"
+        }
+      },
+      "growth": {
+        "purpose": {
+          "name": "Life Purpose",
+          "description": "요즘 내가 잘 살고 있는지 모르겠어요. 삶의 의미와 방향을 찾아서."
+        },
+        "habits": {
+          "name": "Habits Improvement",
+          "description": "What small habits can I start to change myself?"
+        },
+        "mindset": {
+          "name": "Mindset",
+          "description": "When negative thoughts keep creeping in, let's cultivate the power of a positive mindset."
+        },
+        "healing": {
+          "name": "Inner Healing",
+          "description": "I want to break free from past wounds. A time to heal inner pain."
+        }
+      },
+      "finance": {
+        "saving": {
+          "name": "Saving",
+          "description": "What are the reasons I can't save money? Realistic advice for building up savings."
+        },
+        "spending": {
+          "name": "Spending Patterns",
+          "description": "I keep overspending. How can I develop smarter spending habits?"
+        },
+        "investment": {
+          "name": "Investment",
+          "description": "Stocks, crypto, real estate... What investment strategies are right for me?"
+        },
+        "debt": {
+          "name": "Debt Management",
+          "description": "Loans and debts, how should I resolve them? Breaking free from the cycle of debt."
+        }
+      },
+      "timing": {
+        "decision": {
+          "name": "Decision Timing",
+          "description": "Is it the right time to decide? Important life choices and the optimal timing."
+        },
+        "opportunity": {
+          "name": "Opportunity",
+          "description": "What opportunities are coming my way? Preparing to seize opportunities."
+        },
+        "luck": {
+          "name": "Luck",
+          "description": "Are things not going well these days? Let's check the overall flow of my luck."
+        },
+        "caution": {
+          "name": "Caution",
+          "description": "What should I be most wary of right now?"
+        }
+      }
+    }
   }
 }

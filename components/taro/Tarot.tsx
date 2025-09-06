@@ -1,45 +1,33 @@
 "use client";
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { categories } from "@/constants/tarot/TarotConstants";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 export default function Tarot({ locale }: { locale: string }) {
   const router = useRouter();
+  // 'tarot' 네임스페이스를 사용하도록 지정합니다.
+  const { t } = useTranslation("common");
 
   const handleCategorySelect = (categoryId: string) => {
-    router.push(`/tarot/${categoryId}`);
+    // 다국어 라우팅을 위해 locale 정보를 포함하는 것이 좋습니다.
+    router.push(`/${locale}/tarot/${categoryId}`);
   };
-  return (
-    <div className="min-h-screen bg-background">
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-10 w-2 h-2 bg-accent rounded-full constellation-twinkle" />
-        <div
-          className="absolute top-32 right-20 w-1 h-1 bg-accent rounded-full constellation-twinkle"
-          style={{ animationDelay: "1s" }}
-        />
-        <div
-          className="absolute bottom-40 left-1/4 w-1.5 h-1.5 bg-accent rounded-full constellation-twinkle"
-          style={{ animationDelay: "2s" }}
-        />
-        <div
-          className="absolute top-1/2 right-10 w-1 h-1 bg-accent rounded-full constellation-twinkle"
-          style={{ animationDelay: "0.5s" }}
-        />
-      </div>
 
+  return (
+    <div className="tarot min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 relative z-10">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="font-sans text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">
-              무엇을 정리해볼까요?
+              {/* 번역 파일의 키를 직접 사용합니다. */}
+              {t("tarot.typePage.title")}
             </h1>
             <p className="font-mono text-lg text-muted-foreground text-pretty">
-              당신의 상황에 맞는 카테고리를 선택하세요.
+              {t("tarot.typePage.subtitle")}
             </p>
           </div>
-
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
             {categories.map((category) => {
               const IconComponent = category.icon;
@@ -54,10 +42,10 @@ export default function Tarot({ locale }: { locale: string }) {
                       <IconComponent className="w-8 h-8 text-accent" />
                     </div>
                     <h3 className="font-sans font-semibold text-card-foreground mb-2">
-                      {category.name}
+                      {t(`tarot.categories.${category.id}.name`)}
                     </h3>
                     <p className="font-mono text-sm text-muted-foreground text-pretty">
-                      {category.description}
+                      {t(`tarot.categories.${category.id}.description`)}
                     </p>
                   </CardContent>
                 </Card>

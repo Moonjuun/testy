@@ -247,5 +247,201 @@
     "notice": "Thông báo",
     "watermarkedMessage": "Bạn sẽ nhận được hình ảnh gốc không có watermark nếu bạn đăng nhập.",
     "confirm": "Xác nhận"
+  },
+  "tarot": {
+    "typePage": {
+      "title": "Cụ thể bạn đang thắc mắc điều gì?",
+      "subtitle": "Khi thu hẹp chủ đề đã chọn, việc giải thích thẻ sẽ rõ ràng hơn.",
+      "back": "Quay lại",
+      "currentCategoryChip": "{{name}}",
+      "situationTitle": "Vui lòng mô tả tình huống hiện tại của bạn (tùy chọn)",
+      "situationPlaceholder": "Hãy viết một hoặc hai câu về tình huống hiện tại của bạn.",
+      "start": "Bắt đầu rút thẻ",
+      "invalidType": "Loại không hợp lệ. Vui lòng thử lại với liên kết hợp lệ."
+    },
+    "categories": {
+      "love": {
+        "name": "Tình yêu",
+        "description": "Mối quan hệ này sẽ ra sao?"
+      },
+      "marriage": {
+        "name": "Hôn nhân",
+        "description": "Kết hôn với người này, liệu có ổn?"
+      },
+      "career": {
+        "name": "Nghề nghiệp",
+        "description": "Sự nghiệp của bạn: bước tiếp theo?"
+      },
+      "business": {
+        "name": "Kinh doanh",
+        "description": "Dự án kinh doanh này có thành công?"
+      },
+      "relationships": {
+        "name": "Mối quan hệ",
+        "description": "Gỡ rối những mối quan hệ phức tạp."
+      },
+      "growth": {
+        "name": "Tự phát triển",
+        "description": "Khai phá tiềm năng thật sự."
+      },
+      "finance": {
+        "name": "Tài chính/Chi tiêu",
+        "description": "Vận may và cách quản lý tài chính."
+      },
+      "timing": {
+        "name": "Vận may/Thời điểm",
+        "description": "Quyết định quan trọng: thời điểm nào?"
+      }
+    },
+    "subcategories": {
+      "love": {
+        "start": {
+          "name": "Khởi đầu mới",
+          "description": "Thích, đơn phương, hẹn hò… Chúng ta có thể bắt đầu không?"
+        },
+        "current": {
+          "name": "Chẩn đoán hiện tại",
+          "description": "Dạo này chúng ta có ổn không? Hãy chẩn đoán tình trạng mối quan hệ."
+        },
+        "partner": {
+          "name": "Tâm tư của đối phương",
+          "description": "Người ấy đang nghĩ gì về mình? Tâm tư thật sự của đối phương."
+        },
+        "future": {
+          "name": "Dòng chảy tương lai",
+          "description": "Mối quan hệ của chúng ta sẽ đi về đâu? Những mẹo cho một tương lai tốt đẹp hơn."
+        },
+        "action": {
+          "name": "Hành động của tôi",
+          "description": "Nên thổ lộ tình cảm hay chờ đợi? Hành động nào là cần thiết nhất vào lúc này?"
+        }
+      },
+      "marriage": {
+        "timing": {
+          "name": "Thời điểm kết hôn",
+          "description": "Liệu bây giờ có thể kết hôn với người này không? Hãy tìm thời điểm tối ưu."
+        },
+        "partner": {
+          "name": "Đối tác hôn nhân",
+          "description": "Người bạn đời của tôi sẽ là người như thế nào? Hãy nhìn vào mối quan hệ trong tương lai."
+        },
+        "family": {
+          "name": "Mối quan hệ gia đình",
+          "description": "Hôn nhân là thực tế! Lời khuyên cho mối quan hệ hài hòa với gia đình hai bên."
+        },
+        "preparation": {
+          "name": "Chuẩn bị kết hôn",
+          "description": "Chuẩn bị kết hôn, có quá nhiều điều phải lo lắng? Hãy giải quyết những xung đột trong quá trình."
+        }
+      },
+      "career": {
+        "change": {
+          "name": "Thay đổi nghề nghiệp",
+          "description": "Tôi đang chuẩn bị chuyển việc, liệu có ổn không? Lời khuyên cho một sự chuyển đổi nghề nghiệp thành công."
+        },
+        "promotion": {
+          "name": "Thăng tiến",
+          "description": "Tôi muốn được công nhận trong công ty. Hãy nắm bắt cơ hội thăng tiến và tăng lương."
+        },
+        "workplace": {
+          "name": "Mối quan hệ tại nơi làm việc",
+          "description": "Vì sếp, vì đồng nghiệp… Cuộc sống công sở khó khăn, hãy tìm ra manh mối cho các mối quan hệ."
+        },
+        "skills": {
+          "name": "Phát triển kỹ năng",
+          "description": "Tôi cần chuẩn bị gì cho sự phát triển nghề nghiệp của mình?"
+        }
+      },
+      "business": {
+        "startup": {
+          "name": "Khởi nghiệp",
+          "description": "Bạn có đang mơ ước về việc khởi nghiệp? Hãy kiểm tra khả năng thành công và những lời khuyên thực tế."
+        },
+        "investment": {
+          "name": "Đầu tư",
+          "description": "Liệu có nên đầu tư vào đây không? Hãy cùng xem xét cơ hội và rủi ro."
+        },
+        "partnership": {
+          "name": "Đối tác",
+          "description": "Liệu có nên hợp tác không? Hãy xem xét sự tương hợp và cách giải quyết xung đột với đối tác."
+        },
+        "growth": {
+          "name": "Mở rộng kinh doanh",
+          "description": "Doanh nghiệp của bạn có đang cảm thấy bế tắc? Hãy tìm kiếm những đột phá cho sự phát triển."
+        }
+      },
+      "relationships": {
+        "friends": {
+          "name": "Mối quan hệ bạn bè",
+          "description": "Có phải bạn đang xa cách với bạn bè? Cách phục hồi và phát triển tình bạn."
+        },
+        "family": {
+          "name": "Mối quan hệ gia đình",
+          "description": "Gia đình gần gũi nhưng khó khăn, sự hiểu biết và giao tiếp lẫn nhau."
+        },
+        "conflicts": {
+          "name": "Giải quyết xung đột",
+          "description": "Có ai đó khiến bạn khó chịu không? Hãy xác định nguyên nhân xung đột và tìm kiếm giải pháp."
+        },
+        "networking": {
+          "name": "Xây dựng mối quan hệ",
+          "description": "Bạn muốn gặp gỡ những người bạn tốt. Những mối quan hệ mới nào có thể giúp ích cho bạn?"
+        }
+      },
+      "growth": {
+        "purpose": {
+          "name": "Mục tiêu cuộc sống",
+          "description": "Gần đây tôi không chắc mình có đang sống tốt không. Hãy tìm kiếm ý nghĩa và định hướng cho cuộc sống."
+        },
+        "habits": {
+          "name": "Thói quen",
+          "description": "Những thói quen nhỏ có thể thay đổi bản thân, tôi nên bắt đầu từ đâu?"
+        },
+        "mindset": {
+          "name": "Tư duy",
+          "description": "Khi những suy nghĩ tiêu cực xuất hiện, hãy nuôi dưỡng sức mạnh của tâm trí tích cực."
+        },
+        "healing": {
+          "name": "Chữa lành nội tâm",
+          "description": "Tôi muốn thoát khỏi những vết thương trong quá khứ. Hãy dành thời gian để chữa lành nỗi đau bên trong."
+        }
+      },
+      "finance": {
+        "saving": {
+          "name": "Tiết kiệm",
+          "description": "Tại sao tiền không thể tiết kiệm được? Những lời khuyên thực tế để tích lũy vốn."
+        },
+        "spending": {
+          "name": "Chi tiêu",
+          "description": "Tôi thường xuyên chi tiêu quá mức. Làm thế nào để xây dựng thói quen chi tiêu thông minh?"
+        },
+        "investment": {
+          "name": "Đầu tư",
+          "description": "Chứng khoán, tiền điện tử, bất động sản… Phương pháp đầu tư nào phù hợp với tôi?"
+        },
+        "debt": {
+          "name": "Quản lý nợ",
+          "description": "Vay mượn và nợ nần, tôi nên giải quyết như thế nào? Thoát khỏi vòng xoáy nợ nần."
+        }
+      },
+      "timing": {
+        "decision": {
+          "name": "Thời điểm quyết định",
+          "description": "Bây giờ có phải là thời điểm đúng để quyết định không? Những lựa chọn quan trọng trong cuộc đời, thời điểm tối ưu."
+        },
+        "opportunity": {
+          "name": "Cơ hội",
+          "description": "Có cơ hội nào đang đến với tôi không? Chuẩn bị để nắm bắt cơ hội."
+        },
+        "luck": {
+          "name": "Vận may",
+          "description": "Gần đây mọi việc có diễn ra suôn sẻ không? Hãy kiểm tra dòng chảy vận may của tôi."
+        },
+        "caution": {
+          "name": "Cảnh giác",
+          "description": "Hiện tại, điều gì là mối nguy hiểm và cần chú ý nhất đối với tôi?"
+        }
+      }
+    }
   }
 }
