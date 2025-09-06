@@ -21,11 +21,10 @@ export default function Tarot({ locale }: { locale: string }) {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="font-sans text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">
-              {/* 번역 파일의 키를 직접 사용합니다. */}
-              {t("tarot.typePage.title")}
+              {t("tarot.typePage.title1")}
             </h1>
             <p className="font-mono text-lg text-muted-foreground text-pretty">
-              {t("tarot.typePage.subtitle")}
+              {t("tarot.typePage.subtitle1")}
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">

@@ -250,8 +250,10 @@
   },
   "tarot": {
     "typePage": {
-      "title": "Find Your Tarot Insight",
-      "subtitle": "Narrowing down your chosen theme will make the card interpretation clearer.",
+      "title1": "何に悩んでいますか？",
+      "subtitle1": "あなたの状況に合ったカテゴリを選択してください。",
+      "title2": "Find Your Tarot Insight",
+      "subtitle2": "Narrowing down your chosen theme will make the card interpretation clearer.",
       "back": "Back",
       "currentCategoryChip": "{{name}}",
       "situationTitle": "Please briefly describe your current situation (optional)",

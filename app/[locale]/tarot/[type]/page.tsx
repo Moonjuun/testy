@@ -75,10 +75,10 @@ export default function TarotTypePage() {
 
         <div className="text-center mb-12">
           <h1 className="font-sans text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">
-            {t("tarot.typePage.title")}
+            {t("tarot.typePage.title2")}
           </h1>
           <p className="font-mono text-lg text-muted-foreground text-pretty">
-            {t("tarot.typePage.subtitle")}
+            {t("tarot.typePage.subtitle2")}
           </p>
         </div>
 

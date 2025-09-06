@@ -250,8 +250,10 @@
   },
   "tarot": {
     "typePage": {
-      "title": "Cụ thể bạn đang thắc mắc điều gì?",
-      "subtitle": "Khi thu hẹp chủ đề đã chọn, việc giải thích thẻ sẽ rõ ràng hơn.",
+      "title1": "Bạn đang thắc mắc điều gì?",
+      "subtitle1": "Hãy chọn một danh mục phù hợp với tình huống của bạn.",
+      "title2": "Cụ thể bạn đang thắc mắc điều gì?",
+      "subtitle2": "Khi thu hẹp chủ đề đã chọn, việc giải thích thẻ sẽ rõ ràng hơn.",
       "back": "Quay lại",
       "currentCategoryChip": "{{name}}",
       "situationTitle": "Vui lòng mô tả tình huống hiện tại của bạn (tùy chọn)",
