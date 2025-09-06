@@ -41,22 +41,23 @@ export default function ClientLayout({
   return (
     <I18nextProvider i18n={i18n}>
       <ThemeProvider>
-        {/* 2. 앱 전체를 AlertProvider로 감싸줍니다. */}
         <AlertProvider>
           <div className="flex flex-col min-h-screen">
             <Header locale={locale} />
 
             <div className="flex flex-1 relative">
               {!isAdminPage && (
-                <div className="hidden xl:block w-80 flex-shrink-0">
+                // ⬇️ 1280px(xl)에서는 숨기고, 1536px(2xl)부터만 노출
+                <div className="hidden 2xl:block w-80 flex-shrink-0">
                   <SideAdContainer position="left" slot="5251424654" />
                 </div>
               )}
 
-              <main className="flex-1 min-w-0">{children}</main>
+              <main className="flex-1 min-w-0 w-full">{children}</main>
 
               {!isAdminPage && (
-                <div className="hidden xl:block w-80 flex-shrink-0">
+                // ⬇️ 오른쪽도 동일하게 2xl부터만 노출
+                <div className="hidden 2xl:block w-80 flex-shrink-0">
                   <SideAdContainer position="right" slot="2714274112" />
                 </div>
               )}

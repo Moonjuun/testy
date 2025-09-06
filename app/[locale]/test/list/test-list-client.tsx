@@ -129,7 +129,7 @@ export function TestListClient() {
     <>
       <div className="px-4 sm:px-6 lg:px-8">
         {/* 검색 + 카테고리 필터 */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg mb-8 ">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg mb-8 mt-8 ">
           <div className="flex flex-col lg:flex-row justify-between gap-4">
             <div className="relative w-full max-w-md">
               <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
