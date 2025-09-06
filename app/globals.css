@@ -177,3 +177,137 @@ body {
     animation: reveal 0.5s ease-out forwards;
   }
 }
+
+/* Tarot Section Styles 
+  - 기본적으로 라이트 모드 테마가 적용됩니다.
+  - 다크 모드 시에는 .dark 클래스를 기반으로 어두운 테마가 적용됩니다.
+*/
+
+.tarot {
+  --background: 240 20% 98%; /* 안개처럼 부드럽고 밝은 배경 */
+  --foreground: 240, 12%, 15%; /* 더 진하고 선명해진 텍스트 색상 */
+  --card: 240 25% 99%; /* 거의 흰색에 가까운 카드 배경 */
+  --card-foreground: 240, 12%, 15%; /* 텍스트 색상과 통일 */
+  --popover: 240 20% 98%;
+  --popover-foreground: 240, 12%, 15%;
+  --primary: 255 70% 65%; /* 버튼 등 주요 UI를 위한 생기 있는 라벤더 */
+  --primary-foreground: 240 10% 15%;
+  --secondary: 245 30% 75%; /* 카드 뒷면 등에 쓰이는 부드러운 회보라색 */
+  --secondary-foreground: 240 10% 20%;
+  --muted: 240 15% 95%;
+  --muted-foreground: 240 8% 45%;
+  --accent: 340 70% 50%; /* ✨ 카드 위 아이콘/텍스트를 위한 깊은 라즈베리 핑크 */
+  --accent-foreground: 0 0% 100%; /* ✨ accent 배경 위에 올라갈 밝은 흰색 */
+  --destructive: 0 70% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 240 10% 88%;
+  --input: 240 10% 94%;
+  --ring: 340 70% 50%; /* ✨ accent와 통일 */
+  --radius: 0.75rem;
+
+  /* 라이트 모드용 신비로운 배경 패턴 */
+  background-image: radial-gradient(
+      circle at 15% 85%,
+      hsla(255, 70%, 65%, 0.15),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 85% 15%,
+      hsla(340, 70%, 50%, 0.1),
+      /* 라즈베리 색상으로 변경 */ transparent 40%
+    );
+}
+
+/* 다크 모드 - 기존의 신비로운 밤하늘, 네이비, 금색 테마 (변경 없음) */
+.dark .tarot {
+  --background: 230 35% 5%;
+  --foreground: 45 35% 95%;
+  --card: 230 35% 7%;
+  --card-foreground: 45 35% 95%;
+  --popover: 235 30% 10%;
+  --popover-foreground: 45 35% 95%;
+  --primary: 45 80% 65%;
+  --primary-foreground: 230 35% 5%;
+  --secondary: 270 22% 18%;
+  --secondary-foreground: 45 35% 95%;
+  --muted: 235 25% 10%;
+  --muted-foreground: 45 10% 70%;
+  --accent: 45 80% 65%;
+  --accent-foreground: 230 35% 5%;
+  --destructive: 8 70% 45%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 270 22% 18%;
+  --input: 230 35% 7%;
+  --ring: 45 80% 65%;
+  --chart-1: 45 80% 65%;
+  --chart-2: 270 22% 18%;
+  --chart-3: 230 35% 7%;
+  --chart-4: 8 70% 45%;
+  --chart-5: 45 35% 95%;
+  --sidebar-background: 230 35% 7%;
+  --sidebar-foreground: 45 35% 95%;
+  --sidebar-primary: 270 22% 18%;
+  --sidebar-primary-foreground: 45 35% 95%;
+  --sidebar-accent: 45 80% 65%;
+  --sidebar-accent-foreground: 230 35% 5%;
+  --sidebar-border: 270 22% 18%;
+  --sidebar-ring: 45 80% 65%;
+
+  /* 다크 모드용 신비로운 배경 패턴 */
+  background-image: radial-gradient(
+      circle at 20% 80%,
+      rgba(117, 46, 145, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(212, 175, 55, 0.05) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 40%,
+      rgba(30, 30, 120, 0.1) 0%,
+      transparent 50%
+    );
+}
+
+/* 카드 플립, 글로우 등 애니메이션 (테마와 무관하게 동일) */
+@keyframes card-flip {
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(90deg);
+  }
+  100% {
+    transform: rotateY(0deg);
+  }
+}
+@keyframes mystical-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px hsla(var(--primary), 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px hsla(var(--primary), 0.6);
+  }
+}
+@keyframes constellation-twinkle {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.card-flip {
+  animation: card-flip 0.8s ease-in-out;
+}
+.mystical-glow {
+  animation: mystical-glow 2s ease-in-out infinite;
+}
+.constellation-twinkle {
+  animation: constellation-twinkle 3s ease-in-out infinite;
+}
