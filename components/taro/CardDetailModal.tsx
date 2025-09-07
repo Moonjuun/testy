@@ -101,12 +101,12 @@ export default function CardDetailModal({
                   <DialogClose asChild>
                     <Button variant="outline">닫기</Button>
                   </DialogClose>
-                  <Button
+                  {/* <Button
                     onClick={onNext}
                     className="font-sans font-semibold mystical-glow"
                   >
                     다음 카드
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
             </div>

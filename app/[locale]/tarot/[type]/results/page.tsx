@@ -80,9 +80,20 @@ export default function ResultTarotPage({
             />
           ))}
         </div>
+
+        {/* 하단 CTA */}
+        <div className="text-center my-10 mt-20">
+          <Button
+            onClick={() => router.push(`/tarot/`)}
+            size="lg"
+            className="font-sans font-semibold mystical-glow"
+          >
+            <Sparkles className="mr-2 h-4 w-4" />
+            새로운 리딩 시작하기
+          </Button>
+        </div>
       </div>
 
-      {/* 분리된 모달 컴포넌트 렌더링 */}
       <CardDetailModal
         open={openModal}
         onOpenChange={setOpenModal}
@@ -91,18 +102,6 @@ export default function ResultTarotPage({
         activeCardIndex={activeCardIndex}
         onNext={handleNextCard}
       />
-
-      {/* 하단 CTA */}
-      <div className="text-center my-10">
-        <Button
-          onClick={() => router.push(`/tarot/`)}
-          size="lg"
-          className="font-sans font-semibold mystical-glow"
-        >
-          <Sparkles className="mr-2 h-4 w-4" />
-          새로운 리딩 시작하기
-        </Button>
-      </div>
     </div>
   );
 }
