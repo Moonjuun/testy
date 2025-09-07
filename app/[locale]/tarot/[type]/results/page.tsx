@@ -1,16 +1,18 @@
+// app/[locale]/tarot/[type]/results/page.tsx
+
 "use client";
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-
-import { Star, ArrowLeft, Sparkles } from "lucide-react";
-import { useRouter, useParams } from "next/navigation";
+import { Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { fullTarotDeck } from "@/constants/tarot/TarotConstants";
-import { Card, CardContent } from "@/components/ui/card";
+import TarotCard3D from "@/components/taro/TarotCard3D";
+import CardDetailModal from "@/components/taro/CardDetailModal"; // 모달 컴포넌트 import
 
 type CardSpread = "single" | "three" | "five";
 
-const spreadPositions = {
+const spreadPositions: Record<CardSpread, string[]> = {
   single: ["현재 상황"],
   three: ["과거/원인", "현재 상황", "미래/결과"],
   five: ["과거", "현재", "미래", "조언", "결과"],
@@ -24,86 +26,83 @@ export default function ResultTarotPage({
   selectedSpread: CardSpread;
 }) {
   const router = useRouter();
+  const [openModal, setOpenModal] = useState(false);
+  const [activeIdx, setActiveIdx] = useState<number | null>(null);
 
-  const startNewReading = () => {
-    router.push(`/tarot/`);
+  const positions = spreadPositions[selectedSpread];
+
+  const handleOpenCard = (i: number) => {
+    setActiveIdx(i);
+    setOpenModal(true);
   };
 
+  const handleNextCard = () => {
+    if (activeIdx === null) return;
+    const next = (activeIdx + 1) % drawnCards.length;
+    setActiveIdx(next);
+  };
+
+  const activeCard =
+    activeIdx !== null ? fullTarotDeck[drawnCards[activeIdx]] : null;
+  const activeLabel = activeIdx !== null ? positions[activeIdx] : undefined;
+  const activeCardIndex = activeIdx !== null ? drawnCards[activeIdx] : 0;
+
+  // 반응형 격자
+  const gridCols =
+    selectedSpread === "single"
+      ? "grid-cols-1"
+      : selectedSpread === "three"
+      ? "grid-cols-1 sm:grid-cols-3"
+      : "grid-cols-2 md:grid-cols-3 lg:grid-cols-5";
+
   return (
-    <>
-      <div className="tarot space-y-6 mb-12">
-        {drawnCards?.map((cardIndex, position) => {
-          const card = fullTarotDeck[cardIndex];
-          const positionName = spreadPositions[selectedSpread][position];
-          return (
-            <Card key={position} className="overflow-hidden mystical-glow">
-              <CardContent className="p-6">
-                <div className="flex flex-col md:flex-row gap-6">
-                  <div className="flex-shrink-0">
-                    <div className="w-24 h-36 md:w-32 md:h-48 mx-auto md:mx-0">
-                      <div className="w-full h-full bg-gradient-to-b from-accent/20 to-accent/5 rounded-lg border-2 border-accent/30 flex items-center justify-center">
-                        <div className="text-center text-accent">
-                          <Star className="w-8 h-8 mx-auto mb-2" />
-                          <div className="font-sans text-sm font-semibold">
-                            {card.koreanName}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex-1 text-center md:text-left">
-                    <div className="mb-4">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-secondary/50 rounded-full mb-3">
-                        <Star className="w-3 h-3 text-accent" />
-                        <span className="font-mono text-xs text-secondary-foreground">
-                          {positionName}
-                        </span>
-                      </div>
-                      <h3 className="font-sans text-xl font-bold text-card-foreground mb-1">
-                        {card.koreanName} ({card.name})
-                      </h3>
-                      <p className="font-mono text-sm text-accent font-semibold">
-                        {card.meaning}
-                      </p>
-                    </div>
-                    <p className="font-mono text-muted-foreground leading-relaxed">
-                      {card.description}
-                    </p>
-                    <p className="font-mono text-sm text-muted-foreground mt-3 leading-relaxed">
-                      이 카드는 {positionName.toLowerCase()}에서 중요한 메시지를
-                      전달합니다. 현재 상황을 긍정적으로 받아들이고 내면의
-                      지혜를 믿어보세요.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+    <div className="tarot flex min-h-screen w-full flex-col items-center justify-between p-4 relative sm:p-6 lg:p-8 overflow-x-clip">
+      <div className="w-full flex-grow flex flex-col items-center">
+        <div className="text-center my-6">
+          <h1 className="font-sans text-3xl font-bold text-foreground md:text-4xl mb-2">
+            선택한 카드
+          </h1>
+          <p className="font-mono text-muted-foreground">
+            카드를 눌러 해석을 확인하세요.
+          </p>
+        </div>
+
+        {/* 카드 격자 */}
+        <div
+          className={`grid gap-10 place-items-center py-6 md:gap-12 ${gridCols}`}
+        >
+          {drawnCards.map((cardIndex, i) => (
+            <TarotCard3D
+              key={`${cardIndex}-${i}`}
+              index={cardIndex}
+              label={positions[i]}
+              onOpen={() => handleOpenCard(i)}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* <div className="text-center mb-8">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={saveCurrentReading}
-                  className="font-sans font-semibold bg-transparent"
-                >
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  리딩 기록에 저장하기
-                </Button>
-              </div> */}
+      {/* 분리된 모달 컴포넌트 렌더링 */}
+      <CardDetailModal
+        open={openModal}
+        onOpenChange={setOpenModal}
+        activeCard={activeCard}
+        activeLabel={activeLabel}
+        activeCardIndex={activeCardIndex}
+        onNext={handleNextCard}
+      />
 
-      <div className="text-center">
+      {/* 하단 CTA */}
+      <div className="text-center my-10">
         <Button
-          onClick={startNewReading}
+          onClick={() => router.push(`/tarot/`)}
           size="lg"
           className="font-sans font-semibold mystical-glow"
         >
-          <Sparkles className="w-4 h-4 mr-2" />
+          <Sparkles className="mr-2 h-4 w-4" />
           새로운 리딩 시작하기
         </Button>
       </div>
-    </>
+    </div>
   );
 }

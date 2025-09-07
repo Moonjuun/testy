@@ -1,3 +1,4 @@
+// app/[locale]/tarot/[type]/choose/page.tsx
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
