@@ -1,4 +1,8 @@
 {
+  "common": {
+    "close": "닫기",
+    "loading": "로딩 중..."
+  },
   "header": {
     "all": "전체",
     "profile": "프로필",
@@ -9,7 +13,8 @@
     "lunch": "오점머?",
     "test": "테스트",
     "language": "언어",
-    "gallery": "갤러리"
+    "gallery": "갤러리",
+    "tarot": "타로"
   },
   "welcome": "만나서 반가워요!",
   "description": "심심할 때 가볍게, 생각보다 잘 맞는 테스트!!",
@@ -271,7 +276,28 @@
       "situationTitle": "현재 상황을 간단히 적어주세요 (선택사항)",
       "situationPlaceholder": "한두 문장으로 지금 상황을 적어주세요.",
       "start": "카드 뽑기 시작하기",
-      "invalidType": "유효하지 않은 타입입니다. 올바른 링크로 다시 시도해주세요."
+      "invalidType": "유효하지 않은 타입입니다. 올바른 링크로 다시 시도해주세요.",
+      "chooseTitle": "카드를 선택하세요",
+      "chooseSubtitle": "당신의 직관 이끄는 카드를 선택해보세요.",
+      "choose1Card": "1장 뽑기",
+      "choose3Cards": "3장 뽑기",
+      "choose5Cards": "5장 뽑기",
+      "selected": "선택됨",
+      "viewInterpretation": "카드 해석 보기",
+      "loading": "카드를 불러오는 중...",
+      "resultTitle": "선택한 카드",
+      "resultDescription": "카드를 눌러 해석을 확인하세요.",
+      "startNewReading": "새로운 리딩 시작하기",
+      "message": "의 메세지",
+      "meaningTitle": "카드 의미",
+      "descriptionTitle": "카드 해설",
+      "cardIs": "카드는",
+      "positionExplanation": " 에서 중요한 메시지를 전달합니다. 현재 상황을 긍정적으로받아들이고 내면의 지혜를 믿어보세요."
+    },
+    "spreads": {
+      "single": { "positions": ["현재 상황"] },
+      "three": { "positions": ["과거/원인", "현재 상황", "미래/결과"] },
+      "five": { "positions": ["과거", "현재", "미래", "조언", "결과"] }
     },
     "categories": {
       "love": {

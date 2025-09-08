@@ -10,7 +10,7 @@ export default function TarotBackFace({ index }: { index: number }) {
         <div className="w-8 h-8 border border-accent/50 rounded-full mx-auto flex items-center justify-center mb-1">
           <Star className="w-4 h-4 text-accent" />
         </div>
-        <div className="text-[10px] font-mono text-accent/70">{index + 1}</div>
+        {/* <div className="text-[10px] font-mono text-accent/70">{index + 1}</div> */}
       </div>
       <div className="absolute top-1 right-1 w-1 h-1 bg-accent/30 rounded-full" />
       <div className="absolute bottom-1 left-1 w-1 h-1 bg-accent/40 rounded-full" />

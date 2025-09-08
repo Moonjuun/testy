@@ -4,8 +4,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Star, ArrowLeft, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ResultTarotPage from "../results/page";
+import { useRouter } from "next/navigation"; // ✅ 추가
 import { DragHint } from "@/components/taro/DragHint";
+import { useTranslation } from "react-i18next";
 
 // 78장 전체 덱
 const fullTarotDeck = Array.from({ length: 78 }, (_, i) => ({
@@ -13,23 +14,41 @@ const fullTarotDeck = Array.from({ length: 78 }, (_, i) => ({
   name: `Card ${i + 1}`,
 }));
 
+// 카드 셔플 함수
+function shuffle(array: any[]) {
+  const newArray = [...array];
+  let currentIndex = newArray.length,
+    randomIndex;
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [newArray[currentIndex], newArray[randomIndex]] = [
+      newArray[randomIndex],
+      newArray[currentIndex],
+    ];
+  }
+  return newArray;
+}
+
 type CardSpread = "single" | "three" | "five";
 
 export default function TarotChoosePage() {
-  const [params, setParams] = useState<{ type: string | null }>({
-    type: null,
-  });
+  const router = useRouter();
+  const { t } = useTranslation("common");
 
+  const [params, setParams] = useState<{ type: string | null }>({ type: null });
   const [radius, setRadius] = useState(450);
   const [isMobile, setIsMobile] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
-  const [showResults, setShowResults] = useState(false);
+
+  // ✅ Result 페이지를 직접 렌더링하지 않으므로 showResults 제거
+  const shuffledDeck = useMemo(() => shuffle(fullTarotDeck), []);
 
   useEffect(() => {
-    setHasMounted(true); // 클라이언트에서 마운트되었음을 표시
+    setHasMounted(true);
 
     try {
-      const pathSegments = window.location.pathname.split("/");
+      const pathSegments = window.location.pathname.split("/"); // /ko/tarot/{type}/choose
       const typeIndex = pathSegments.indexOf("tarot") + 1;
       if (typeIndex > 0 && typeIndex < pathSegments.length) {
         const type = pathSegments[typeIndex];
@@ -52,21 +71,14 @@ export default function TarotChoosePage() {
 
     window.addEventListener("resize", updateLayout);
     updateLayout();
-
     return () => window.removeEventListener("resize", updateLayout);
   }, []);
 
   const handleBack = () => {
-    // 결과 페이지에서 뒤로가기 시 카드 선택 화면으로 돌아오도록 처리
-    if (showResults) {
-      setShowResults(false);
-      setDrawnCards([]); // 선택 카드 초기화
-      setFlippedCards(new Set());
-    } else {
-      window.history.back();
-    }
+    window.history.back();
   };
-  const [selectedSpread, setSelectedSpread] = useState<CardSpread>("single");
+
+  const [selectedSpread, setSelectedSpread] = useState<CardSpread>("three");
   const [drawnCards, setDrawnCards] = useState<number[]>([]);
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
@@ -78,17 +90,19 @@ export default function TarotChoosePage() {
   };
 
   const handleCardClick = (cardIndex: number) => {
-    if (drawnCards.includes(cardIndex)) return;
+    const cardId = shuffledDeck[cardIndex].id;
+    if (drawnCards.includes(cardId)) return;
 
     const maxCards =
       selectedSpread === "single" ? 1 : selectedSpread === "three" ? 3 : 5;
+
     if (drawnCards.length >= maxCards) return;
 
-    const newDrawnCards = [...drawnCards, cardIndex];
+    const newDrawnCards = [...drawnCards, cardId];
     setDrawnCards(newDrawnCards);
 
     setTimeout(() => {
-      setFlippedCards((prev) => new Set([...prev, cardIndex]));
+      setFlippedCards((prev) => new Set([...prev, cardId]));
     }, 300);
   };
 
@@ -100,19 +114,22 @@ export default function TarotChoosePage() {
         return 3;
       case "five":
         return 5;
-      default:
-        return 3;
     }
   };
 
   const canProceedToResults = () => drawnCards.length === getCardCount();
 
+  // ✅ 서버 페이지로 이동 (상대경로 사용: /[locale]/tarot/[type]/choose → ./results)
   const handleProceedToResults = () => {
-    setShowResults(true);
+    const qs = new URLSearchParams({
+      cards: drawnCards.join(","), // 예: "12,3,40"
+      spread: selectedSpread, // "single" | "three" | "five"
+    });
+    router.push(`./results?${qs.toString()}`);
   };
 
   const layout = useMemo(() => {
-    const totalCards = fullTarotDeck.length;
+    const totalCards = shuffledDeck.length;
     const fanAngle = Math.PI * 0.7;
     const startAngle = -fanAngle / 2;
 
@@ -133,38 +150,26 @@ export default function TarotChoosePage() {
     const totalWidth = Math.ceil(maxX - minX + leftPadding * 2);
 
     return { points, leftShift, totalWidth };
-  }, [radius]);
+  }, [radius, shuffledDeck]);
 
-  // 마운트 전에는 렌더링하지 않거나 로딩 스켈레톤을 보여줌
-  if (!hasMounted) {
-    return null; // 또는 <LoadingSpinner /> 같은 컴포넌트
-  }
-
-  if (showResults) {
-    return (
-      <ResultTarotPage
-        drawnCards={drawnCards}
-        selectedSpread={selectedSpread}
-      />
-    );
-  }
+  if (!hasMounted) return null;
 
   return (
     <div className="tarot min-h-screen flex flex-col p-4 sm:p-6 lg:p-8 overflow-y-auto overflow-x-hidden">
       <div className="flex-shrink-0">
         <div className="mt-4">
-          <Button variant="ghost" onClick={handleBack} className="">
+          <Button variant="ghost" onClick={handleBack}>
             <ArrowLeft className="w-4 h-4 mr-2" />
-            돌아가기
+            {t("tarot.typePage.back")}
           </Button>
         </div>
 
         <div className="text-center mb-8">
           <h1 className="font-sans text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">
-            카드를 선택하세요
+            {t("tarot.typePage.chooseTitle")}
           </h1>
           <p className="font-mono text-lg text-muted-foreground text-pretty">
-            직감을 믿고 끌리는 카드를 선택해주세요.
+            {t("tarot.typePage.chooseSubtitle")}
           </p>
         </div>
 
@@ -174,21 +179,21 @@ export default function TarotChoosePage() {
             onClick={() => handleSpreadSelect("single")}
             className="font-sans"
           >
-            1장 뽑기
+            {t("tarot.typePage.choose1Card")}
           </Button>
           <Button
             variant={selectedSpread === "three" ? "default" : "outline"}
             onClick={() => handleSpreadSelect("three")}
             className="font-sans"
           >
-            3장 뽑기
+            {t("tarot.typePage.choose3Cards")}
           </Button>
           <Button
             variant={selectedSpread === "five" ? "default" : "outline"}
             onClick={() => handleSpreadSelect("five")}
             className="font-sans"
           >
-            5장 뽑기
+            {t("tarot.typePage.choose5Cards")}
           </Button>
         </div>
       </div>
@@ -215,9 +220,9 @@ export default function TarotChoosePage() {
 
           <div className="relative w-full max-w-6xl">
             <div className="relative w-full h-[400px] sm:h-[500px] md:h-[500px]">
-              {fullTarotDeck.map((card, index) => {
-                const isDrawn = drawnCards.includes(index);
-                const isFlipped = flippedCards.has(index);
+              {shuffledDeck.map((card, index) => {
+                const isDrawn = drawnCards.includes(card.id);
+                const isFlipped = flippedCards.has(card.id);
                 const isHovered = hoveredCard === index;
 
                 const { x, y, cardRotation } = layout.points[index];
@@ -225,11 +230,9 @@ export default function TarotChoosePage() {
                 const leftStyle = isMobile
                   ? `${x + layout.leftShift}px`
                   : `calc(50% + ${x}px)`;
-
                 const baseTransform = isMobile
                   ? `translateY(-50%) rotate(${cardRotation}deg)`
                   : `translate(-50%, -50%) rotate(${cardRotation}deg)`;
-
                 const hoverScale = isHovered
                   ? "translateY(-12px) scale(1.15)"
                   : isDrawn
@@ -238,7 +241,7 @@ export default function TarotChoosePage() {
 
                 return (
                   <div
-                    key={index}
+                    key={card.id}
                     className={`absolute cursor-pointer transition-all duration-300 ${
                       isDrawn ? "z-30" : isHovered ? "z-20" : "z-10"
                     } ${isMobile ? "snap-start" : ""}`}
@@ -277,9 +280,6 @@ export default function TarotChoosePage() {
                             <div className="w-4 h-4 md:w-6 md:h-6 border border-accent/50 rounded-full mx-auto flex items-center justify-center mb-1">
                               <Star className="w-2 h-2 md:w-3 md:h-3 text-accent" />
                             </div>
-                            <div className="text-[6px] md:text-[8px] font-mono text-accent/70">
-                              {index + 1}
-                            </div>
                           </div>
                           <div className="absolute top-1 right-1 w-0.5 h-0.5 bg-accent/30 rounded-full" />
                           <div className="absolute bottom-1 left-1 w-0.5 h-0.5 bg-accent/40 rounded-full" />
@@ -290,7 +290,7 @@ export default function TarotChoosePage() {
                           <div className="text-accent text-center">
                             <Star className="w-3 h-3 md:w-4 md:h-4 mx-auto mb-1" />
                             <div className="font-sans text-[6px] md:text-[8px] font-semibold leading-tight">
-                              선택됨
+                              {t("tarot.typePage.selected")}
                             </div>
                           </div>
                         </div>
@@ -307,7 +307,8 @@ export default function TarotChoosePage() {
       <div className="flex-shrink-0 text-center">
         <div className="mb-6">
           <p className="font-mono text-muted-foreground mb-2">
-            {drawnCards.length} / {getCardCount()} 카드 선택됨
+            {drawnCards.length} / {getCardCount()}{" "}
+            {t("tarot.typePage.selected")}
           </p>
           <div className="w-full max-w-xs mx-auto bg-muted rounded-full h-2">
             <div
@@ -319,16 +320,22 @@ export default function TarotChoosePage() {
           </div>
         </div>
 
-        {canProceedToResults() && (
-          <Button
-            size="lg"
-            className="font-sans font-semibold mystical-glow"
-            onClick={handleProceedToResults}
-          >
-            <Sparkles className="w-4 h-4 mr-2" />
-            카드 해석 보기
-          </Button>
-        )}
+        <Button
+          size="lg"
+          className={[
+            "font-sans font-semibold mystical-glow",
+            !canProceedToResults()
+              ? "opacity-50 cursor-not-allowed ring-0"
+              : "",
+          ].join(" ")}
+          onClick={handleProceedToResults}
+          disabled={!canProceedToResults()}
+          aria-disabled={!canProceedToResults()}
+          title={t("tarot.typePage.selectAllToEnable")}
+        >
+          <Sparkles className="w-4 h-4 mr-2" />
+          {t("tarot.typePage.viewInterpretation")}
+        </Button>
       </div>
     </div>
   );

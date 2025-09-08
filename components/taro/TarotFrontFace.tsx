@@ -1,41 +1,35 @@
-import React from "react";
-import { Star, Sparkles } from "lucide-react";
+// components/taro/TarotFrontFace.tsx
+"use client";
 
-/* 모달 앞면(카드 정보) */
+import React from "react";
+import Image from "next/image";
+import { Sparkles } from "lucide-react";
+
+interface TarotFrontFaceProps {
+  imageUrl: string;
+  name: string;
+}
+
 export default function TarotFrontFace({
-  title,
-  subtitle,
-  meaning,
-  description,
-}: {
-  title: string;
-  subtitle?: string;
-  meaning?: string;
-  description?: string;
-}) {
+  imageUrl,
+  name,
+}: TarotFrontFaceProps) {
   return (
-    <div className="w-full h-full rounded-xl border-2 border-accent/40 bg-gradient-to-b from-accent/15 to-accent/5 p-4 md:p-6 text-accent">
-      <div className="text-center">
-        <Star className="w-8 h-8 md:w-10 md:h-10 mx-auto mb-3" />
-        <div className="font-sans text-lg md:text-2xl font-bold leading-tight">
-          {title}
+    <div className="relative h-full w-full rounded-xl p-2 md:p-4 border-2 border-accent/20 bg-gradient-to-br from-card to-card/50 shadow-lg">
+      <div className="relative h-full w-full rounded-md overflow-hidden">
+        <Image
+          src={imageUrl}
+          alt={`Image of ${name}`}
+          layout="fill"
+          objectFit="cover"
+          className="rounded-md"
+        />
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 hover:opacity-100 transition-opacity duration-300">
+          <div className="p-4 rounded-full bg-accent/20 backdrop-blur-sm">
+            <Sparkles className="w-10 h-10 text-accent" />
+          </div>
         </div>
-        {subtitle && (
-          <div className="font-mono text-xs md:text-sm text-accent/80 mt-1">
-            {subtitle}
-          </div>
-        )}
-        {meaning && (
-          <div className="font-mono text-sm md:text-base text-accent mt-3">
-            {meaning}
-          </div>
-        )}
       </div>
-      {description && (
-        <p className="font-mono text-sm md:text-base text-card-foreground/80 mt-5 leading-relaxed">
-          {description}
-        </p>
-      )}
     </div>
   );
 }

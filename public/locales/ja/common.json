@@ -1,4 +1,8 @@
 {
+  "common": {
+    "close": "閉じる",
+    "loading": "読み込み中..."
+  },
   "header": {
     "all": "すべて",
     "profile": "プロフィール",
@@ -9,7 +13,8 @@
     "lunch": "ランチ",
     "test": "テスト",
     "language": "言語",
-    "gallery": "ギャラリー"
+    "gallery": "ギャラリー",
+    "tarot": "タロット"
   },
   "welcome": "はじめまして！",
   "description": "暇つぶしにピッタリ、意外と当たるテスト！",
@@ -259,7 +264,28 @@
       "situationTitle": "現在の状況を簡単に教えてください（任意）",
       "situationPlaceholder": "一文か二文で今の状況を教えてください。",
       "start": "カードを引くを始める",
-      "invalidType": "無効なタイプです。正しいリンクで再試行してください。"
+      "invalidType": "",
+      "chooseTitle": "カードを選んでください",
+      "chooseSubtitle": "あなたの直感が導くカードを選んでみてください。",
+      "choose1Card": "1枚引く",
+      "choose3Cards": "3枚引く",
+      "choose5Cards": "5枚引く",
+      "selected": "選択中",
+      "viewInterpretation": "カード解釈を見る",
+      "loading": "カードを読み込んでいます...",
+      "resultTitle": "選択したカード",
+      "resultDescription": "カードを押して解釈を確認してください。",
+      "startNewReading": "新しいリーディングを始める",
+      "message": "のメッセージ",
+      "meaningTitle": "カードの意味",
+      "descriptionTitle": "カードの解説",
+      "cardIs": "カードは",
+      "positionExplanation": " で重要なメッセージを伝えます。現在の状況をポジティブに受け入れ、内なる知恵を信じてみてください。"
+    },
+    "spreads": {
+      "single": { "positions": ["現在の状況"] },
+      "three": { "positions": ["過去/原因", "現在の状況", "未来/結果"] },
+      "five": { "positions": ["過去", "現在", "未来", "アドバイス", "結果"] }
     },
     "categories": {
       "love": {

@@ -314,7 +314,7 @@ body {
 
 /* 결과 페이지 카드 3D 플립 효과 */
 .card-flipper {
-  transition: transform 0.8s;
+  transition: transform 3s;
   transform-style: preserve-3d;
   position: relative;
 }

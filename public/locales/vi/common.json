@@ -1,4 +1,8 @@
 {
+  "common": {
+    "close": "Đóng",
+    "loading": "Đang tải..."
+  },
   "header": {
     "all": "Tất cả",
     "profile": "Hồ sơ",
@@ -9,7 +13,8 @@
     "lunch": "Ăn trưa?",
     "test": "Bài kiểm tra",
     "language": "Ngôn ngữ",
-    "gallery": "Thư viện"
+    "gallery": "Thư viện",
+    "tarot": "Tarot"
   },
   "welcome": "Rất vui được gặp bạn!",
   "description": "Một bài test nhẹ nhàng, vui vẻ và chính xác bất ngờ!",
@@ -259,7 +264,38 @@
       "situationTitle": "Vui lòng mô tả tình huống hiện tại của bạn (tùy chọn)",
       "situationPlaceholder": "Hãy viết một hoặc hai câu về tình huống hiện tại của bạn.",
       "start": "Bắt đầu rút thẻ",
-      "invalidType": "Loại không hợp lệ. Vui lòng thử lại với liên kết hợp lệ."
+      "invalidType": "Loại không hợp lệ. Vui lòng thử lại với liên kết hợp lệ.",
+      "chooseTitle": "Chọn thẻ",
+      "chooseSubtitle": "Hãy chọn thẻ mà bạn cảm thấy trực giác dẫn dắt.",
+      "choose1Card": "Rút 1 thẻ",
+      "choose3Cards": "Rút 3 thẻ",
+      "choose5Cards": "Rút 5 thẻ",
+      "selected": "Đã chọn",
+      "viewInterpretation": "Xem giải thích thẻ",
+      "loading": "Đang tải thẻ...",
+      "resultTitle": "Thẻ đã chọn",
+      "resultDescription": "Nhấn vào thẻ để xem giải thích.",
+      "startNewReading": "Bắt đầu đọc mới",
+      "message": "Thông điệp của",
+      "meaningTitle": "Ý nghĩa thẻ",
+      "descriptionTitle": "Giải thích thẻ",
+      "cardIs": "Thẻ là",
+      "positionExplanation": "Thẻ này truyền tải một thông điệp quan trọng. Hãy chấp nhận tình huống hiện tại một cách tích cực và tin tưởng vào trí tuệ bên trong của bạn."
+    },
+    "spreads": {
+      "single": { "positions": ["Hiện tại"] },
+      "three": {
+        "positions": ["Quá khứ/Nguồn gốc", "Hiện tại", "Tương lai/Kết quả"]
+      },
+      "five": {
+        "positions": [
+          "Quá khứ",
+          "Hiện tại",
+          "Tương lai",
+          "Lời khuyên",
+          "Kết quả"
+        ]
+      }
     },
     "categories": {
       "love": {

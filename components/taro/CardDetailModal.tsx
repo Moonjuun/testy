@@ -1,6 +1,8 @@
+// components/taro/CardDetailModal.tsx
+
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,10 +15,9 @@ import {
 import PositionBadge from "@/components/taro/PositionBadge";
 import TarotBackFace from "@/components/taro/TarotBackFace";
 import TarotFrontFace from "@/components/taro/TarotFrontFace";
-import { fullTarotDeck } from "@/constants/tarot/TarotConstants";
-
-// TarotCard 타입을 정의하여 props를 명확하게 합니다.
-type TarotCard = (typeof fullTarotDeck)[0];
+import { TarotCard } from "@/types/tarot/tarot";
+import { formatBoldText } from "@/utils/formatBoldText";
+import { useTranslation } from "react-i18next";
 
 interface CardDetailModalProps {
   open: boolean;
@@ -35,106 +36,117 @@ export default function CardDetailModal({
   activeCardIndex,
   onNext,
 }: CardDetailModalProps) {
-  // activeCard가 없으면 모달을 렌더링하지 않습니다.
+  const { t } = useTranslation("common");
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    if (open) {
+      timeoutId = setTimeout(() => {
+        setIsFlipped(true);
+      }, 100);
+    } else {
+      setIsFlipped(false);
+    }
+    return () => clearTimeout(timeoutId);
+  }, [open]);
+
   if (!activeCard) return null;
 
   return (
-    <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="tarot flex h-full max-h-[90vh] w-[95vw] max-w-4xl flex-col rounded-2xl border-accent/30 md:h-auto md:max-h-[82vh]">
-          <DialogHeader className="flex-shrink-0">
-            <DialogTitle className="font-sans text-2xl md:text-3xl">
-              {activeCard.koreanName}{" "}
-              <span className="text-base font-normal text-muted-foreground">
-                ({activeCard.name})
-              </span>
-            </DialogTitle>
-            <DialogDescription className="font-mono">
-              {activeLabel}의 메시지
-            </DialogDescription>
-          </DialogHeader>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="tarot flex h-full max-h-[90vh] w-[95vw] max-w-4xl flex-col rounded-2xl border-accent/30 md:h-auto md:min-h-[85vh]">
+        <DialogHeader className="flex-shrink-0">
+          <DialogTitle className="font-sans text-2xl md:text-3xl">
+            {activeCard.name}
+            <span className="text-base font-normal text-muted-foreground">
+              ({activeCard.cardKey})
+            </span>
+          </DialogTitle>
+          <DialogDescription className="font-mono">
+            {activeLabel}
+            {/* {t("tarot.typePage.message")} */}
+          </DialogDescription>
+        </DialogHeader>
 
-          {/* ✅ 데스크탑에서 스크롤바 숨기는 클래스 추가 */}
-          <div className="flex-grow overflow-y-auto pr-2 desktop-scrollbar-hide">
-            <div className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2 md:items-start">
-              {/* 3D 플립 컨테이너 */}
+        {/* 모바일: 이 래퍼가 스크롤 역할 / 데스크탑: overflow 해제 */}
+        <div className="flex-grow overflow-y-auto md:overflow-visible pr-2 desktop-scrollbar-hide">
+          {/* 데스크탑 2열 레이아웃, 모바일 1열 */}
+          <div className=" grid grid-cols-1 gap-6 md:grid-cols-[320px_1fr] md:items-start">
+            {/* 왼쪽: 카드 (데스크탑에서만 sticky) */}
+            <div
+              className="relative mx-auto w-full max-w-[260px] aspect-[2/3] md:mx-0 md:sticky md:top-0 md:max-w-none md:self-start"
+              style={{ perspective: "1600px" }}
+            >
               <div
-                className="relative mx-auto w-full max-w-[260px] aspect-[2/3] md:sticky md:top-0 md:max-w-none"
-                style={{ perspective: "1600px" }}
+                className={`relative h-full w-full rounded-xl [transform-style:preserve-3d] transition-transform duration-700 ${
+                  isFlipped ? "is-flipped" : ""
+                }`}
               >
-                <div className="relative h-full w-full rounded-xl [transform-style:preserve-3d] animate-[flipIn_700ms_ease-out_forwards]">
-                  {/* 앞면 */}
-                  <div
-                    className="absolute inset-0 [backface-visibility:hidden]"
-                    style={{ transform: "rotateY(0deg)" }}
-                  >
-                    <TarotFrontFace
-                      title={activeCard.koreanName ?? ""}
-                      subtitle={activeCard.name}
-                      meaning={activeCard.meaning}
-                    />
-                  </div>
-                  {/* 뒷면 */}
-                  <div
-                    className="absolute inset-0 [backface-visibility:hidden]"
-                    style={{ transform: "rotateY(180deg)" }}
-                  >
-                    <TarotBackFace index={activeCardIndex} />
-                  </div>
+                <div
+                  className="absolute inset-0 [backface-visibility:hidden]"
+                  style={{ transform: "rotateY(0deg)" }}
+                >
+                  <TarotBackFace index={activeCard.id} />
                 </div>
-              </div>
-
-              {/* 설명 */}
-              <div className="flex flex-col gap-4">
-                <div className="group inline-block">
-                  <PositionBadge>{activeLabel}</PositionBadge>
-                </div>
-                <p className="font-mono leading-relaxed text-muted-foreground">
-                  {activeCard.description}
-                </p>
-                <p className="font-mono text-sm leading-relaxed text-muted-foreground">
-                  이 카드는 {String(activeLabel).toLowerCase()}에서 중요한
-                  메시지를 전달합니다. 현재 상황을 긍정적으로 받아들이고 내면의
-                  지혜를 믿어보세요.
-                </p>
-                <div className="mt-4 flex flex-shrink-0 gap-3">
-                  <DialogClose asChild>
-                    <Button variant="outline">닫기</Button>
-                  </DialogClose>
-                  {/* <Button
-                    onClick={onNext}
-                    className="font-sans font-semibold mystical-glow"
-                  >
-                    다음 카드
-                  </Button> */}
+                <div
+                  className="absolute inset-0 [backface-visibility:hidden] h-full"
+                  style={{ transform: "rotateY(180deg)" }}
+                >
+                  <TarotFrontFace
+                    imageUrl={activeCard.imageUrl || ""}
+                    name={activeCard.name}
+                  />
                 </div>
               </div>
             </div>
+
+            {/* 오른쪽: 설명 (데스크탑에서만 내부 스크롤) */}
+            <div className="flex flex-col gap-4 md:pr-2 desktop-scrollbar-hide md:overflow-y-auto md:max-h-[70vh]">
+              <div className="group inline-block">
+                <PositionBadge>{activeLabel}</PositionBadge>
+              </div>
+
+              {/* 1. 의미 */}
+              <div>
+                <h3 className="text-xl font-bold font-sans mb-2">
+                  {t("tarot.typePage.meaningTitle")}
+                </h3>
+                <p className="font-mono leading-relaxed text-muted-foreground">
+                  {formatBoldText(activeCard.meaning)}
+                </p>
+              </div>
+
+              {/* 2. 해설 */}
+              <div>
+                <h3 className="text-xl font-bold font-sans mb-2">
+                  {t("tarot.typePage.descriptionTitle")}
+                </h3>
+                <p className="font-mono leading-relaxed text-muted-foreground">
+                  {formatBoldText(activeCard.description)}
+                </p>
+              </div>
+
+              <p className="font-mono text-sm leading-relaxed text-muted-foreground">
+                {activeCard.name} {t("tarot.typePage.cardIs")}{" "}
+                {String(activeLabel).toLowerCase()}
+                {t("tarot.typePage.positionExplanation")}
+              </p>
+
+              <div className="mt-6 mr-4 flex flex-shrink-0 justify-end gap-3">
+                <DialogClose asChild>
+                  <Button
+                    className="px-5 py-2 text-base font-bold"
+                    variant="default"
+                  >
+                    {t("common.close")}
+                  </Button>
+                </DialogClose>
+              </div>
+            </div>
           </div>
-        </DialogContent>
-      </Dialog>
-
-      <style jsx global>{`
-        @keyframes flipIn {
-          from {
-            transform: rotateY(-180deg);
-          }
-          to {
-            transform: rotateY(0deg);
-          }
-        }
-
-        /* ✅ 데스크탑 화면(768px 이상)에서 스크롤바를 숨기는 CSS 추가 */
-        @media (min-width: 768px) {
-          .desktop-scrollbar-hide {
-            -ms-overflow-style: none; /* IE and Edge */
-            scrollbar-width: none; /* Firefox */
-          }
-          .desktop-scrollbar-hide::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
-          }
-        }
-      `}</style>
-    </>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

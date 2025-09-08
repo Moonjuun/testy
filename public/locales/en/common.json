@@ -1,4 +1,8 @@
 {
+  "common": {
+    "close": "close",
+    "loading": "loading..."
+  },
   "header": {
     "all": "All",
     "profile": "Profile",
@@ -9,7 +13,8 @@
     "lunch": "WFL?",
     "test": "Test",
     "language": "Language",
-    "gallery": "Gallery"
+    "gallery": "Gallery",
+    "tarot": "Tarot"
   },
   "welcome": "Nice to meet you!",
   "description": "A fun and surprisingly accurate test to kill time!",
@@ -250,8 +255,8 @@
   },
   "tarot": {
     "typePage": {
-      "title1": "何に悩んでいますか？",
-      "subtitle1": "あなたの状況に合ったカテゴリを選択してください。",
+      "title1": "Choose Your Tarot Category",
+      "subtitle1": "Select a category that resonates with your situation.",
       "title2": "Find Your Tarot Insight",
       "subtitle2": "Narrowing down your chosen theme will make the card interpretation clearer.",
       "back": "Back",
@@ -259,7 +264,32 @@
       "situationTitle": "Please briefly describe your current situation (optional)",
       "situationPlaceholder": "Please describe your current situation in one or two sentences.",
       "start": "Start Drawing Cards",
-      "invalidType": "Invalid type. Please try again with the correct link."
+      "invalidType": "Invalid type. Please try again with the correct link.",
+      "chooseTitle": "Choose Your Cards",
+      "chooseSubtitle": "Select cards that you feel drawn to.",
+      "choose1Card": "Draw 1 Card",
+      "choose3Cards": "Draw 3 Cards",
+      "choose5Cards": "Draw 5 Cards",
+      "selected": "Selected",
+      "viewInterpretation": "View Card Interpretation",
+      "loading": "Loading Cards...",
+      "resultTitle": "Your Tarot Reading",
+      "resultDescription": "Tap on the cards to see their interpretations.",
+      "startNewReading": "Start a New Reading",
+      "message": "Message from",
+      "meaningTitle": "Card Meaning",
+      "descriptionTitle": "Card Description",
+      "cardIs": "The card is",
+      "positionExplanation": " conveys an important message about . Embrace the current situation positively and trust your inner wisdom."
+    },
+    "spreads": {
+      "single": { "positions": ["Current Situation"] },
+      "three": {
+        "positions": ["Past/Cause", "Current Situation", "Future/Result"]
+      },
+      "five": {
+        "positions": ["Past", "Present", "Future", "Advice", "Outcome"]
+      }
     },
     "categories": {
       "love": {

@@ -190,6 +190,20 @@ export function Header({ locale }: HeaderProps) {
     </Button>
   );
 
+  const tarotMenu = (
+    <Button
+      variant="ghost"
+      className="px-4 py-2 text-[15px] font-semibold text-gray-800 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+    >
+      <Link
+        href={`/${locale}/tarot`}
+        onClick={() => setIsMobileMenuOpen(false)}
+      >
+        {isClient ? t("header.tarot") : "Tarot"}
+      </Link>
+    </Button>
+  );
+
   const galleryMenu = (
     <Button
       variant="ghost"
@@ -221,6 +235,7 @@ export function Header({ locale }: HeaderProps) {
             <nav className="hidden lg:flex items-center space-x-1">
               {testMenu}
               {mbtiMenu}
+              {tarotMenu}
               {playgroundMenu}
               {galleryMenu}
             </nav>
@@ -355,6 +370,17 @@ export function Header({ locale }: HeaderProps) {
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       MBTI
+                    </Link>
+                  </summary>
+                </details>
+
+                <details className="w-full group">
+                  <summary className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+                    <Link
+                      href={`/${locale}/tarot`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {isClient ? t("header.tarot") : "Tarot"}
                     </Link>
                   </summary>
                 </details>

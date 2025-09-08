@@ -27,7 +27,7 @@ export default function TarotTypePage() {
 
   const handleProceedToCards = () => {
     if (!type || !selectedSubcategory) return;
-    const locale = (params?.locale as string) || "ko";
+    const locale = (params?.locale as string) || "en";
     router.push(`/${locale}/tarot/${type}/choose`);
   };
 
