@@ -1,3 +1,4 @@
+// app/[locale]/tarot/[type]/choose/page.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -32,7 +33,7 @@ export default function TarotTypePage() {
 
   if (!type || !currentCategory) {
     return (
-      <div className="max-w-2xl mx-auto w-full">
+      <div className="max-w-2xl mx-auto w-full p-4 sm:p-6 lg:p-8">
         <Button variant="ghost" onClick={handleBack}>
           <ArrowLeft className="w-4 h-4 mr-2" />
           {t("tarot.typePage.back", { defaultValue: "돌아가기" })}
@@ -64,17 +65,18 @@ export default function TarotTypePage() {
     });
 
   return (
-    <div className="tarot">
-      <div className="w-full max-w-2xl mx-auto">
-        <div className="mt-4">
-          <Button variant="ghost" onClick={handleBack} className="mb-4">
+    <div className="tarot min-h-screen">
+      <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="py-4">
+          <Button variant="ghost" onClick={handleBack} className="text-sm px-0">
             <ArrowLeft className="w-4 h-4 mr-2" />
             {t("tarot.typePage.back")}
           </Button>
         </div>
 
-        <div className="text-center mb-12">
-          <h1 className="font-sans text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">
+        {/* 👇 1. 제목과 부제목을 중앙 정렬합니다. */}
+        <div className="text-center mb-8">
+          <h1 className="font-sans text-3xl md:text-4xl font-bold text-foreground text-pretty mb-2">
             {t("tarot.typePage.title2")}
           </h1>
           <p className="font-mono text-lg text-muted-foreground text-pretty">
@@ -82,6 +84,7 @@ export default function TarotTypePage() {
           </p>
         </div>
 
+        {/* 👇 2. 카테고리 칩을 중앙 정렬합니다. */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-card rounded-full border border-accent/30">
             <IconComponent className="w-4 h-4 text-accent" />
@@ -94,28 +97,34 @@ export default function TarotTypePage() {
           </div>
         </div>
 
-        <div className="space-y-3 mb-8">
+        <div className="space-y-4 mb-8">
           {subs.map((sub) => (
             <Card
               key={sub.id}
               className={`cursor-pointer transition-all duration-300 ${
                 selectedSubcategory === sub.id
-                  ? "ring-2 ring-accent mystical-glow border-accent"
-                  : "hover:border-accent/50"
+                  ? "ring-2 ring-accent border-accent scale-[1.02] mystical-glow"
+                  : "hover:border-accent/50 hover:scale-[1.01]"
               }`}
               onClick={() => setSelectedSubcategory(sub.id)}
             >
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="text-left">
-                    <h3 className="font-sans font-semibold text-card-foreground mb-1">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-start justify-between">
+                  <div className="text-left flex-1 mr-4">
+                    <h3 className="font-sans font-semibold text-lg text-card-foreground mb-1 leading-snug">
                       {subName(sub.id)}
                     </h3>
-                    <p className="font-mono text-sm text-muted-foreground">
+                    <p className="font-mono text-sm text-muted-foreground leading-relaxed">
                       {subDesc(sub.id)}
                     </p>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-accent opacity-50" />
+                  <ArrowRight
+                    className={`w-5 h-5 text-accent flex-shrink-0 transition-transform duration-300 ${
+                      selectedSubcategory === sub.id
+                        ? "translate-x-1"
+                        : "opacity-50"
+                    }`}
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -123,7 +132,7 @@ export default function TarotTypePage() {
         </div>
 
         <div className="mb-8">
-          <Card>
+          <Card className="bg-card">
             <CardContent className="p-6">
               <h3 className="font-sans font-semibold text-card-foreground mb-4">
                 {t("tarot.typePage.situationTitle", {
@@ -142,12 +151,16 @@ export default function TarotTypePage() {
           </Card>
         </div>
 
-        <div className="text-center mb-8">
+        <div className="text-center">
           <Button
             size="lg"
             onClick={handleProceedToCards}
             disabled={!selectedSubcategory}
-            className="font-sans font-semibold mystical-glow"
+            className={`w-full font-sans font-semibold transition-all duration-300 mb-8 ${
+              selectedSubcategory
+                ? "mystical-glow"
+                : "bg-muted-foreground/30 text-muted"
+            }`}
           >
             {t("tarot.typePage.start", { defaultValue: "카드 뽑기 시작하기" })}
           </Button>

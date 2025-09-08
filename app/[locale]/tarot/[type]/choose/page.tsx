@@ -5,6 +5,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Star, ArrowLeft, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ResultTarotPage from "../results/page";
+import { DragHint } from "@/components/taro/DragHint";
 
 // 78장 전체 덱
 const fullTarotDeck = Array.from({ length: 78 }, (_, i) => ({
@@ -200,6 +201,7 @@ export default function TarotChoosePage() {
             : "flex items-center justify-center overflow-x-hidden",
         ].join(" ")}
       >
+        {isMobile && <DragHint />}
         <div
           className="relative h-full flex items-center justify-center w-full flex-shrink-0 md:min-w-0"
           style={

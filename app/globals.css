@@ -364,3 +364,20 @@ body {
 .modal-content {
   animation: modal-content-slide-up 0.4s ease-out forwards;
 }
+
+@keyframes drag-hint-animation {
+  0%,
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(10px);
+    opacity: 0.8;
+  }
+}
+
+.drag-hint-icon {
+  animation: drag-hint-animation 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+    infinite;
+}
