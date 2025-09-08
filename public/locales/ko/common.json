@@ -68,7 +68,10 @@
     "startFirstTest": "첫 테스트 시작하기",
     "popularTests": "인기 테스트",
     "popularTestsDescription": "가장 많이 선택된 테스트",
-    "gotoPopular": "하러가기"
+    "gotoPopular": "하러가기",
+    "tarotTests": "타로",
+    "tarotTestsDescription": "당신의 고민에 맞는 타로 리딩",
+    "gotoTarot": "리딩가기"
   },
   "testView": {
     "loading": "테스트를 불러오는 중...",

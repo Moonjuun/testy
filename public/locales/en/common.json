@@ -68,7 +68,10 @@
     "startFirstTest": "Start First Test",
     "popularTests": "Popular Tests",
     "popularTestsDescription": "Most Selected Tests",
-    "gotoPopular": "Go to Popular"
+    "gotoPopular": "Go to Popular",
+    "tarotTests": "Tarot",
+    "tarotTestsDescription": "Tarot readings tailored to your concerns",
+    "gotoTarot": "Go to Reading"
   },
   "testView": {
     "loading": "Loading test...",

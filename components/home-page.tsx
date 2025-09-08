@@ -86,9 +86,10 @@ export default function HomePage({ initialTests }: HomePageProps) {
       {/* Feature Sections */}
       <section className="px-4 pb-8">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-            {/* Popular Tests Section - ADDED */}
-            <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+          {/* ✅ 5개 항목 대응: auto-fit + minmax로 반응형 1~5열 */}
+          <div className="grid [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))] gap-6 xl:gap-8 mb-16">
+            {/* Popular Tests Section */}
+            {/* <Card className="group h-full flex flex-col hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
               <CardHeader className="text-center">
                 <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-200 dark:group-hover:bg-orange-800/50 transition-colors">
                   <Trophy className="w-8 h-8 text-orange-600 dark:text-orange-400" />
@@ -100,7 +101,7 @@ export default function HomePage({ initialTests }: HomePageProps) {
                   {t("home.popularTestsDescription")}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="mt-auto">
                 <Link href="/test/list">
                   <Button
                     variant="ghost"
@@ -111,10 +112,10 @@ export default function HomePage({ initialTests }: HomePageProps) {
                   </Button>
                 </Link>
               </CardContent>
-            </Card>
+            </Card> */}
 
             {/* MBTI Section */}
-            <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+            <Card className="group h-full flex flex-col hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
               <CardHeader className="text-center">
                 <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-200 dark:group-hover:bg-purple-800/50 transition-colors">
                   <Brain className="w-8 h-8 text-purple-600 dark:text-purple-400" />
@@ -126,7 +127,7 @@ export default function HomePage({ initialTests }: HomePageProps) {
                   {t("home.mbtiDescription")}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="mt-auto">
                 <Link href="/mbti">
                   <Button
                     variant="ghost"
@@ -139,8 +140,34 @@ export default function HomePage({ initialTests }: HomePageProps) {
               </CardContent>
             </Card>
 
+            {/* Tarot Section */}
+            <Card className="group h-full flex flex-col hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+              <CardHeader className="text-center">
+                <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-indigo-200 dark:group-hover:bg-indigo-800/50 transition-colors">
+                  <Sparkles className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
+                </div>
+                <CardTitle className="text-xl font-bold text-slate-900 dark:text-white">
+                  {t("home.tarotTests")}
+                </CardTitle>
+                <CardDescription className="text-slate-600 dark:text-slate-400">
+                  {t("home.tarotTestsDescription")}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="mt-auto">
+                <Link href={`/tarot`}>
+                  <Button
+                    variant="ghost"
+                    className="w-full text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:text-indigo-300 dark:hover:bg-indigo-900/20 font-semibold"
+                  >
+                    {t("home.gotoTarot")}
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
             {/* Playground Section */}
-            <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+            <Card className="group h-full flex flex-col hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
               <CardHeader className="text-center">
                 <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200 dark:group-hover:bg-green-800/50 transition-colors">
                   <Gamepad2 className="w-8 h-8 text-green-600 dark:text-green-400" />
@@ -152,7 +179,7 @@ export default function HomePage({ initialTests }: HomePageProps) {
                   {t("home.playgroundDescription")}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="mt-auto">
                 <Link href="/play/draw">
                   <Button
                     variant="ghost"
@@ -166,7 +193,7 @@ export default function HomePage({ initialTests }: HomePageProps) {
             </Card>
 
             {/* Gallery Section */}
-            <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+            <Card className="group h-full flex flex-col hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
               <CardHeader className="text-center">
                 <div className="w-16 h-16 bg-pink-100 dark:bg-pink-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-pink-200 dark:group-hover:bg-pink-800/50 transition-colors">
                   <ImageIcon className="w-8 h-8 text-pink-600 dark:text-pink-400" />
@@ -178,7 +205,7 @@ export default function HomePage({ initialTests }: HomePageProps) {
                   {t("home.galleryDescription")}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="mt-auto">
                 <Link href="/gallery">
                   <Button
                     variant="ghost"
@@ -192,7 +219,7 @@ export default function HomePage({ initialTests }: HomePageProps) {
             </Card>
           </div>
 
-          {/* Latest Tests Section */}
+          {/* Latest Tests Section (그대로) */}
           <div className="mb-16">
             <div className="flex items-center gap-3 mb-8">
               <Clock className="w-8 h-8 text-purple-600 dark:text-purple-400" />
@@ -212,7 +239,7 @@ export default function HomePage({ initialTests }: HomePageProps) {
             </div>
           </div>
 
-          {/* CTA Section */}
+          {/* CTA Section (그대로) */}
           <div className="text-center bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl p-10 text-white">
             <h3 className="text-3xl md:text-4xl font-bold mb-4">
               {t("home.startNow")}

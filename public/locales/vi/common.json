@@ -68,7 +68,10 @@
     "startFirstTest": "Bắt đầu bài kiểm tra đầu tiên",
     "popularTests": "Bài test phổ biến",
     "popularTestsDescription": "Các bài test được chọn nhiều nhất",
-    "gotoPopular": "Đi đến bài test phổ biến"
+    "gotoPopular": "Đi đến bài test phổ biến",
+    "tarotTests": "Tarot",
+    "tarotTestsDescription": "Các bài đọc Tarot phù hợp với mối quan tâm của bạn",
+    "gotoTarot": "Đi đến Đọc Tarot"
   },
   "testView": {
     "loading": "Đang tải bài test...",

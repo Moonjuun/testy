@@ -68,7 +68,10 @@
     "startFirstTest": "最初のテストを始める",
     "popularTests": "人気テスト",
     "popularTestsDescription": "最も選ばれたテスト",
-    "gotoPopular": "ハルカに行く"
+    "gotoPopular": "人気テストへ",
+    "tarotTests": "タロット",
+    "tarotTestsDescription": "あなたの悩みに合ったタロットリーディング",
+    "gotoTarot": "リーディングへ"
   },
   "testView": {
     "loading": "テストを読み込み中...",
