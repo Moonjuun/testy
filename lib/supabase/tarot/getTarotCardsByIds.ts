@@ -7,7 +7,7 @@ type MeaningType = "free" | "paid";
 
 export async function getTarotCardsByIds(
   cardIds: number[],
-  language: "ko" | "en" | "ja" | "vi" = "ko", // 기본값을 "ko"로 설정
+  language: "ko" | "en" | "ja" | "vi" = "en", // 기본값을 "ko"로 설정
   meaningType: MeaningType = "free"
 ): Promise<TarotCard[]> {
   const supabase = createClient();
@@ -23,7 +23,7 @@ export async function getTarotCardsByIds(
       arcana_type,
       suit,
       image_url,
-      keyword,
+      keyword_translations,
       name:name_translations->>${language},
       meaning:meaning_translations->${language}->>${meaningType},
       description:description_translations->${language}->>${meaningType}
@@ -32,7 +32,11 @@ export async function getTarotCardsByIds(
     .in("id", cardIds);
 
   if (error || !data) {
-    console.error("Error fetching tarot cards by IDs:", error);
+    console.error(
+      "Error fetching tarot cards by IDs:",
+      JSON.stringify(error, null, 2)
+    );
+
     return [];
   }
 
