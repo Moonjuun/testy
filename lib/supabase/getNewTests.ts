@@ -1,10 +1,14 @@
-//lib/supabase/getNewTests.ts
+// lib/supabase/getNewTests.ts
 import { NewTest } from "@/types/test";
 import { createClient } from "./client";
+import { unstable_cache } from "next/cache";
 
-export async function getNewTests(
-  language: "ko" | "en" | "ja" | "vi" = "en",
-  limit: number = 12
+type Lang = "ko" | "en" | "ja" | "vi";
+
+// 1) 원본 쿼리(캐시 X) — 내부 전용
+async function fetchNewTestsRaw(
+  language: Lang = "en",
+  limit = 12
 ): Promise<NewTest[]> {
   const supabase = createClient();
   const nameField = `name_${language}`;
@@ -59,16 +63,30 @@ export async function getNewTests(
       is_visible: test.is_visible,
       created_at: test.created_at,
       category: test.categories
-        ? {
-            code: test.categories.code,
-            name: test.categories[nameField] ?? "",
-          }
+        ? { code: test.categories.code, name: test.categories[nameField] ?? "" }
         : null,
       test_translations: {
         title: translation?.title ?? "",
         language: translation?.language ?? language,
         description: translation?.description ?? "",
       },
-    };
+    } as NewTest;
   });
 }
+
+// 2) 캐시 래퍼 — 외부에는 이 이름으로 계속 노출
+export async function getNewTests(
+  language: Lang = "en",
+  limit = 12
+): Promise<NewTest[]> {
+  // 언어/limit별 캐시 키
+  const key = ["new-tests", language, String(limit)];
+  const cached = unstable_cache(() => fetchNewTestsRaw(language, limit), key, {
+    revalidate: 60 * 60, // 1시간
+    tags: [`new-tests:${language}:${limit}`],
+  });
+  return cached();
+}
+
+// (선택) 캐시 없이 강제 최신 조회가 필요하면 이걸 import해서 쓰세요.
+export { fetchNewTestsRaw as getNewTestsNoCache };
