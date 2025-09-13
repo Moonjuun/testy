@@ -13,8 +13,7 @@ export async function generateMetadata({
   params: { locale: string };
 }): Promise<Metadata> {
   const { locale } = await params;
-  const url = `https://testy.im/${locale}/play/taro`; // TODO: 실제 도메인으로 교체
-
+  const url = `https://testy.im/${locale}/tarot`; // TODO: 실제 도메인으로 교체
   const metadataByLocale = {
     ko: {
       title: "오늘의 운세 타로 | Testy",

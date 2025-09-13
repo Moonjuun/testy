@@ -1,6 +1,7 @@
 import { getAllTests } from "@/lib/supabase/getAllTests";
 import { getActiveCategories } from "@/lib/supabase/getActiveCategories";
 import { Language } from "@/store/useLanguageStore";
+import { categories } from "@/constants/tarot/TarotConstants";
 
 type SitemapUrl = {
   loc: string;
@@ -21,6 +22,10 @@ export async function generateSitemapXml() {
     { loc: `${baseUrl}/${locale}/play/ladder` },
     { loc: `${baseUrl}/${locale}/play/lunch` },
     { loc: `${baseUrl}/${locale}/gallery` },
+    { loc: `${baseUrl}/${locale}/tarot` },
+    ...categories.map((category) => ({
+      loc: `${baseUrl}/${locale}/tarot/${category.id}`,
+    })),
   ]);
 
   // 4. 동적 페이지(카테고리, 테스트) URL을 모든 언어에 대해 생성합니다.
