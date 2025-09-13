@@ -8,13 +8,12 @@ import { useTheme } from "@/contexts/theme-context";
 import { User, Menu, X, Moon, Sun, Globe, ChevronDown } from "lucide-react";
 import { useActiveCategories } from "@/hooks/useActiveCategories";
 import { Skeleton } from "./ui/skeleton";
-import { useLanguageStore } from "@/store/useLanguageStore";
+import { useLanguageStore, Language } from "@/store/useLanguageStore";
 import { useUserStore } from "@/store/useUserStore";
 import { getAllLabel, languages } from "@/constants/Header";
 import { useTranslation } from "react-i18next";
 import { AuthModal } from "./modal/auth-modal";
 import { useRouter, usePathname } from "next/navigation";
-import { Language } from "@/store/useLanguageStore";
 import { useAlert } from "./modal/alert-context";
 import {
   DropdownMenu,
@@ -24,7 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface HeaderProps {
-  locale: string;
+  locale: Language;
 }
 
 export function Header({ locale }: HeaderProps) {
@@ -45,9 +44,15 @@ export function Header({ locale }: HeaderProps) {
   const setLanguage = useLanguageStore((state) => state.setLanguage);
 
   const { theme, toggleTheme } = useTheme();
-  const { categories, loading } = useActiveCategories(locale as Language);
+  const { categories, loading } = useActiveCategories(locale);
 
   const [isClient, setIsClient] = useState(false);
+
+  // ✅ [수정] URL의 locale이 변경될 때마다 전역 상태를 동기화합니다.
+  useEffect(() => {
+    setLanguage(locale);
+    i18n.changeLanguage(locale);
+  }, [locale, setLanguage, i18n]);
 
   const currentLanguageName =
     languages.find((l) => l.code === locale)?.name ?? "English";
@@ -68,18 +73,14 @@ export function Header({ locale }: HeaderProps) {
       });
 
       if (confirmed) {
-        setLanguage(newLocale);
-        i18n.changeLanguage(newLocale);
+        // ✅ [수정] URL 변경만 수행
         router.push(`/${newLocale}`);
       }
     } else {
-      setLanguage(newLocale);
-      i18n.changeLanguage(newLocale);
-
+      // ✅ [수정] URL 변경만 수행
       const currentPathParts = pathname.split("/");
       currentPathParts[1] = newLocale;
       const newPath = currentPathParts.join("/");
-
       router.push(newPath);
     }
   };
@@ -105,7 +106,6 @@ export function Header({ locale }: HeaderProps) {
           variant="ghost"
           className="px-4 py-2 text-[15px] font-semibold text-gray-800 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
         >
-          {/* *** 수정 2: 번역 텍스트를 isClient로 감싸기 *** */}
           {isClient ? t("header.playground") : "Playground"}{" "}
           <ChevronDown className="w-4 h-4 ml-1" />
         </Button>
@@ -275,7 +275,6 @@ export function Header({ locale }: HeaderProps) {
                 onClick={toggleTheme}
                 className="rounded-full p-2 bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
               >
-                {/* isClient를 사용하여 테마 아이콘 렌더링 */}
                 {isClient ? (
                   theme === "dark" ? (
                     <Sun className="w-4 h-4" />
@@ -287,7 +286,6 @@ export function Header({ locale }: HeaderProps) {
                 )}
               </Button>
 
-              {/* *** 수정 3: 사용자 상태에 따른 UI를 isClient로 감싸고, 초기 렌더링 시 Skeleton 표시 *** */}
               {isClient ? (
                 user ? (
                   <Button
@@ -363,27 +361,26 @@ export function Header({ locale }: HeaderProps) {
                   </div>
                 </details>
 
-                <details className="w-full group">
-                  <summary className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
-                    <Link
-                      href={`/${locale}/mbti`}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      MBTI
-                    </Link>
-                  </summary>
-                </details>
+                {/* Simplified Mobile Menu Items for brevity */}
+                <div className="w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <Link
+                    href={`/${locale}/mbti`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full block"
+                  >
+                    MBTI
+                  </Link>
+                </div>
 
-                <details className="w-full group">
-                  <summary className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
-                    <Link
-                      href={`/${locale}/tarot`}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      {isClient ? t("header.tarot") : "Tarot"}
-                    </Link>
-                  </summary>
-                </details>
+                <div className="w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <Link
+                    href={`/${locale}/tarot`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full block"
+                  >
+                    {isClient ? t("header.tarot") : "Tarot"}
+                  </Link>
+                </div>
 
                 <details className="w-full group">
                   <summary className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
@@ -415,16 +412,15 @@ export function Header({ locale }: HeaderProps) {
                   </div>
                 </details>
 
-                <details className="w-full group">
-                  <summary className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
-                    <Link
-                      href={`/${locale}/gallery`}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      {isClient ? t("header.gallery") : "Gallery"}
-                    </Link>
-                  </summary>
-                </details>
+                <div className="w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <Link
+                    href={`/${locale}/gallery`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full block"
+                  >
+                    {isClient ? t("header.gallery") : "Gallery"}
+                  </Link>
+                </div>
               </nav>
             </div>
           )}

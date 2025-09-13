@@ -31,7 +31,7 @@ interface HomePageProps {
   initialTests: NewTest[];
 }
 
-export default function HomePage({ initialTests }: HomePageProps) {
+export default function HomePage({ locale, initialTests }: HomePageProps) {
   const [isMounted, setIsMounted] = useState(false);
   const { t } = useTranslation("common");
 
@@ -63,7 +63,7 @@ export default function HomePage({ initialTests }: HomePageProps) {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/test/list">
+            <Link href={`/${locale}/test/list`}>
               <Button
                 size="lg"
                 className="bg-purple-600 hover:bg-purple-700 text-white font-semibold"
@@ -128,7 +128,7 @@ export default function HomePage({ initialTests }: HomePageProps) {
                 </CardDescription>
               </CardHeader>
               <CardContent className="mt-auto">
-                <Link href="/mbti">
+                <Link href={`/${locale}/mbti`}>
                   <Button
                     variant="ghost"
                     className="w-full text-purple-600 hover:text-purple-700 hover:bg-purple-50 dark:text-purple-400 dark:hover:text-purple-300 dark:hover:bg-purple-900/20 font-semibold"
@@ -154,7 +154,7 @@ export default function HomePage({ initialTests }: HomePageProps) {
                 </CardDescription>
               </CardHeader>
               <CardContent className="mt-auto">
-                <Link href={`/tarot`}>
+                <Link href={`${locale}/tarot`}>
                   <Button
                     variant="ghost"
                     className="w-full text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:text-indigo-300 dark:hover:bg-indigo-900/20 font-semibold"
@@ -180,7 +180,7 @@ export default function HomePage({ initialTests }: HomePageProps) {
                 </CardDescription>
               </CardHeader>
               <CardContent className="mt-auto">
-                <Link href="/play/draw">
+                <Link href={`${locale}/play/draw`}>
                   <Button
                     variant="ghost"
                     className="w-full text-green-600 hover:text-green-700 hover:bg-green-50 dark:text-green-400 dark:hover:text-green-300 dark:hover:bg-green-900/20 font-semibold"
@@ -206,7 +206,7 @@ export default function HomePage({ initialTests }: HomePageProps) {
                 </CardDescription>
               </CardHeader>
               <CardContent className="mt-auto">
-                <Link href="/gallery">
+                <Link href={`/${locale}/gallery`}>
                   <Button
                     variant="ghost"
                     className="w-full text-pink-600 hover:text-pink-700 hover:bg-pink-50 dark:text-pink-400 dark:hover:text-pink-300 dark:hover:bg-pink-900/20 font-semibold"
@@ -247,7 +247,7 @@ export default function HomePage({ initialTests }: HomePageProps) {
             <p className="text-xl mb-6 text-purple-100">
               {t("home.waitingForYou")}
             </p>
-            <Link href="/test/list">
+            <Link href={`/${locale}/test/list`}>
               <Button
                 size="lg"
                 className="bg-white text-purple-600 hover:bg-purple-50 font-semibold"
