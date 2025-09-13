@@ -131,13 +131,11 @@ export default function TarotTypePage() {
           ))}
         </div>
 
-        <div className="mb-8">
+        {/* <div className="mb-8">
           <Card className="bg-card">
             <CardContent className="p-6">
               <h3 className="font-sans font-semibold text-card-foreground mb-4">
-                {t("tarot.typePage.situationTitle", {
-                  defaultValue: "현재 상황을 간단히 적어주세요 (선택사항)",
-                })}
+                {t("tarot.typePage.situationTitle")}
               </h3>
               <Textarea
                 placeholder={t("tarot.typePage.situationPlaceholder", {
@@ -149,7 +147,7 @@ export default function TarotTypePage() {
               />
             </CardContent>
           </Card>
-        </div>
+        </div> */}
 
         <div className="text-center">
           <Button

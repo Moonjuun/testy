@@ -9,4 +9,5 @@ export type TarotCard = {
   meaning: string;
   description: string;
   keyword: string[];
+  advice: string;
 };

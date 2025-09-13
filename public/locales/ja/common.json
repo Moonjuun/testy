@@ -283,7 +283,9 @@
       "meaningTitle": "カードの意味",
       "descriptionTitle": "カードの解説",
       "cardIs": "カードは",
-      "positionExplanation": " で重要なメッセージを伝えます。現在の状況をポジティブに受け入れ、内なる知恵を信じてみてください。"
+      "positionExplanation": " で重要なメッセージを伝えます。現在の状況をポジティブに受け入れ、内なる知恵を信じてみてください。",
+      "adviceTitle": "アドバイス",
+      "keywordsTitle": "キーワード"
     },
     "spreads": {
       "single": { "positions": ["現在の状況"] },

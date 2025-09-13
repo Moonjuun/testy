@@ -283,7 +283,9 @@
       "meaningTitle": "Card Meaning",
       "descriptionTitle": "Card Description",
       "cardIs": "The card is",
-      "positionExplanation": " conveys an important message about . Embrace the current situation positively and trust your inner wisdom."
+      "positionExplanation": " conveys an important message about . Embrace the current situation positively and trust your inner wisdom.",
+      "adviceTitle": "Advice",
+      "keywordsTitle": "Keywords"
     },
     "spreads": {
       "single": { "positions": ["Current Situation"] },

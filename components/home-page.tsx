@@ -224,7 +224,7 @@ export default function HomePage({ initialTests }: HomePageProps) {
             <div className="flex items-center gap-3 mb-8">
               <Clock className="w-8 h-8 text-purple-600 dark:text-purple-400" />
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
-                최신 테스트
+                {t("home.latestTests")}
               </h2>
             </div>
 

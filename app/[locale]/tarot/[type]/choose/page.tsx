@@ -1,10 +1,9 @@
-// app/[locale]/tarot/[type]/choose/page.tsx
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
 import { Star, ArrowLeft, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation"; // ✅ 추가
+import { useRouter } from "next/navigation";
 import { DragHint } from "@/components/taro/DragHint";
 import { useTranslation } from "react-i18next";
 
@@ -41,7 +40,6 @@ export default function TarotChoosePage() {
   const [isMobile, setIsMobile] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
 
-  // ✅ Result 페이지를 직접 렌더링하지 않으므로 showResults 제거
   const shuffledDeck = useMemo(() => shuffle(fullTarotDeck), []);
 
   useEffect(() => {
@@ -119,11 +117,10 @@ export default function TarotChoosePage() {
 
   const canProceedToResults = () => drawnCards.length === getCardCount();
 
-  // ✅ 서버 페이지로 이동 (상대경로 사용: /[locale]/tarot/[type]/choose → ./results)
   const handleProceedToResults = () => {
     const qs = new URLSearchParams({
-      cards: drawnCards.join(","), // 예: "12,3,40"
-      spread: selectedSpread, // "single" | "three" | "five"
+      cards: drawnCards.join(","),
+      spread: selectedSpread,
     });
     router.push(`./results?${qs.toString()}`);
   };
@@ -195,6 +192,23 @@ export default function TarotChoosePage() {
           >
             {t("tarot.typePage.choose5Cards")}
           </Button>
+        </div>
+      </div>
+
+      <div className="flex-shrink-0 text-center mt-4">
+        <div className="mb-6">
+          <p className="font-mono text-muted-foreground mb-2">
+            {drawnCards.length} / {getCardCount()}{" "}
+            {t("tarot.typePage.selected")}
+          </p>
+          <div className="w-full max-w-xs mx-auto bg-muted rounded-full h-2">
+            <div
+              className="bg-accent h-2 rounded-full transition-all duration-500"
+              style={{
+                width: `${(drawnCards.length / getCardCount()) * 100}%`,
+              }}
+            />
+          </div>
         </div>
       </div>
 
@@ -299,43 +313,22 @@ export default function TarotChoosePage() {
                   </div>
                 );
               })}
+
+              {canProceedToResults() && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 animate-fade-in">
+                  <Button
+                    size="lg"
+                    className="font-sans font-semibold mystical-glow"
+                    onClick={handleProceedToResults}
+                  >
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    {t("tarot.typePage.viewInterpretation")}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="flex-shrink-0 text-center">
-        <div className="mb-6">
-          <p className="font-mono text-muted-foreground mb-2">
-            {drawnCards.length} / {getCardCount()}{" "}
-            {t("tarot.typePage.selected")}
-          </p>
-          <div className="w-full max-w-xs mx-auto bg-muted rounded-full h-2">
-            <div
-              className="bg-accent h-2 rounded-full transition-all duration-500"
-              style={{
-                width: `${(drawnCards.length / getCardCount()) * 100}%`,
-              }}
-            />
-          </div>
-        </div>
-
-        <Button
-          size="lg"
-          className={[
-            "font-sans font-semibold mystical-glow",
-            !canProceedToResults()
-              ? "opacity-50 cursor-not-allowed ring-0"
-              : "",
-          ].join(" ")}
-          onClick={handleProceedToResults}
-          disabled={!canProceedToResults()}
-          aria-disabled={!canProceedToResults()}
-          title={t("tarot.typePage.selectAllToEnable")}
-        >
-          <Sparkles className="w-4 h-4 mr-2" />
-          {t("tarot.typePage.viewInterpretation")}
-        </Button>
       </div>
     </div>
   );

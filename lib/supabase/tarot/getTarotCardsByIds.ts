@@ -1,5 +1,3 @@
-// lib/supabase/getTarotCardsByIds.ts
-
 import { createClient } from "../client";
 import { TarotCard } from "@/types/tarot/tarot";
 
@@ -7,12 +5,16 @@ type MeaningType = "free" | "paid";
 
 export async function getTarotCardsByIds(
   cardIds: number[],
-  language: "ko" | "en" | "ja" | "vi" = "en", // 기본값을 "ko"로 설정
-  meaningType: MeaningType = "free"
+  language: "ko" | "en" | "ja" | "vi" = "ko",
+  meaningType: MeaningType = "free" // 기본값 'free'로 설정
 ): Promise<TarotCard[]> {
   const supabase = createClient();
 
-  // ✅ 쿼리 최적화: `select` 구문에서 특정 언어의 텍스트만 가져옵니다.
+  // meaningType에 따라 동적으로 컬럼 이름을 생성합니다.
+  const meaningCol = `${meaningType}_meaning_translations`;
+  const descriptionCol = `${meaningType}_description_translations`;
+  const adviceCol = `${meaningType}_advice_translations`;
+
   const { data, error } = await supabase
     .from("tarot_cards")
     .select(
@@ -25,8 +27,9 @@ export async function getTarotCardsByIds(
       image_url,
       keyword_translations,
       name:name_translations->>${language},
-      meaning:meaning_translations->${language}->>${meaningType},
-      description:description_translations->${language}->>${meaningType}
+      meaning:${meaningCol}->>${language},
+      description:${descriptionCol}->>${language},
+      advice:${adviceCol}->>${language}
     `
     )
     .in("id", cardIds);
@@ -36,11 +39,9 @@ export async function getTarotCardsByIds(
       "Error fetching tarot cards by IDs:",
       JSON.stringify(error, null, 2)
     );
-
     return [];
   }
 
-  // ✅ 반환되는 데이터가 이미 필터링되었으므로, 매핑 로직이 간결해집니다.
   return data.map((card: any) => ({
     id: card.id,
     cardNumber: card.card_number,
@@ -49,9 +50,11 @@ export async function getTarotCardsByIds(
     suit: card.suit,
     imageUrl: card.image_url,
     name: card.name,
-    meaning: card.meaning || "", // 값이 없을 경우를 대비해 빈 문자열로 대체
-    description: card.description || "", // 값이 없을 경우를 대비해 빈 문자열로 대체
-    // keyword는 객체이므로 기존 방식 그대로 유지
-    keyword: card.keyword?.[language] || [],
+    meaning: card.meaning || "",
+    description: card.description || "",
+    // ✅ 'keyword_translations'에서 현재 언어에 맞는 키워드를 추출합니다.
+    keyword: card.keyword_translations?.[language] || [],
+    // ✅ 새로 추가된 'advice' 필드를 매핑합니다.
+    advice: card.advice || "",
   }));
 }
