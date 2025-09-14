@@ -35,12 +35,12 @@ This service, testy (https://testy.im, hereinafter "testy"), values your persona
 **7. User Rights and How to Exercise Them**
 
 - You may request to access, correct, delete, or suspend the processing of your personal information.
-- Requests can be made by contacting cmoonjun11@gmail.com.
+- Requests can be made by contacting chmj1102@gmail.com.
 
 **8. Chief Privacy Officer**
 
 - **Officer:** The operator of the testy service.
-- **Email:** cmoonjun11@gmail.com
+- **Email:** chmj1102@gmail.com
 
 **9. Policy Changes**
 

@@ -110,7 +110,7 @@ export function Footer() {
           <div className="flex flex-col items-center  mb-4 md:mb-0">
             <span className="text-gray-400 text-sm mb-1">광고/제작 문의</span>
             <a
-              href="mailto:cmoonjun11@gmail.com"
+              href="mailto:chmj1102@gmail.com"
               className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-sm"
             >
               <Mail className="w-4 h-4" />

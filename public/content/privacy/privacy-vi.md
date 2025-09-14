@@ -35,12 +35,12 @@ Dịch vụ này, testy (https://testy.im, sau đây gọi là "testy"), coi tr�
 **7. Quyền của người dùng và cách thực hiện**
 
 - Bạn có thể yêu cầu truy cập, sửa đổi, xóa hoặc tạm ngừng xử lý thông tin cá nhân của mình.
-- Yêu cầu có thể được gửi đến cmoonjun11@gmail.com.
+- Yêu cầu có thể được gửi đến chmj1102@gmail.com.
 
 **8. Giám đốc Bảo vệ Thông tin Cá nhân**
 
 - **Người chịu trách nhiệm:** Nhà điều hành dịch vụ testy.
-- **Email:** cmoonjun11@gmail.com
+- **Email:** chmj1102@gmail.com
 
 **9. Thay đổi chính sách**
 
