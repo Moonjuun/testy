@@ -1,4 +1,3 @@
-// components/admin/AdminSidebar.tsx
 "use client";
 
 import {
@@ -7,17 +6,16 @@ import {
   ImageIcon,
   ListChecks,
   GalleryHorizontal,
-  Utensils, // 점심 메뉴 아이콘 추가
+  Utensils,
 } from "lucide-react";
 
-// ✅ 6개 탭을 위한 타입 정의
 type AdminTab =
   | "json"
   | "thumbnail-upload"
   | "result-upload"
   | "thumbnail-manage"
   | "result-manage"
-  | "lunch-image"; // 런치 이미지 타입 추가
+  | "lunch-image";
 
 interface Props {
   activeTab: AdminTab;
@@ -29,40 +27,38 @@ export default function AdminSidebar({ activeTab, setActiveTab }: Props) {
     {
       key: "json" as const,
       label: "1. 테스트 유형 JSON 업로드",
-      icon: <UploadCloud />,
+      icon: <UploadCloud className="w-4 h-4" />,
     },
     {
       key: "thumbnail-upload" as const,
       label: "2. 테스트 썸네일 등록",
-      icon: <FileImage />,
+      icon: <FileImage className="w-4 h-4" />,
     },
-
     {
       key: "thumbnail-manage" as const,
       label: "3. 등록된 테스트 썸네일 관리",
-      icon: <GalleryHorizontal />,
+      icon: <GalleryHorizontal className="w-4 h-4" />,
     },
     {
       key: "result-upload" as const,
       label: "4. 결과 이미지 등록",
-      icon: <ImageIcon />,
+      icon: <ImageIcon className="w-4 h-4" />,
     },
     {
       key: "result-manage" as const,
       label: "5. 등록된 결과 이미지 관리",
-      icon: <ListChecks />,
+      icon: <ListChecks className="w-4 h-4" />,
     },
-    // ✅ 점심 메뉴 이미지 등록 탭 추가
     {
       key: "lunch-image" as const,
       label: "6. 점심 메뉴 이미지 등록",
-      icon: <Utensils />,
+      icon: <Utensils className="w-4 h-4" />,
     },
   ];
 
   return (
-    <aside className="w-72 bg-white dark:bg-gray-800/50 flex-shrink-0 border-r border-gray-200 dark:border-gray-700 p-6 flex flex-col">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">
+    <aside className="h-full w-72 bg-white dark:bg-gray-800/50 flex-shrink-0 border-r border-gray-200 dark:border-gray-700 p-6 flex flex-col">
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
         Testy 어드민
       </h1>
       <nav className="space-y-2">
@@ -73,7 +69,7 @@ export default function AdminSidebar({ activeTab, setActiveTab }: Props) {
             className={`w-full flex items-center gap-3 text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
               activeTab === item.key
                 ? "bg-purple-600 text-white shadow-md"
-                : "text-gray-600 dark:text-gray-300 hover:bg-purple-100 dark:hover:bg-gray-700"
+                : "text-gray-700 dark:text-gray-300 hover:bg-purple-100 dark:hover:bg-gray-700"
             }`}
           >
             {item.icon}
