@@ -114,7 +114,7 @@ export function Footer() {
               className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-sm"
             >
               <Mail className="w-4 h-4" />
-              cmoonjun11@gmail.com
+              chmj1102@gmail.com
             </a>
           </div>
 
