@@ -1,11 +1,13 @@
 // components/taro/DragHint.tsx
 "use client";
 
+import { useTranslation } from "react-i18next";
 import { ArrowRight } from "lucide-react";
 import React, { useState, useEffect } from "react";
 
 export function DragHint() {
   const [isVisible, setIsVisible] = useState(true);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     // 터치 시작을 감지하는 이벤트 핸들러
@@ -36,7 +38,7 @@ export function DragHint() {
       <div className="bg-background/80 backdrop-blur-sm p-4 rounded-xl flex items-center shadow-lg animate-pulse-slow">
         <ArrowRight className="w-6 h-6 text-accent animate-bounce-horizontal" />
         <span className="ml-2 font-mono text-sm text-foreground">
-          카드를 옆으로 드래그해 보세요
+          {t("tarot.typePage.dragCard")}
         </span>
       </div>
     </div>

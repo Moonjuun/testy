@@ -285,7 +285,8 @@
       "cardIs": "Thẻ là",
       "positionExplanation": "Thẻ này truyền tải một thông điệp quan trọng. Hãy chấp nhận tình huống hiện tại một cách tích cực và tin tưởng vào trí tuệ bên trong của bạn.",
       "adviceTitle": "Lời khuyên",
-      "keywordsTitle": "Từ khóa"
+      "keywordsTitle": "Từ khóa",
+      "dragCard": "Hãy thử kéo thẻ sang ngang"
     },
     "spreads": {
       "single": { "positions": ["Hiện tại"] },

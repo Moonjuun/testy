@@ -297,7 +297,8 @@
       "cardIs": "카드는",
       "positionExplanation": " 에서 중요한 메시지를 전달합니다. 현재 상황을 긍정적으로받아들이고 내면의 지혜를 믿어보세요.",
       "adviceTitle": "조언",
-      "keywordsTitle": "키워드"
+      "keywordsTitle": "키워드",
+      "dragCard": "카드를 옆으로 드래그해 보세요"
     },
     "spreads": {
       "single": { "positions": ["현재 상황"] },

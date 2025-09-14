@@ -285,7 +285,8 @@
       "cardIs": "The card is",
       "positionExplanation": " conveys an important message about . Embrace the current situation positively and trust your inner wisdom.",
       "adviceTitle": "Advice",
-      "keywordsTitle": "Keywords"
+      "keywordsTitle": "Keywords",
+      "dragCard": "Try dragging the card sideways"
     },
     "spreads": {
       "single": { "positions": ["Current Situation"] },
