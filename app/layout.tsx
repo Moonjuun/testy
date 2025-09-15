@@ -6,53 +6,44 @@ import Script from "next/script";
 
 const metadataTranslations = {
   ko: {
-    // ✨ 변경된 부분: 핵심 콘텐츠를 제목에 포함
-    title: "Testy 테스티 - MBTI, 사다리게임, 성향 테스트",
-    // ✨ 변경된 부분: 제공하는 게임/테스트 종류를 명확히 나열
+    title: "Testy 테스티 - 타로, MBTI, 사다리게임 성향 테스트",
     description:
-      "MBTI, 사다리게임, 점심 메뉴 고르기, 스피드 드로우 등 다양한 테스트와 게임을 즐겨보세요! 성격, 연애, 진로를 탐색하며 숨겨진 나를 발견하는 즐거움.",
-    twitterTitle: "Testy 테스티 - 성향 테스트 & 미니게임 플랫폼",
+      "하루 운세부터 연애·직장 타로까지! MBTI, 사다리게임, 점심 고르기, 스피드 드로우 등 다양한 테스트와 게임으로 나를 탐구하세요. 한국어 타로카드 점 무료 제공.",
+    twitterTitle: "Testy 테스티 - 타로&성향 테스트 · 미니게임",
     twitterDescription:
-      "MBTI부터 사다리게임까지, 테스트로 나를 알아가는 즐거움. 지금 바로 시작해보세요!",
+      "오늘의 타로·연애 타로·금전운 타로부터 MBTI까지! 쉽고 빠르게 나를 알아보는 재미.",
     ogImage: "/og-image-ko.png",
-    ogImageAlt: "Testy 테스티(MBTI, 사다리게임) 한국어 대표 이미지",
+    ogImageAlt: "Testy 테스티 - 타로, MBTI, 사다리게임 대표 이미지",
   },
   en: {
-    // ✨ Changed: Included key content in the title
-    title: "Testy - MBTI, Ladder Game & Personality Tests",
-    // ✨ Changed: Clearly listed the types of games/tests offered
+    title: "Testy - Tarot, MBTI, Ladder Game & Personality Tests",
     description:
-      "Enjoy various tests and games like MBTI, Ladder Game, Lunch Picker, and Speed Draw. Discover your hidden self by exploring personality, relationships, and career paths.",
-    twitterTitle: "Testy - Personality Tests & Mini-Games Platform",
+      "Daily tarot, love & career readings plus MBTI, Ladder Game, Lunch Picker, and Speed Draw. Explore yourself with fun quizzes and free tarot spreads in English.",
+    twitterTitle: "Testy - Tarot Readings & Personality Mini-Games",
     twitterDescription:
-      "From MBTI to the Ladder Game, discover the joy of getting to know yourself. Start now!",
+      "From daily tarot to MBTI—quick, fun ways to understand yourself. Try a free tarot spread now!",
     ogImage: "/og-image-en.png",
-    ogImageAlt: "Testy (MBTI, Ladder Game) - Main promotional image in English",
+    ogImageAlt: "Testy - Tarot, MBTI, Ladder Game promotional image",
   },
   ja: {
-    // ✨ 変更点: 主要なコンテンツをタイトルに含める
-    title: "Testy テスティ - MBTI、あみだくじ、性格テスト",
-    // ✨ 変更点: 提供するゲーム・テストの種類を明確にリストアップ
+    title: "Testy テスティ - タロット, MBTI, あみだくじ 性格テスト",
     description:
-      "MBTI、あみだくじ、ランチルーレット、スピードドローなど、様々なテストやゲームを楽しんでください！性格、恋愛、進路を探りながら、隠れた自分を発見する楽しさを。",
-    twitterTitle: "Testy テスティ - 性格テスト＆ミニゲームプラットフォーム",
+      "今日の運勢・恋愛・仕事のタロット占いに加え、MBTI、あみだくじ、ランチルーレット、スピードドローなど多彩なテストで自分を発見。日本語の無料タロット展開に対応。",
+    twitterTitle: "Testy テスティ - タロット占い＆性格テスト",
     twitterDescription:
-      "MBTIからあみだくじまで、テストで自分を知る楽しさ。今すぐ始めてみましょう！",
+      "今日のタロットからMBTIまで。手軽に自己理解を深めよう！",
     ogImage: "/og-image-ja.png",
-    ogImageAlt: "Testy テスティ (MBTI, あみだくじ) 日本語版の代表画像",
+    ogImageAlt: "Testy テスティ - タロット・MBTI・あみだくじ 代表画像",
   },
   vi: {
-    // ✨ Thay đổi: Bao gồm nội dung chính trong tiêu đề
-    title: "Testy - Kiểm tra MBTI, Trò chơi bậc thang & Tính cách",
-    // ✨ Thay đổi: Liệt kê rõ ràng các loại trò chơi/bài kiểm tra được cung cấp
+    title: "Testy - Tarot, MBTI, Trò chơi bậc thang & Tính cách",
     description:
-      "Thưởng thức các bài kiểm tra và trò chơi đa dạng như MBTI, Trò chơi bậc thang, Chọn bữa trưa và Vẽ nhanh. Khám phá bản thân ẩn giấu qua việc tìm hiểu tính cách, các mối quan hệ và con đường sự nghiệp.",
-    twitterTitle: "Testy - Nền tảng kiểm tra tính cách & Trò chơi nhỏ",
+      "Tarot hằng ngày, tình yêu & sự nghiệp cùng MBTI, Trò chơi bậc thang, Chọn bữa trưa và Speed Draw. Khám phá bản thân với các bài test thú vị, hỗ trợ tiếng Việt.",
+    twitterTitle: "Testy - Tarot & Bài test tính cách",
     twitterDescription:
-      "Từ MBTI đến Trò chơi bậc thang, hãy khám phá niềm vui khi tìm hiểu về bản thân. Bắt đầu ngay bây giờ!",
+      "Từ tarot hằng ngày đến MBTI – hiểu bản thân nhanh chóng và thú vị. Dùng thử trải bài miễn phí!",
     ogImage: "/og-image-vi.png",
-    ogImageAlt:
-      "Hình ảnh đại diện Testy (MBTI, Trò chơi bậc thang) bằng tiếng Việt",
+    ogImageAlt: "Testy - Tarot, MBTI, Trò chơi bậc thang - Ảnh đại diện",
   },
 };
 
