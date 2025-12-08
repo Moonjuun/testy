@@ -1,264 +1,148 @@
 "use client";
-import { TestCard } from "@/components/test-card";
-import { TestCardSkeleton } from "@/components/TestCardSkeleton";
-import { useTranslation } from "react-i18next";
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Sparkles,
-  Clock,
-  Brain,
-  Gamepad2,
-  ImageIcon,
-  ArrowRight,
-  Users,
-  Trophy,
-  Zap,
-} from "lucide-react";
-import { NewTest } from "@/types/test"; // 기존 코드의 타입을 가져옵니다.
+
+import { useMemo } from "react";
+import { NewTest } from "@/types/test";
+import { HeroSection } from "@/components/home/HeroSection";
+import { QuickCircleSection } from "@/components/home/QuickCircleSection";
+import { MysticZoneSection } from "@/components/home/MysticZoneSection";
+import { MBTICollectionSection } from "@/components/home/MBTICollectionSection";
+import { EditorPickSection } from "@/components/home/EditorPickSection";
 
 interface HomePageProps {
   locale: string;
   initialTests: NewTest[];
 }
 
-export default function HomePage({ locale, initialTests }: HomePageProps) {
-  const [isMounted, setIsMounted] = useState(false);
-  const { t } = useTranslation("common");
+// Skeleton 컴포넌트들
+function HeroSkeleton() {
+  return (
+    <section className="relative h-[60vh] min-h-[500px] bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-900 dark:to-zinc-800 animate-pulse" />
+  );
+}
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+function QuickCircleSkeleton() {
+  return (
+    <section className="py-8 px-4 md:px-8 bg-white dark:bg-zinc-950">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex gap-4 md:gap-6">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              className="flex-shrink-0 flex flex-col items-center gap-3"
+            >
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+              <div className="w-16 h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MysticZoneSkeleton() {
+  return (
+    <section className="relative py-16 md:py-24 px-4 md:px-8 bg-gradient-to-br from-indigo-950 via-purple-950 to-indigo-900">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-12">
+          <div className="w-32 h-8 bg-purple-800/50 rounded mx-auto mb-4 animate-pulse" />
+          <div className="w-96 h-12 bg-purple-800/50 rounded mx-auto mb-4 animate-pulse" />
+        </div>
+        <div className="flex justify-center">
+          <div className="w-64 h-96 md:w-80 md:h-[480px] bg-purple-800/50 rounded-2xl animate-pulse" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MBTICollectionSkeleton() {
+  return (
+    <section className="py-12 md:py-16 px-4 md:px-8 bg-white dark:bg-zinc-950">
+      <div className="max-w-7xl mx-auto">
+        <div className="w-64 h-8 bg-zinc-200 dark:bg-zinc-800 rounded mb-8 animate-pulse" />
+        <div className="flex gap-4 md:gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div
+              key={i}
+              className="flex-shrink-0 w-32 h-40 md:w-40 md:h-52 bg-zinc-200 dark:bg-zinc-800 rounded-xl animate-pulse"
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function EditorPickSkeleton() {
+  return (
+    <section className="py-12 md:py-16 px-4 md:px-8 bg-zinc-50 dark:bg-zinc-900">
+      <div className="max-w-6xl mx-auto">
+        <div className="w-48 h-8 bg-zinc-200 dark:bg-zinc-800 rounded mb-8 animate-pulse" />
+        <div className="space-y-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              className="bg-white dark:bg-zinc-800 rounded-xl p-4 md:p-6 flex gap-4 md:gap-6"
+            >
+              <div className="w-24 h-32 md:w-32 md:h-44 bg-zinc-200 dark:bg-zinc-700 rounded-lg animate-pulse" />
+              <div className="flex-1 space-y-2">
+                <div className="w-3/4 h-6 bg-zinc-200 dark:bg-zinc-700 rounded animate-pulse" />
+                <div className="w-full h-4 bg-zinc-200 dark:bg-zinc-700 rounded animate-pulse" />
+                <div className="w-1/2 h-4 bg-zinc-200 dark:bg-zinc-700 rounded animate-pulse" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default function HomePage({ locale, initialTests }: HomePageProps) {
+  // 히어로 배너용: 랜덤으로 선택 (새로고침할 때마다 변경)
+  const featuredTest = useMemo(() => {
+    if (initialTests.length === 0) return null;
+
+    // 인기 있는 테스트들(조회수 1000 이상) 중에서 우선 선택
+    const popularTests = initialTests.filter(
+      (test) => (test.view_count ?? 0) >= 1000
+    );
+
+    // 인기 테스트가 있으면 그 중에서 랜덤 선택, 없으면 전체에서 랜덤 선택
+    const candidates = popularTests.length > 0 ? popularTests : initialTests;
+    const randomIndex = Math.floor(Math.random() * candidates.length);
+
+    return candidates[randomIndex];
+  }, [initialTests]);
+
+  // 에디터 픽: 최신 테스트들 (최대 10개)
+  const editorPickTests = initialTests.slice(0, 10);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950">
-      {/* Hero Section */}
-      <section className="py-16 px-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-purple-100 dark:bg-purple-900/30 rounded-full px-6 py-3 mb-6 border border-purple-200 dark:border-purple-700">
-            <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-            <span className="text-sm font-semibold text-purple-700 dark:text-purple-300">
-              {isMounted ? t("home.weeklyUpdate") : "\u00A0"}
-            </span>
-          </div>
+    <div className="min-h-screen bg-white dark:bg-zinc-950">
+      {/* Section A: 히어로 배너 */}
+      {featuredTest ? (
+        <HeroSection featuredTest={featuredTest} locale={locale} />
+      ) : (
+        <HeroSkeleton />
+      )}
 
-          <h1 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-            <span>{isMounted ? t("home.heroTitlePart1") : "\u00A0"}</span>{" "}
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              {isMounted ? t("home.heroTitlePart2") : ""}
-            </span>
-          </h1>
+      {/* Section B: 퀵 서클 */}
+      <QuickCircleSection locale={locale} />
 
-          <p className="text-base md:text-xl text-slate-600 dark:text-slate-300 mb-8 max-w-2xl mx-auto text-pretty">
-            {isMounted ? t("description") : "\u00A0"}
-          </p>
+      {/* Section C: 미스틱 존 타로 */}
+      <MysticZoneSection locale={locale} />
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href={`/${locale}/test/list`}>
-              <Button
-                size="lg"
-                className="bg-purple-600 hover:bg-purple-700 text-white font-semibold"
-              >
-                {isMounted ? t("home.gotoTest") : "\u00A0"}
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-            </Link>
-            {/* <Button
-              variant="outline"
-              size="lg"
-              className="border-purple-200 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-900/20 font-semibold bg-transparent"
-            >
-              인기 테스트 보기
-            </Button> */}
-          </div>
-        </div>
-      </section>
+      {/* Section D: MBTI 컬렉션 */}
+      <MBTICollectionSection locale={locale} />
 
-      {/* Feature Sections */}
-      <section className="px-4 pb-8">
-        <div className="max-w-6xl mx-auto">
-          {/* ✅ 5개 항목 대응: auto-fit + minmax로 반응형 1~5열 */}
-          <div className="grid [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))] gap-6 xl:gap-8 mb-16">
-            {/* Popular Tests Section */}
-            {/* <Card className="group h-full flex flex-col hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-200 dark:group-hover:bg-orange-800/50 transition-colors">
-                  <Trophy className="w-8 h-8 text-orange-600 dark:text-orange-400" />
-                </div>
-                <CardTitle className="text-xl font-bold text-slate-900 dark:text-white">
-                  {t("home.popularTests")}
-                </CardTitle>
-                <CardDescription className="text-slate-600 dark:text-slate-400">
-                  {t("home.popularTestsDescription")}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="mt-auto">
-                <Link href="/test/list">
-                  <Button
-                    variant="ghost"
-                    className="w-full text-orange-600 hover:text-orange-700 hover:bg-orange-50 dark:text-orange-400 dark:hover:text-orange-300 dark:hover:bg-orange-900/20 font-semibold"
-                  >
-                    {t("home.gotoPopular")}
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card> */}
-
-            {/* MBTI Section */}
-            <Card className="group h-full flex flex-col hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-200 dark:group-hover:bg-purple-800/50 transition-colors">
-                  <Brain className="w-8 h-8 text-purple-600 dark:text-purple-400" />
-                </div>
-                <CardTitle className="text-xl font-bold text-slate-900 dark:text-white">
-                  MBTI {t("home.test")}
-                </CardTitle>
-                <CardDescription className="text-slate-600 dark:text-slate-400">
-                  {t("home.mbtiDescription")}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="mt-auto">
-                <Link href={`/${locale}/mbti`}>
-                  <Button
-                    variant="ghost"
-                    className="w-full text-purple-600 hover:text-purple-700 hover:bg-purple-50 dark:text-purple-400 dark:hover:text-purple-300 dark:hover:bg-purple-900/20 font-semibold"
-                  >
-                    {t("home.start")}
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-
-            {/* Tarot Section */}
-            <Card className="group h-full flex flex-col hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-indigo-200 dark:group-hover:bg-indigo-800/50 transition-colors">
-                  <Sparkles className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
-                </div>
-                <CardTitle className="text-xl font-bold text-slate-900 dark:text-white">
-                  {t("home.tarotTests")}
-                </CardTitle>
-                <CardDescription className="text-slate-600 dark:text-slate-400">
-                  {t("home.tarotTestsDescription")}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="mt-auto">
-                <Link href={`${locale}/tarot`}>
-                  <Button
-                    variant="ghost"
-                    className="w-full text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:text-indigo-300 dark:hover:bg-indigo-900/20 font-semibold"
-                  >
-                    {t("home.gotoTarot")}
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-
-            {/* Playground Section */}
-            <Card className="group h-full flex flex-col hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200 dark:group-hover:bg-green-800/50 transition-colors">
-                  <Gamepad2 className="w-8 h-8 text-green-600 dark:text-green-400" />
-                </div>
-                <CardTitle className="text-xl font-bold text-slate-900 dark:text-white">
-                  {t("home.playground")}
-                </CardTitle>
-                <CardDescription className="text-slate-600 dark:text-slate-400">
-                  {t("home.playgroundDescription")}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="mt-auto">
-                <Link href={`${locale}/play/draw`}>
-                  <Button
-                    variant="ghost"
-                    className="w-full text-green-600 hover:text-green-700 hover:bg-green-50 dark:text-green-400 dark:hover:text-green-300 dark:hover:bg-green-900/20 font-semibold"
-                  >
-                    {t("home.gotoPlayground")}
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-
-            {/* Gallery Section */}
-            <Card className="group h-full flex flex-col hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-pink-100 dark:bg-pink-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-pink-200 dark:group-hover:bg-pink-800/50 transition-colors">
-                  <ImageIcon className="w-8 h-8 text-pink-600 dark:text-pink-400" />
-                </div>
-                <CardTitle className="text-xl font-bold text-slate-900 dark:text-white">
-                  {t("home.gallery")}
-                </CardTitle>
-                <CardDescription className="text-slate-600 dark:text-slate-400">
-                  {t("home.galleryDescription")}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="mt-auto">
-                <Link href={`/${locale}/gallery`}>
-                  <Button
-                    variant="ghost"
-                    className="w-full text-pink-600 hover:text-pink-700 hover:bg-pink-50 dark:text-pink-400 dark:hover:text-pink-300 dark:hover:bg-pink-900/20 font-semibold"
-                  >
-                    {t("home.gotoGallery")}
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Latest Tests Section (그대로) */}
-          <div className="mb-16">
-            <div className="flex items-center gap-3 mb-8">
-              <Clock className="w-8 h-8 text-purple-600 dark:text-purple-400" />
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
-                {t("home.latestTests")}
-              </h2>
-            </div>
-
-            <div className="grid [grid-template-columns:repeat(auto-fit,minmax(250px,1fr))] gap-6 mb-12">
-              {initialTests.length === 0
-                ? Array.from({ length: 10 }).map((_, i) => (
-                    <TestCardSkeleton key={i} />
-                  ))
-                : initialTests.map((test) => (
-                    <TestCard key={test.id} test={test} featured />
-                  ))}
-            </div>
-          </div>
-
-          {/* CTA Section (그대로) */}
-          <div className="text-center bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl p-10 text-white">
-            <h3 className="text-3xl md:text-4xl font-bold mb-4">
-              {t("home.startNow")}
-            </h3>
-            <p className="text-xl mb-6 text-purple-100">
-              {t("home.waitingForYou")}
-            </p>
-            <Link href={`/${locale}/test/list`}>
-              <Button
-                size="lg"
-                className="bg-white text-purple-600 hover:bg-purple-50 font-semibold"
-              >
-                {t("home.startFirstTest")}
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Section E: 에디터 픽 */}
+      {editorPickTests.length > 0 ? (
+        <EditorPickSection tests={editorPickTests} locale={locale} />
+      ) : (
+        <EditorPickSkeleton />
+      )}
     </div>
   );
 }
