@@ -45,14 +45,25 @@ export async function updateSession(request: NextRequest) {
     ? allowedEmailsEnv.split(",").map((email) => email.trim())
     : [];
 
-  const isAdminPath = request.nextUrl.pathname.startsWith("/admin");
-  const isLocalhost =
-    request.nextUrl.hostname === "localhost" && request.nextUrl.port === "3000";
+  // admin 경로 체크: /admin 또는 /[locale]/admin
+  const pathname = request.nextUrl.pathname;
+  const isAdminPath =
+    pathname.startsWith("/admin") ||
+    /\/[a-z]{2}\/admin/.test(pathname); // /ko/admin, /en/admin 등
 
-  if (isAdminPath && !allowedEmails.includes(user?.user_metadata.email)) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/sorry";
-    return NextResponse.redirect(url);
+  if (isAdminPath) {
+    // 로그인하지 않았거나 허용된 이메일이 아닌 경우
+    if (!user || !allowedEmails.includes(user.user_metadata?.email || "")) {
+      const url = request.nextUrl.clone();
+      // locale이 있으면 해당 locale의 홈으로, 없으면 기본 홈으로
+      const localeMatch = pathname.match(/\/([a-z]{2})\/admin/);
+      if (localeMatch) {
+        url.pathname = `/${localeMatch[1]}`;
+      } else {
+        url.pathname = "/ko"; // 기본 locale로 리다이렉트
+      }
+      return NextResponse.redirect(url);
+    }
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.

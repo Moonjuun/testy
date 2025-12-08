@@ -1,11 +1,15 @@
-// app/not-found.tsx
+// app/[locale]/not-found.tsx
 "use client";
 
 import Link from "next/link";
-import { Sparkles, Compass } from "lucide-react"; // 귀여운 분위기에 어울리는 아이콘 추가
+import { usePathname } from "next/navigation";
+import { Sparkles, Compass } from "lucide-react";
 import { useTranslation } from "react-i18next";
+
 export default function NotFound() {
   const { t } = useTranslation("common");
+  const pathname = usePathname();
+  const locale = pathname?.split("/")[1] || "ko";
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20 text-gray-900 dark:text-white p-4">
       <div className="text-center">
@@ -39,7 +43,7 @@ export default function NotFound() {
         </p>
 
         <Link
-          href="/"
+          href={`/${locale}`}
           className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-lg shadow-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105"
         >
           <Compass className="w-5 h-5 mr-3" />
