@@ -15,17 +15,18 @@ const translations = {
   vi: viTranslations,
 };
 
-// 서버에서 featuredTest 선택 (Hydration 오류 방지)
+// 서버에서 featuredTest 선택 (매 요청마다 랜덤하게 선택)
 function selectFeaturedTest(tests: NewTest[]): NewTest | null {
   if (tests.length === 0) return null;
 
   // 인기 있는 테스트들(조회수 1000 이상) 중에서 우선 선택
   const popularTests = tests.filter((test) => (test.view_count ?? 0) >= 1000);
 
-  // 인기 테스트가 있으면 그 중에서 첫 번째 선택, 없으면 전체에서 첫 번째 선택
-  // 서버에서는 일관된 결과를 위해 랜덤 대신 첫 번째를 선택
+  // 인기 테스트가 있으면 그 중에서 랜덤 선택, 없으면 전체에서 랜덤 선택
+  // 서버 컴포넌트는 매 요청마다 실행되므로 새로고침할 때마다 다른 테스트가 표시됨
   const candidates = popularTests.length > 0 ? popularTests : tests;
-  return candidates[0] || null;
+  const randomIndex = Math.floor(Math.random() * candidates.length);
+  return candidates[randomIndex] || null;
 }
 
 // 1. 함수를 async로 만듭니다.
