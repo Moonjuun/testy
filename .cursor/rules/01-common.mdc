@@ -17,7 +17,7 @@ alwaysApply: true
 - **State Management (Hybrid Strategy):**
   - **Server State:** TanStack Query v5 (@tanstack/react-query) - API 캐싱, 무한 스크롤
   - **Client UI State:** Zustand v5 - 모달 제어, 전역 UI 설정
-- **i18n:** next-intl
+- **i18n:** i18next + react-i18next (다국어 지원: ko, en, ja, vi)
 
 ## 2. 상태 관리 원칙 (State Management Rules)
 
@@ -48,78 +48,198 @@ alwaysApply: true
 
 아래 구조를 엄격히 준수한다.
 
-### Next.js 16 App Router + next-intl 구조
+### Next.js 16 App Router + 다국어 구조
 
 ```
-/src
+/
 ├── app/
-│   ├── api/                      # (선택) API Routes
-│   │   └── og/                   # OG Image 생성용
-│   ├── auth/                     # 🔴 [위치 변경] locale 밖으로 이동
-│   │   └── callback/
-│   │       └── route.ts          # 구글 로그인 콜백 처리 (UI 없음)
-│   ├── [locale]/
-│   │   ├── (legal)/              # 약관 등
-│   │   ├── admin/
-│   │   ├── category/
-│   │   ├── gallery/
-│   │   ├── mbti/
-│   │   ├── tarot/
+│   ├── [locale]/                 # 다국어 라우팅 (ko, en, ja, vi)
+│   │   ├── (legal)/              # 약관 등 (Route Group)
+│   │   │   ├── privacy/
+│   │   │   └── terms/
+│   │   ├── admin/                # 관리자 페이지
+│   │   ├── auth/                 # 인증 관련
+│   │   │   └── callback/
+│   │   │       └── route.ts      # 구글 OAuth 콜백 처리
+│   │   ├── category/             # 카테고리 페이지
+│   │   ├── gallery/              # 갤러리
+│   │   ├── mbti/                 # MBTI 테스트
+│   │   ├── play/                 # 게임 (draw, ladder, lunch)
+│   │   ├── tarot/                # 타로 카드
 │   │   ├── test/                 # 테스트 상세 페이지
-│   │   ├── layout.tsx
+│   │   ├── layout.tsx            # Locale 레이아웃 (Supabase Auth, i18n)
 │   │   ├── page.tsx              # 메인 페이지
-│   │   └── not-found.tsx         # [이동 추천] locale 내부로 넣으면 번역된 404 가능
-│   ├── globals.css
-│   ├── layout.tsx                # Root Layout (html, body)
-│   ├── robots.ts
-│   └── sitemap.ts
+│   │   └── not-found.tsx         # 404 페이지 (다국어 지원)
+│   ├── globals.css               # 전역 스타일
+│   ├── layout.tsx                # Root Layout (html, body, 메타데이터)
+│   ├── robots.ts                 # robots.txt 생성
+│   └── sitemap.ts                # sitemap.xml 생성 (다국어 URL 포함)
 ├── components/
-│   ├── features/
-│   │   └── auth/
-│   │       ├── LoginModal.tsx    # 🟢 [신규] 로그인 모달
-│   │       └── GoogleBtn.tsx     # 🟢 [신규] 구글 로그인 버튼
+│   ├── modal/
+│   │   └── auth-modal.tsx        # 인증 모달
 │   └── layout/
-│       └── Header.tsx            # 로그인 버튼이 있는 헤더
-├── store/                        # (기존 폴더 유지)
-│   └── useAuthStore.ts           # 🟢 [신규] 모달 상태 관리
+│       └── Header.tsx            # 헤더 (로그인 버튼 포함)
 ├── lib/
-│   └── supabase/                 # Supabase 클라이언트 설정
-├── middleware.ts                 # i18n 및 Auth 미들웨어
+│   └── supabase/
+│       ├── server.ts              # Server Component용 Supabase 클라이언트
+│       ├── client.ts              # Client Component용 Supabase 클라이언트
+│       └── middleware.ts          # 미들웨어용 Supabase 세션 관리
+├── middleware.ts                 # Next.js 미들웨어 (i18n 라우팅 + Supabase Auth)
+└── public/
+    └── locales/                  # i18next 번역 파일
+        ├── ko/
+        ├── en/
+        ├── ja/
+        └── vi/
 ```
 
-### next-intl 필수 설정
+### Next.js 16 + 다국어 + Supabase Auth 필수 설정
 
-1. **`next.config.ts`**:
+1. **`next.config.mjs`**:
 
 ```ts
-import createNextIntlPlugin from "next-intl/plugin";
-const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
-export default withNextIntl({
-  /* config */
-});
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com", // Google 프로필 이미지
+      },
+      {
+        protocol: "https",
+        hostname: "*.supabase.co", // Supabase Storage 이미지
+      },
+    ],
+  },
+};
+
+export default nextConfig;
 ```
 
-2. **`src/middleware.ts`** (프로젝트 루트가 아닌 `src/` 폴더에 위치):
+2. **`middleware.ts`** (프로젝트 루트에 위치):
 
 ```ts
-import createMiddleware from "next-intl/middleware";
-import { routing } from "./i18n/routing";
-export default createMiddleware(routing);
+import { NextRequest, NextResponse } from "next/server";
+import { updateSession } from "./lib/supabase/middleware";
+
+const locales = ["ko", "en", "ja", "vi"];
+
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // 정적 자산 및 SEO 파일 제외
+  if (
+    /\.[a-zA-Z0-9]+$/.test(pathname) ||
+    ["/robots.txt", "/sitemap.xml", "/ads.txt"].includes(pathname)
+  ) {
+    return NextResponse.next();
+  }
+
+  // API 경로는 Supabase 세션만 업데이트
+  if (pathname.startsWith("/api")) {
+    return await updateSession(request);
+  }
+
+  // 이미 locale이 붙은 경로면 세션만 업데이트
+  if (
+    locales.some(
+      (locale) =>
+        pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+    )
+  ) {
+    return await updateSession(request);
+  }
+
+  // locale 없을 경우 브라우저 언어 감지 후 리디렉션
+  const locale = detectLocale(request);
+  request.nextUrl.pathname = `/${locale}${pathname}`;
+  return NextResponse.redirect(request.nextUrl);
+}
+
 export const config = {
-  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
+  matcher: [
+    "/((?!_next/|favicon.ico|robots.txt|ads\\.txt|sitemap\\.xml|api).*)",
+  ],
 };
 ```
 
-3. **`src/app/[locale]/layout.tsx`** (Locale 레이아웃):
+3. **`app/layout.tsx`** (루트 레이아웃):
 
 ```ts
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
-import { routing } from "@/i18n/routing";
+import type { Metadata } from "next";
+import "./globals.css";
+
+// ⚠️ Next.js 16: generateMetadata는 async 필수
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params; // ⚠️ 필수: await 사용
+
+  return {
+    title: "Testy",
+    metadataBase: new URL("https://testy.im"),
+    alternates: {
+      languages: {
+        "ko-KR": "https://testy.im/ko",
+        "en-US": "https://testy.im/en",
+        "ja-JP": "https://testy.im/ja",
+        "vi-VN": "https://testy.im/vi",
+      },
+    },
+  };
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html>
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+4. **`app/[locale]/layout.tsx`** (Locale 레이아웃):
+
+```ts
+import type { Metadata } from "next";
+import { createClientForServer } from "@/lib/supabase/server";
 
 // ⚠️ 필수: async 함수로 export
 export async function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
+  return [
+    { locale: "ko" },
+    { locale: "en" },
+    { locale: "ja" },
+    { locale: "vi" },
+  ];
+}
+
+// ⚠️ Next.js 16: generateMetadata는 async 필수, params는 Promise
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params; // ⚠️ 필수: await 사용
+
+  return {
+    title: `Testy - ${locale}`,
+    description: "...",
+    openGraph: {
+      locale: locale,
+      // ...
+    },
+    alternates: {
+      canonical: `https://testy.im/${locale}`,
+    },
+  };
 }
 
 export default async function LocaleLayout({
@@ -130,49 +250,117 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>; // ⚠️ Next.js 16: params는 Promise 타입
 }) {
   const { locale } = await params; // ⚠️ 필수: await 사용
-  const messages = await getMessages({ locale });
+
+  // Supabase Auth: 서버에서 사용자 정보 가져오기
+  const supabase = await createClientForServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
-    <NextIntlClientProvider messages={messages}>
-      {children}
-    </NextIntlClientProvider>
+    <div lang={locale}>
+      {/* 사용자 정보를 Client Component로 전달 */}
+      <ClientLayout user={user} locale={locale}>
+        {children}
+      </ClientLayout>
+    </div>
   );
 }
 ```
 
-4. **`src/app/[locale]/page.tsx`** (페이지):
+5. **`app/[locale]/auth/callback/route.ts`** (구글 OAuth 콜백):
 
 ```ts
-import { routing } from "@/i18n/routing";
+import { createClientForServer } from "@/lib/supabase/server";
+import { NextRequest, NextResponse } from "next/server";
 
-// ⚠️ 필수: async 함수로 export
-export async function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ locale: string }> }
+) {
+  const { locale } = await params; // ⚠️ Next.js 16: await 필수
+  const { searchParams, origin } = new URL(request.url);
+  const code = searchParams.get("code");
 
-export default async function HomePage({
-  params,
-}: {
-  params: Promise<{ locale: string }>; // ⚠️ Next.js 16: params는 Promise 타입
-}) {
-  const { locale } = await params; // ⚠️ 필수: await 사용
-  // ...
+  if (code) {
+    const supabase = await createClientForServer();
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (!error) {
+      return NextResponse.redirect(`${origin}/${locale}`);
+    }
+  }
+
+  return NextResponse.redirect(`${origin}/${locale}/auth/error`);
 }
 ```
 
-5. **루트 레이아웃 (`src/app/layout.tsx`)**:
+6. **`app/sitemap.ts`** (SEO: 다국어 사이트맵):
 
-   - ⚠️ locale 파라미터를 받지 않음 (params 없음)
-   - ⚠️ html, body 태그만 포함
-   - ⚠️ 전역 설정(폰트, 메타데이터 등)만 처리
-   - ⚠️ `globals.css`는 `src/app/globals.css`에 위치하고 `import "./globals.css"`로 import
+```ts
+import { MetadataRoute } from "next";
 
-6. **중요 주의사항**:
-   - ⚠️ `generateStaticParams`는 반드시 `async` 함수여야 함
-   - ⚠️ Next.js 16에서 `params`는 `Promise<{ locale: string }>` 타입이므로 `await params` 필수
-   - ⚠️ `middleware.ts`는 `src/` 폴더에 위치 (프로젝트 루트가 아님)
-   - ⚠️ `globals.css`는 `src/app/globals.css`에 위치
-   - ⚠️ 루트 레이아웃과 Locale 레이아웃을 명확히 분리 (루트는 html/body만, Locale은 NextIntlClientProvider)
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = "https://testy.im";
+  const locales = ["ko", "en", "ja", "vi"] as const;
+
+  // 정적 URL
+  const staticUrls = locales.flatMap((locale) => [
+    { url: `${baseUrl}/${locale}`, lastModified: new Date() },
+    // ...
+  ]);
+
+  // 동적 URL (DB에서 가져오기)
+  const dynamicUrls = (await Promise.all(
+    locales.map(async (locale) => {
+      // 데이터 페칭...
+      return [...];
+    })
+  )).flat();
+
+  return [...staticUrls, ...dynamicUrls];
+}
+```
+
+7. **`app/robots.ts`** (SEO: robots.txt):
+
+```ts
+import { MetadataRoute } from "next";
+
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: [{ userAgent: "*", allow: "/", disallow: ["/admin", "/api"] }],
+    sitemap: "https://testy.im/sitemap.xml",
+  };
+}
+```
+
+8. **SEO 최적화 필수 사항**:
+
+   - ⚠️ 모든 페이지에 `generateMetadata` 함수 구현 (async 필수)
+   - ⚠️ `alternates.languages`로 다국어 hreflang 태그 자동 생성
+   - ⚠️ `alternates.canonical`로 정규 URL 지정
+   - ⚠️ Open Graph 이미지는 1200x630px 권장
+   - ⚠️ `sitemap.ts`에서 정적/동적 URL 모두 포함
+   - ⚠️ `robots.ts`에서 관리자 페이지 제외 설정
+
+9. **Supabase Auth + 구글 OAuth 통합**:
+
+   - ⚠️ 서버: `createClientForServer()` 사용 (쿠키 기반 세션)
+   - ⚠️ 클라이언트: `createClient()` 사용 (브라우저 클라이언트)
+   - ⚠️ 미들웨어: `updateSession()`으로 모든 요청에서 세션 갱신
+   - ⚠️ OAuth 리디렉션: `redirectTo`에 `/${locale}/auth/callback` 지정
+   - ⚠️ 콜백 처리: `exchangeCodeForSession()`으로 코드 교환
+
+10. **중요 주의사항**:
+
+- ⚠️ Next.js 16에서 `params`, `searchParams`는 모두 `Promise` 타입이므로 `await` 필수
+- ⚠️ `generateMetadata`와 `generateStaticParams`는 반드시 `async` 함수
+- ⚠️ 루트 레이아웃(`app/layout.tsx`)과 Locale 레이아웃(`app/[locale]/layout.tsx`) 분리
+- ⚠️ Supabase Auth는 서버에서 `createClientForServer()`로 처리
+- ⚠️ 구글 OAuth 콜백은 `app/[locale]/auth/callback/route.ts`에 위치
+- ⚠️ 다국어 URL은 `alternates.languages`로 hreflang 태그 자동 생성
+- ⚠️ 미들웨어에서 SEO 파일(`robots.txt`, `sitemap.xml`) 제외 필수
 
 ## 5. GIT 컨벤션 (Conventional Commits)
 
@@ -215,46 +403,155 @@ AI는 작업을 시작하기 전에 다음 단계를 수행해야 한다.
 
 ## 7. 주요 패턴 예시
 
-### Server Component (기본)
+### Server Component (기본) - Next.js 16
 
 ```tsx
-// src/app/[locale]/anime/[id]/page.tsx
-import { getAnime } from "@/lib/tmdb/api";
+// app/[locale]/test/[id]/page.tsx
+import { getTestById } from "@/lib/supabase/test/getTestById";
 
-export default async function AnimePage({
+// ⚠️ Next.js 16: params는 Promise 타입
+export default async function TestPage({
   params,
 }: {
-  params: { id: string; locale: string };
+  params: Promise<{ id: string; locale: string }>;
 }) {
-  const anime = await getAnime(params.id);
-  return <AnimeDetail anime={anime} />;
+  const { id, locale } = await params; // ⚠️ 필수: await 사용
+  const test = await getTestById(id, locale);
+
+  return <TestDetail test={test} locale={locale} />;
+}
+```
+
+### Server Component with Metadata (SEO 최적화)
+
+```tsx
+// app/[locale]/test/[id]/page.tsx
+import type { Metadata } from "next";
+
+// ⚠️ Next.js 16: generateMetadata는 async 필수
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string; locale: string }>;
+}): Promise<Metadata> {
+  const { id, locale } = await params;
+  const test = await getTestById(id, locale);
+
+  return {
+    title: test.title,
+    description: test.description,
+    openGraph: {
+      title: test.title,
+      description: test.description,
+      images: [test.thumbnail_url],
+      locale: locale,
+    },
+    alternates: {
+      canonical: `https://testy.im/${locale}/test/${id}`,
+      languages: {
+        "ko-KR": `https://testy.im/ko/test/${id}`,
+        "en-US": `https://testy.im/en/test/${id}`,
+        "ja-JP": `https://testy.im/ja/test/${id}`,
+      },
+    },
+  };
 }
 ```
 
 ### Client Component (인터랙션 필요시)
 
 ```tsx
-// src/components/features/AnimeList.tsx
+// components/test/TestView.tsx
 "use client";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useTranslations } from "react-i18next";
 
-export function AnimeList() {
+export function TestList({ locale }: { locale: string }) {
+  const { t } = useTranslations("common");
+
   const { data, fetchNextPage } = useInfiniteQuery({
-    queryKey: ["anime"],
-    queryFn: fetchAnime,
+    queryKey: ["tests", locale],
+    queryFn: ({ pageParam }) => fetchTests({ locale, page: pageParam }),
   });
-  // ...
+
+  return (
+    <div>
+      <h1>{t("test_list_title")}</h1>
+      {/* ... */}
+    </div>
+  );
+}
+```
+
+### Supabase Auth (서버)
+
+```tsx
+// app/[locale]/layout.tsx
+import { createClientForServer } from "@/lib/supabase/server";
+
+export default async function LocaleLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
+  // 서버에서 사용자 정보 가져오기
+  const supabase = await createClientForServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  return (
+    <ClientLayout user={user} locale={locale}>
+      {children}
+    </ClientLayout>
+  );
+}
+```
+
+### Supabase Auth (클라이언트)
+
+```tsx
+// components/modal/auth-modal.tsx
+"use client";
+
+import { createClient } from "@/lib/supabase/client";
+
+export function GoogleSignInButton() {
+  const supabase = createClient();
+
+  const handleSignIn = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/${locale}/auth/callback`,
+      },
+    });
+
+    if (error) console.error(error);
+  };
+
+  return <button onClick={handleSignIn}>구글로 로그인</button>;
 }
 ```
 
 ### Zustand Store (UI 상태)
 
 ```tsx
-// src/stores/uiStore.ts
+// store/useAuthStore.ts
 import { create } from "zustand";
 
-export const useUIStore = create<UIState>((set) => ({
+interface AuthState {
+  isModalOpen: boolean;
+  openModal: () => void;
+  closeModal: () => void;
+}
+
+export const useAuthStore = create<AuthState>((set) => ({
   isModalOpen: false,
   openModal: () => set({ isModalOpen: true }),
   closeModal: () => set({ isModalOpen: false }),
@@ -264,14 +561,27 @@ export const useUIStore = create<UIState>((set) => ({
 ### Server Action (데이터 변형)
 
 ```tsx
-// src/actions/review.ts
+// lib/supabase/action.ts
 "use server";
 
+import { createClientForServer } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
-export async function createReview(formData: FormData) {
-  const review = await saveReview(formData);
-  revalidatePath("/anime/[id]");
-  return review;
+export async function saveTestResult(
+  testId: string,
+  result: TestResult,
+  locale: string
+) {
+  const supabase = await createClientForServer();
+  const { data, error } = await supabase
+    .from("test_results")
+    .insert({ test_id: testId, result });
+
+  if (error) throw error;
+
+  // 캐시 무효화
+  revalidatePath(`/${locale}/test/${testId}`);
+
+  return data;
 }
 ```
