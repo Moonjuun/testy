@@ -259,6 +259,12 @@
     "stronglyDisagree": "まったくそう思わない"
   },
   "mbti": {
+    "selectMode": "モードを選択",
+    "basicMode": "基本モード",
+    "basicModeDescription": "40の重要な質問で素早く診断",
+    "advancedMode": "詳細モード",
+    "advancedModeDescription": "100の詳細な質問で深く分析",
+    "startTest": "MBTIテスト開始",
     "INTJ": "建築家",
     "INTP": "論理学者",
     "ENTJ": "指揮官",

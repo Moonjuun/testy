@@ -259,6 +259,12 @@
     "stronglyDisagree": "Hoàn toàn không đồng ý"
   },
   "mbti": {
+    "selectMode": "Chọn chế độ",
+    "basicMode": "Chế độ cơ bản",
+    "basicModeDescription": "Kiểm tra nhanh với 40 câu hỏi cốt lõi",
+    "advancedMode": "Chế độ nâng cao",
+    "advancedModeDescription": "Phân tích sâu với 100 câu hỏi chi tiết",
+    "startTest": "Bắt đầu kiểm tra MBTI",
     "INTJ": "Kiến trúc sư",
     "INTP": "Nhà tư duy",
     "ENTJ": "Chỉ huy",

@@ -89,7 +89,21 @@ export default function TestViewMbti({
       }
     });
 
-    const maxScorePerDimension = 25 * 2; // Each dimension has a max raw score of 50
+    // 각 dimension별 질문 개수 계산 (동적)
+    const dimensionCounts = {
+      EI: initialTestData.questions.filter((q) => q.dimension === "EI").length,
+      SN: initialTestData.questions.filter((q) => q.dimension === "SN").length,
+      TF: initialTestData.questions.filter((q) => q.dimension === "TF").length,
+      JP: initialTestData.questions.filter((q) => q.dimension === "JP").length,
+    };
+
+    // 각 dimension의 최대 점수 계산 (질문 개수 * 2점)
+    const maxScorePerDimension = Math.max(
+      dimensionCounts.EI * 2,
+      dimensionCounts.SN * 2,
+      dimensionCounts.TF * 2,
+      dimensionCounts.JP * 2
+    );
 
     // Helper function to amplify the difference from the 50% midpoint
     const amplifyScore = (rawScore: number) => {

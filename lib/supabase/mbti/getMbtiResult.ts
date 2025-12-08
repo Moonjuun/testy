@@ -59,8 +59,23 @@ export async function getMbtiResult(
     .eq("type", mbtiType)
     .single<RawMbtiTypeInfo>();
 
-  if (error || !data) {
-    console.error("MBTI 유형 정보 로딩 에러:", error);
+  if (error) {
+    console.error("MBTI 유형 정보 로딩 에러:", {
+      error,
+      testCode,
+      mbtiType,
+      message: error.message,
+      details: error.details,
+      hint: error.hint,
+    });
+    return null;
+  }
+
+  if (!data) {
+    console.error("MBTI 유형 정보를 찾을 수 없습니다:", {
+      testCode,
+      mbtiType,
+    });
     return null;
   }
 

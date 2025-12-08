@@ -12,27 +12,25 @@ interface MbtiQuestion {
 export async function getMbtiTest(test_code: string, locale: string) {
   const supabase = createClient();
 
-  // 1. 테스트 정보를 다국어로 하드코딩합니다.
+  // 1. 테스트 정보를 다국어로 하드코딩합니다. (test_code에 따라 다른 설명 표시)
+  const questionCount = test_code === "basic_v1" ? 40 : 100;
+
   const testInfoByLocale = {
     ko: {
       title: "MBTI 성격 유형 검사",
-      description:
-        "100개의 질문을 통해 당신의 성격 유형을 알아보세요.\n※ 본 테스트는 자기 이해를 돕기 위한 참고 자료이며, 공식 MBTI® 검사가 아닙니다.",
+      description: `${questionCount}개의 질문을 통해 당신의 성격 유형을 알아보세요.\n※ 본 테스트는 자기 이해를 돕기 위한 참고 자료이며, 공식 MBTI® 검사가 아닙니다.`,
     },
     en: {
       title: "MBTI Personality Test",
-      description:
-        "Find out your personality type through 100 questions.\n※ This test is a reference material to aid self-understanding and is not the official MBTI® assessment.",
+      description: `Find out your personality type through ${questionCount} questions.\n※ This test is a reference material to aid self-understanding and is not the official MBTI® assessment.`,
     },
     ja: {
       title: "MBTI性格診断テスト",
-      description:
-        "100の質問を通じてあなたの性格タイプを調べてみましょう。\n※ このテストは自己理解を助けるための参考資料であり、公式のMBTI®検査ではありません。",
+      description: `${questionCount}の質問を通じてあなたの性格タイプを調べてみましょう。\n※ このテストは自己理解を助けるための参考資料であり、公式のMBTI®検査ではありません。`,
     },
     vi: {
       title: "Bài kiểm tra tính cách MBTI",
-      description:
-        "Tìm hiểu loại tính cách của bạn qua 100 câu hỏi.\n※ Bài kiểm tra này là tài liệu tham khảo nhằm giúp bạn tự khám phá bản thân và không phải là bài đánh giá MBTI® chính thức.",
+      description: `Tìm hiểu loại tính cách của bạn qua ${questionCount} câu hỏi.\n※ Bài kiểm tra này là tài liệu tham khảo nhằm giúp bạn tự khám phá bản thân và không phải là bài đánh giá MBTI® chính thức.`,
     },
   };
 

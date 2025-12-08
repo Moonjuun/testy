@@ -259,6 +259,12 @@
     "stronglyDisagree": "Strongly Disagree"
   },
   "mbti": {
+    "selectMode": "Select Mode",
+    "basicMode": "Basic Mode",
+    "basicModeDescription": "Quick test with 40 essential questions",
+    "advancedMode": "Advanced Mode",
+    "advancedModeDescription": "In-depth analysis with 100 detailed questions",
+    "startTest": "Start MBTI Test",
     "INTJ": "Architect",
     "INTP": "Thinker",
     "ENTJ": "Commander",

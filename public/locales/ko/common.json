@@ -259,6 +259,12 @@
     "stronglyDisagree": "매우 아니다"
   },
   "mbti": {
+    "selectMode": "모드 선택",
+    "basicMode": "기본 모드",
+    "basicModeDescription": "40개의 핵심 질문으로 빠르게 알아보기",
+    "advancedMode": "심화 모드",
+    "advancedModeDescription": "100개의 상세 질문으로 깊이 있게 분석하기",
+    "startTest": "MBTI 테스트 시작",
     "score": "점수",
     "bestChem": "환상의 케미",
     "worstChem": "환장의 케미",
