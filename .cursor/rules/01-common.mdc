@@ -13,6 +13,7 @@ alwaysApply: true
 - **Language:** TypeScript 5.x (Strict Mode)
 - **Styling:** Tailwind CSS 4.x (or latest compatible v3.4+)
 - **Backend:** Supabase (Auth, DB)
+- **Package Manager:** Yarn (yarn.lock 사용, package-lock.json 금지)
 - **State Management (Hybrid Strategy):**
   - **Server State:** TanStack Query v5 (@tanstack/react-query) - API 캐싱, 무한 스크롤
   - **Client UI State:** Zustand v5 - 모달 제어, 전역 UI 설정
@@ -199,8 +200,18 @@ AI는 작업을 시작하기 전에 다음 단계를 수행해야 한다.
    - Server/Client Component 분리가 적절한지 확인
    - TypeScript 타입 안정성 확인 (`any` 금지)
 5. **확인 (Verify):**
-   - `npm run build`를 통해 빌드 오류가 없는지 확인
-   - `npm run lint`로 코드 품질 검증
+   - `yarn build`를 통해 빌드 오류가 없는지 확인
+   - `yarn lint`로 코드 품질 검증
+
+### 패키지 매니저 규칙 (Package Manager Rules)
+
+- **Yarn 전용:** 이 프로젝트는 **Yarn**만 사용한다.
+  - 패키지 설치: `yarn add <package>` 또는 `yarn add -D <package>`
+  - 패키지 제거: `yarn remove <package>`
+  - 의존성 업데이트: `yarn upgrade` 또는 `yarn upgrade <package>`
+  - **금지:** `npm install`, `npm install -g`, `npx` 등의 npm 명령어 사용 금지
+  - **금지:** `package-lock.json` 파일 생성 금지 (`.gitignore`에 포함됨)
+  - **필수:** `yarn.lock` 파일만 사용하고 커밋에 포함
 
 ## 7. 주요 패턴 예시
 
