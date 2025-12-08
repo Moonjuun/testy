@@ -6,7 +6,19 @@ import { Inter } from "next/font/google";
 import ClientLayout from "@/components/ClientLayout";
 import { createClientForServer } from "@/lib/supabase/server";
 import { Analytics } from "@vercel/analytics/next";
+import koTranslations from "@/public/locales/ko/common.json";
+import enTranslations from "@/public/locales/en/common.json";
+import jaTranslations from "@/public/locales/ja/common.json";
+import viTranslations from "@/public/locales/vi/common.json";
+
 const inter = Inter({ subsets: ["latin"] });
+
+const translations = {
+  ko: koTranslations,
+  en: enTranslations,
+  ja: jaTranslations,
+  vi: viTranslations,
+};
 
 const metadataTranslations = {
   ko: {
@@ -133,9 +145,20 @@ export default async function LocaleLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
+  const localeTranslations =
+    translations[locale as keyof typeof translations] || translations.en;
+
   return (
     <div lang={locale} className={inter.className} suppressHydrationWarning>
-      <ClientLayout user={user} locale={locale}>
+      <ClientLayout
+        user={user}
+        locale={locale}
+        footerTranslations={{
+          termsLink: localeTranslations.modal?.termsLink || "Terms of Service",
+          privacyLink:
+            localeTranslations.modal?.privacyLink || "Privacy Policy",
+        }}
+      >
         {children}
         <Analytics />
       </ClientLayout>

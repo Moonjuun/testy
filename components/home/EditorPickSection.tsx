@@ -4,25 +4,33 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Clock, Users, ArrowRight } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import { NewTest } from "@/types/test";
-import { useLanguageStore } from "@/store/useLanguageStore";
 
 interface EditorPickSectionProps {
   tests: NewTest[];
   locale: string;
+  translations: {
+    editorPick: string;
+    editorPickDescription: string;
+    minutes: string;
+    takes: string;
+    tenThousand: string;
+    people: string;
+    participated: string;
+  };
 }
 
-export function EditorPickSection({ tests, locale }: EditorPickSectionProps) {
-  const { t } = useTranslation("common");
-  const language = useLanguageStore((state) => state.currentLanguage);
-
+export function EditorPickSection({
+  tests,
+  locale,
+  translations,
+}: EditorPickSectionProps) {
   if (tests.length === 0) {
     return (
       <section className="py-12 md:py-16 px-4 md:px-8 bg-zinc-50 dark:bg-zinc-900">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-white mb-8">
-            {t("home.editorPick") || "에디터 픽"}
+            {translations.editorPick}
           </h2>
           <div className="space-y-4">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -49,11 +57,10 @@ export function EditorPickSection({ tests, locale }: EditorPickSectionProps) {
           className="mb-8"
         >
           <h2 className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-white mb-2">
-            {t("home.editorPick") || "에디터 픽"}
+            {translations.editorPick}
           </h2>
           <p className="text-zinc-600 dark:text-zinc-400 text-sm md:text-base">
-            {t("home.editorPickDescription") ||
-              "추천하는 인기 테스트를 만나보세요"}
+            {translations.editorPickDescription}
           </p>
         </motion.div>
 
@@ -67,11 +74,7 @@ export function EditorPickSection({ tests, locale }: EditorPickSectionProps) {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1, duration: 0.4 }}
             >
-              <Link
-                href={
-                  language ? `/${language}/test/${test.id}` : `/test/${test.id}`
-                }
-              >
+              <Link href={`/${locale}/test/${test.id}`}>
                 <motion.div
                   whileHover={{ x: 4 }}
                   className="group bg-white dark:bg-zinc-800 rounded-xl p-4 md:p-6 border border-zinc-300 dark:border-zinc-700 shadow-lg hover:shadow-xl dark:shadow-zinc-900/50 transition-all duration-300 flex gap-4 md:gap-6"
@@ -102,8 +105,7 @@ export function EditorPickSection({ tests, locale }: EditorPickSectionProps) {
                       <div className="flex items-center gap-1.5">
                         <Clock className="w-4 h-4" />
                         <span>
-                          {t("home.minutes") || "3분"}{" "}
-                          {t("home.takes") || "소요"}
+                          {translations.minutes} {translations.takes}
                         </span>
                       </div>
                       {test.view_count && (
@@ -113,22 +115,20 @@ export function EditorPickSection({ tests, locale }: EditorPickSectionProps) {
                             {test.view_count >= 10000
                               ? locale === "en"
                                 ? `${(test.view_count / 1000).toFixed(1)}${
-                                    t("home.tenThousand") || "K"
-                                  } ${t("home.participated") || "participated"}`
+                                    translations.tenThousand
+                                  } ${translations.participated}`
                                 : locale === "vi"
                                 ? `${(test.view_count / 1000).toFixed(1)} ${
-                                    t("home.tenThousand") || "nghìn"
-                                  } ${t("home.people") || "người"} ${
-                                    t("home.participated") || "tham gia"
+                                    translations.tenThousand
+                                  } ${translations.people} ${
+                                    translations.participated
                                   }`
                                 : `${(test.view_count / 10000).toFixed(1)}${
-                                    t("home.tenThousand") || "만"
-                                  }${t("home.people") || "명"} ${
-                                    t("home.participated") || "참여"
+                                    translations.tenThousand
+                                  }${translations.people} ${
+                                    translations.participated
                                   }`
-                              : `${test.view_count}${
-                                  t("home.people") || "명"
-                                } ${t("home.participated") || "참여"}`}
+                              : `${test.view_count}${translations.people} ${translations.participated}`}
                           </span>
                         </div>
                       )}
@@ -153,4 +153,3 @@ export function EditorPickSection({ tests, locale }: EditorPickSectionProps) {
     </section>
   );
 }
-

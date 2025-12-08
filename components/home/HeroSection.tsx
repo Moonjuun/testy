@@ -5,18 +5,21 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Play } from "lucide-react";
 import { NewTest } from "@/types/test";
-import { useLanguageStore } from "@/store/useLanguageStore";
-import { useTranslation } from "react-i18next";
 
 interface HeroSectionProps {
   featuredTest: NewTest | null;
   locale: string;
+  translations: {
+    featured: string;
+    startNow: string;
+  };
 }
 
-export function HeroSection({ featuredTest, locale }: HeroSectionProps) {
-  const language = useLanguageStore((state) => state.currentLanguage);
-  const { t } = useTranslation("common");
-
+export function HeroSection({
+  featuredTest,
+  locale,
+  translations,
+}: HeroSectionProps) {
   if (!featuredTest) {
     return (
       <section className="relative h-[60vh] min-h-[500px] bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-900 dark:to-zinc-800 flex items-center justify-center">
@@ -55,7 +58,7 @@ export function HeroSection({ featuredTest, locale }: HeroSectionProps) {
         >
           <div className="mb-4">
             <span className="inline-block px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-semibold border border-white/30">
-              {t("home.featured") || "Featured"}
+              {translations.featured}
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
@@ -70,15 +73,11 @@ export function HeroSection({ featuredTest, locale }: HeroSectionProps) {
             className="mb-4"
           >
             <Link
-              href={
-                language
-                  ? `/${language}/test/${featuredTest.id}`
-                  : `/test/${featuredTest.id}`
-              }
+              href={`/${locale}/test/${featuredTest.id}`}
               className="inline-flex items-center gap-3 bg-purple-600 dark:bg-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-purple-700 dark:hover:bg-purple-700 transition-colors shadow-xl shadow-purple-900/20"
             >
               <Play className="w-5 h-5" />
-              {t("home.startNow") || "지금 시작하기"}
+              {translations.startNow}
               <ArrowRight className="w-5 h-5" />
             </Link>
           </motion.div>

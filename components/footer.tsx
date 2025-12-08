@@ -1,9 +1,14 @@
 import Link from "next/link";
 import { Heart, Mail, MessageCircle } from "lucide-react";
-import { useTranslation } from "react-i18next";
 
-export function Footer() {
-  const { t } = useTranslation();
+interface FooterProps {
+  translations: {
+    termsLink: string;
+    privacyLink: string;
+  };
+}
+
+export function Footer({ translations }: FooterProps) {
   return (
     <footer className="bg-gray-900 dark:bg-gray-950 text-white py-12">
       <div className="container mx-auto px-4">
@@ -130,14 +135,14 @@ export function Footer() {
               href="/terms"
               className="text-gray-400 hover:text-white transition-colors"
             >
-              {t("modal.termsLink")}
+              {translations.termsLink}
             </Link>
 
             <Link
               href="/privacy"
               className="text-gray-400 hover:text-white transition-colors"
             >
-              {t("modal.privacyLink")}
+              {translations.privacyLink}
             </Link>
           </div>
         </div>

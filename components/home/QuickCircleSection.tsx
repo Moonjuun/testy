@@ -12,7 +12,6 @@ import {
   Star,
   Zap,
 } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 
 interface QuickCategory {
@@ -25,10 +24,18 @@ interface QuickCategory {
 
 interface QuickCircleSectionProps {
   locale: string;
+  translations: {
+    new: string;
+    popular: string;
+    tarot: string;
+    love: string;
+  };
 }
 
-export function QuickCircleSection({ locale }: QuickCircleSectionProps) {
-  const { t } = useTranslation("common");
+export function QuickCircleSection({
+  locale,
+  translations,
+}: QuickCircleSectionProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "center",
     loop: false,
@@ -39,21 +46,21 @@ export function QuickCircleSection({ locale }: QuickCircleSectionProps) {
   const categories: QuickCategory[] = [
     {
       id: "new",
-      label: t("home.new") || "신규",
+      label: translations.new,
       icon: Sparkles,
       href: `/${locale}/test/list?filter=new`,
       color: "from-purple-500 to-pink-500",
     },
     {
       id: "popular",
-      label: t("home.popular") || "인기",
+      label: translations.popular,
       icon: Star,
       href: `/${locale}/test/list?filter=popular`,
       color: "from-orange-500 to-red-500",
     },
     {
       id: "tarot",
-      label: t("home.tarot") || "타로",
+      label: translations.tarot,
       icon: Sparkles,
       href: `/${locale}/tarot`,
       color: "from-indigo-500 to-purple-500",
@@ -67,7 +74,7 @@ export function QuickCircleSection({ locale }: QuickCircleSectionProps) {
     },
     {
       id: "love",
-      label: t("home.love") || "연애",
+      label: translations.love,
       icon: Heart,
       href: `/${locale}/test/list?category=love`,
       color: "from-pink-500 to-rose-500",
@@ -142,4 +149,3 @@ export function QuickCircleSection({ locale }: QuickCircleSectionProps) {
     </section>
   );
 }
-

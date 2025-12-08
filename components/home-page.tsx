@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { NewTest } from "@/types/test";
 import { HeroSection } from "@/components/home/HeroSection";
 import { QuickCircleSection } from "@/components/home/QuickCircleSection";
@@ -11,6 +10,46 @@ import { EditorPickSection } from "@/components/home/EditorPickSection";
 interface HomePageProps {
   locale: string;
   initialTests: NewTest[];
+  featuredTest: NewTest | null;
+  translations: {
+    featured: string;
+    startNow: string;
+    new: string;
+    popular: string;
+    tarot: string;
+    love: string;
+    editorPick: string;
+    editorPickDescription: string;
+    mbtiCollection: string;
+    mbtiTypes: {
+      INTJ: string;
+      INTP: string;
+      ENTJ: string;
+      ENTP: string;
+      INFJ: string;
+      INFP: string;
+      ENFJ: string;
+      ENFP: string;
+      ISTJ: string;
+      ISFJ: string;
+      ESTJ: string;
+      ESFJ: string;
+      ISTP: string;
+      ISFP: string;
+      ESTP: string;
+      ESFP: string;
+    };
+    mysticZone: string;
+    tarotTitle: string;
+    tarotDescription: string;
+    clickToReveal: string;
+    exploreTarot: string;
+    minutes: string;
+    takes: string;
+    tenThousand: string;
+    people: string;
+    participated: string;
+  };
 }
 
 // Skeleton 컴포넌트들
@@ -99,23 +138,12 @@ function EditorPickSkeleton() {
   );
 }
 
-export default function HomePage({ locale, initialTests }: HomePageProps) {
-  // 히어로 배너용: 랜덤으로 선택 (새로고침할 때마다 변경)
-  const featuredTest = useMemo(() => {
-    if (initialTests.length === 0) return null;
-
-    // 인기 있는 테스트들(조회수 1000 이상) 중에서 우선 선택
-    const popularTests = initialTests.filter(
-      (test) => (test.view_count ?? 0) >= 1000
-    );
-
-    // 인기 테스트가 있으면 그 중에서 랜덤 선택, 없으면 전체에서 랜덤 선택
-    const candidates = popularTests.length > 0 ? popularTests : initialTests;
-    const randomIndex = Math.floor(Math.random() * candidates.length);
-
-    return candidates[randomIndex];
-  }, [initialTests]);
-
+export default function HomePage({
+  locale,
+  initialTests,
+  featuredTest,
+  translations,
+}: HomePageProps) {
   // 에디터 픽: 최신 테스트들 (최대 10개)
   const editorPickTests = initialTests.slice(0, 10);
 
@@ -123,23 +151,31 @@ export default function HomePage({ locale, initialTests }: HomePageProps) {
     <div className="min-h-screen bg-white dark:bg-zinc-950">
       {/* Section A: 히어로 배너 */}
       {featuredTest ? (
-        <HeroSection featuredTest={featuredTest} locale={locale} />
+        <HeroSection
+          featuredTest={featuredTest}
+          locale={locale}
+          translations={translations}
+        />
       ) : (
         <HeroSkeleton />
       )}
 
       {/* Section B: 퀵 서클 */}
-      <QuickCircleSection locale={locale} />
+      <QuickCircleSection locale={locale} translations={translations} />
 
       {/* Section C: 미스틱 존 타로 */}
-      <MysticZoneSection locale={locale} />
+      <MysticZoneSection locale={locale} translations={translations} />
 
       {/* Section D: MBTI 컬렉션 */}
-      <MBTICollectionSection locale={locale} />
+      <MBTICollectionSection locale={locale} translations={translations} />
 
       {/* Section E: 에디터 픽 */}
       {editorPickTests.length > 0 ? (
-        <EditorPickSection tests={editorPickTests} locale={locale} />
+        <EditorPickSection
+          tests={editorPickTests}
+          locale={locale}
+          translations={translations}
+        />
       ) : (
         <EditorPickSkeleton />
       )}

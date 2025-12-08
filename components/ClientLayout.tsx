@@ -18,10 +18,15 @@ export default function ClientLayout({
   user,
   children,
   locale,
+  footerTranslations,
 }: {
   user: User | null;
   children: React.ReactNode;
   locale: string;
+  footerTranslations: {
+    termsLink: string;
+    privacyLink: string;
+  };
 }) {
   const pathname = usePathname() ?? "";
   const isAdminPage = pathname.startsWith("/admin");
@@ -63,7 +68,7 @@ export default function ClientLayout({
               )}
             </div>
 
-            <Footer />
+            <Footer translations={footerTranslations} />
           </div>
         </AlertProvider>
       </ThemeProvider>

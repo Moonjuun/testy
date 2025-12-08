@@ -4,16 +4,23 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Sparkles, ArrowRight } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 
 interface MysticZoneSectionProps {
   locale: string;
+  translations: {
+    mysticZone: string;
+    tarotTitle: string;
+    tarotDescription: string;
+    clickToReveal: string;
+    exploreTarot: string;
+  };
 }
 
-export function MysticZoneSection({ locale }: MysticZoneSectionProps) {
-  const { t } = useTranslation("common");
-
+export function MysticZoneSection({
+  locale,
+  translations,
+}: MysticZoneSectionProps) {
   return (
     <section className="relative py-20 md:py-28 px-4 md:px-8 overflow-hidden">
       {/* 상단 그라데이션 전환 (이전 섹션에서 자연스럽게) */}
@@ -45,15 +52,14 @@ export function MysticZoneSection({ locale }: MysticZoneSectionProps) {
           <div className="inline-flex items-center gap-2 mb-4">
             <Sparkles className="w-6 h-6 text-purple-600 dark:text-purple-300" />
             <span className="text-purple-600 dark:text-purple-300 font-semibold text-sm uppercase tracking-wider">
-              {t("home.mysticZone") || "미스틱 존"}
+              {translations.mysticZone}
             </span>
           </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-indigo-900 dark:text-white mb-4">
-            {t("home.tarotTitle") || "오늘의 운세를 확인해보세요"}
+            {translations.tarotTitle}
           </h2>
           <p className="text-lg md:text-xl text-indigo-700 dark:text-purple-200 max-w-2xl mx-auto">
-            {t("home.tarotDescription") ||
-              "신비로운 타로 카드로 당신의 미래를 엿보세요"}
+            {translations.tarotDescription}
           </p>
         </motion.div>
 
@@ -109,10 +115,10 @@ export function MysticZoneSection({ locale }: MysticZoneSectionProps) {
                   {/* 하단 텍스트 */}
                   <div className="absolute bottom-8 left-0 right-0 text-center">
                     <p className="text-indigo-900 dark:text-white font-semibold text-lg md:text-xl mb-2">
-                      {t("home.clickToReveal") || "카드를 클릭하세요"}
+                      {translations.clickToReveal}
                     </p>
                     <div className="inline-flex items-center gap-2 text-indigo-700 dark:text-purple-200 text-sm">
-                      {t("home.exploreTarot") || "타로 둘러보기"}
+                      {translations.exploreTarot}
                       <ArrowRight className="w-4 h-4" />
                     </div>
                   </div>
@@ -128,4 +134,3 @@ export function MysticZoneSection({ locale }: MysticZoneSectionProps) {
     </section>
   );
 }
-

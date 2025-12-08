@@ -5,61 +5,57 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight, Brain } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { useLanguageStore } from "@/store/useLanguageStore";
 
 interface MBTICollectionSectionProps {
   locale: string;
+  translations: {
+    mbtiCollection: string;
+    mbtiTypes: {
+      INTJ: string;
+      INTP: string;
+      ENTJ: string;
+      ENTP: string;
+      INFJ: string;
+      INFP: string;
+      ENFJ: string;
+      ENFP: string;
+      ISTJ: string;
+      ISFJ: string;
+      ESTJ: string;
+      ESFJ: string;
+      ISTP: string;
+      ISFP: string;
+      ESTP: string;
+      ESFP: string;
+    };
+  };
 }
 
 // MBTI 타입별 정보 (실제 데이터는 나중에 DB에서 가져올 수 있음)
 const mbtiTypes = [
-  { type: "INTJ", color: "from-blue-600 to-indigo-600", labelKey: "mbti.INTJ" },
-  { type: "INTP", color: "from-purple-600 to-pink-600", labelKey: "mbti.INTP" },
-  { type: "ENTJ", color: "from-orange-600 to-red-600", labelKey: "mbti.ENTJ" },
-  {
-    type: "ENTP",
-    color: "from-yellow-600 to-orange-600",
-    labelKey: "mbti.ENTP",
-  },
-  {
-    type: "INFJ",
-    color: "from-green-600 to-emerald-600",
-    labelKey: "mbti.INFJ",
-  },
-  { type: "INFP", color: "from-pink-600 to-rose-600", labelKey: "mbti.INFP" },
-  { type: "ENFJ", color: "from-cyan-600 to-blue-600", labelKey: "mbti.ENFJ" },
-  {
-    type: "ENFP",
-    color: "from-violet-600 to-purple-600",
-    labelKey: "mbti.ENFP",
-  },
-  { type: "ISTJ", color: "from-gray-600 to-slate-600", labelKey: "mbti.ISTJ" },
-  { type: "ISFJ", color: "from-teal-600 to-cyan-600", labelKey: "mbti.ISFJ" },
-  { type: "ESTJ", color: "from-red-600 to-orange-600", labelKey: "mbti.ESTJ" },
-  {
-    type: "ESFJ",
-    color: "from-pink-600 to-fuchsia-600",
-    labelKey: "mbti.ESFJ",
-  },
-  { type: "ISTP", color: "from-indigo-600 to-blue-600", labelKey: "mbti.ISTP" },
-  {
-    type: "ISFP",
-    color: "from-emerald-600 to-green-600",
-    labelKey: "mbti.ISFP",
-  },
-  {
-    type: "ESTP",
-    color: "from-yellow-500 to-orange-500",
-    labelKey: "mbti.ESTP",
-  },
-  { type: "ESFP", color: "from-rose-600 to-pink-600", labelKey: "mbti.ESFP" },
+  { type: "INTJ", color: "from-blue-600 to-indigo-600" },
+  { type: "INTP", color: "from-purple-600 to-pink-600" },
+  { type: "ENTJ", color: "from-orange-600 to-red-600" },
+  { type: "ENTP", color: "from-yellow-600 to-orange-600" },
+  { type: "INFJ", color: "from-green-600 to-emerald-600" },
+  { type: "INFP", color: "from-pink-600 to-rose-600" },
+  { type: "ENFJ", color: "from-cyan-600 to-blue-600" },
+  { type: "ENFP", color: "from-violet-600 to-purple-600" },
+  { type: "ISTJ", color: "from-gray-600 to-slate-600" },
+  { type: "ISFJ", color: "from-teal-600 to-cyan-600" },
+  { type: "ESTJ", color: "from-red-600 to-orange-600" },
+  { type: "ESFJ", color: "from-pink-600 to-fuchsia-600" },
+  { type: "ISTP", color: "from-indigo-600 to-blue-600" },
+  { type: "ISFP", color: "from-emerald-600 to-green-600" },
+  { type: "ESTP", color: "from-yellow-500 to-orange-500" },
+  { type: "ESFP", color: "from-rose-600 to-pink-600" },
 ];
 
-export function MBTICollectionSection({ locale }: MBTICollectionSectionProps) {
-  const { t } = useTranslation("common");
-  const language = useLanguageStore((state) => state.currentLanguage);
+export function MBTICollectionSection({
+  locale,
+  translations,
+}: MBTICollectionSectionProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     loop: false,
@@ -79,7 +75,7 @@ export function MBTICollectionSection({ locale }: MBTICollectionSectionProps) {
           <div className="flex items-center gap-3">
             <Brain className="w-8 h-8 text-purple-600 dark:text-purple-400" />
             <h2 className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-white">
-              {t("home.mbtiCollection") || "내 성격 유형 찾기"}
+              {translations.mbtiCollection}
             </h2>
           </div>
 
@@ -120,7 +116,7 @@ export function MBTICollectionSection({ locale }: MBTICollectionSectionProps) {
                 whileTap={{ scale: 0.95 }}
                 className="flex-shrink-0"
               >
-                <Link href={language ? `/${language}/mbti` : "/mbti"}>
+                <Link href={`/${locale}/mbti`}>
                   <div className="group cursor-pointer">
                     {/* MBTI 카드 */}
                     <div
@@ -138,7 +134,9 @@ export function MBTICollectionSection({ locale }: MBTICollectionSectionProps) {
                           {mbti.type}
                         </span>
                         <span className="text-xs md:text-sm text-white/90 text-center">
-                          {t(mbti.labelKey) || mbti.type}
+                          {translations.mbtiTypes[
+                            mbti.type as keyof typeof translations.mbtiTypes
+                          ] || mbti.type}
                         </span>
                       </div>
 
@@ -155,4 +153,3 @@ export function MBTICollectionSection({ locale }: MBTICollectionSectionProps) {
     </section>
   );
 }
-
