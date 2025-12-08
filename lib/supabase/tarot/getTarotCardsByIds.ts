@@ -1,4 +1,4 @@
-import { createClient } from "../client";
+import { createClientForServer } from "../server";
 import { TarotCard } from "@/types/tarot/tarot";
 
 type MeaningType = "free" | "paid";
@@ -8,7 +8,7 @@ export async function getTarotCardsByIds(
   language: "ko" | "en" | "ja" | "vi" = "ko",
   meaningType: MeaningType = "free" // 기본값 'free'로 설정
 ): Promise<TarotCard[]> {
-  const supabase = createClient();
+  const supabase = await createClientForServer();
 
   // meaningType에 따라 동적으로 컬럼 이름을 생성합니다.
   const meaningCol = `${meaningType}_meaning_translations`;

@@ -29,18 +29,22 @@ export default async function ResultTarotPage({
   params,
   searchParams,
 }: {
-  params: { locale?: string; type?: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
+  params: Promise<{ locale?: string; type?: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const localeParam = (params?.locale ?? "ko") as string;
+  // ⚠️ Next.js 16: params와 searchParams는 Promise이므로 await 필수
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+
+  const localeParam = (resolvedParams?.locale ?? "ko") as string;
   const validLocales = ["en", "ko", "ja", "vi"] as const;
   const validLocale = (
     validLocales.includes(localeParam as any) ? localeParam : "en"
   ) as "en" | "ko" | "ja" | "vi";
 
   // ✅ 카드 id와 스프레드는 쿼리스트링으로 받는 예시 (?cards=1,2,3&spread=three)
-  const drawnCards = parseCardsParam(searchParams?.cards);
-  const selectedSpread = parseSpreadParam(searchParams?.spread);
+  const drawnCards = parseCardsParam(resolvedSearchParams?.cards);
+  const selectedSpread = parseSpreadParam(resolvedSearchParams?.spread);
 
   // 서버에서 카드 데이터 가져오기 (클라이언트에서는 fetch 없음)
   let fetchedCards: TarotCard[] = [];

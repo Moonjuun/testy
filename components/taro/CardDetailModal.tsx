@@ -40,16 +40,33 @@ export default function CardDetailModal({
   const { t } = useTranslation("common");
   const [isFlipped, setIsFlipped] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    if (open) {
-      timeoutId = setTimeout(() => setIsFlipped(true), 100);
+    if (open && activeCard?.imageUrl) {
+      // 모달이 열릴 때 이미지 로드 상태 초기화 및 이미지 preload
+      setImageLoaded(false);
+      setIsFlipped(false);
+
+      // 이미지 preload
+      const img = new window.Image();
+      img.onload = () => setImageLoaded(true);
+      img.onerror = () => setImageLoaded(true); // 에러가 나도 플립은 진행
+      img.src = activeCard.imageUrl;
     } else {
       setIsFlipped(false);
+      setImageLoaded(false);
     }
-    return () => clearTimeout(timeoutId);
-  }, [open]);
+  }, [open, activeCard?.imageUrl]);
+
+  // 이미지가 로드되면 카드 뒤집기
+  useEffect(() => {
+    if (open && imageLoaded) {
+      // 이미지가 로드된 후 약간의 딜레이를 두고 플립 시작
+      const timeoutId = setTimeout(() => setIsFlipped(true), 50);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [open, imageLoaded]);
 
   const keywords = activeCard?.keyword ?? [];
   const displayedKeywords = useMemo(() => {
@@ -109,6 +126,7 @@ export default function CardDetailModal({
                   <TarotFrontFace
                     imageUrl={activeCard.imageUrl || ""}
                     name={activeCard.name}
+                    onImageLoad={() => setImageLoaded(true)}
                   />
                 </div>
               </div>
