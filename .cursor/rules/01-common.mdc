@@ -1,0 +1,266 @@
+---
+alwaysApply: true
+---
+
+# Testy Project Rules
+
+아래의 조건 및 주의사항을 모두 적용하여 코드를 작성할 것.
+
+## 1. 기술 스택 및 환경 (Tech Stack)
+
+- **Framework:** Next.js 16 (App Router, Turbopack)
+- **Core Library:** React 19 (RC/Stable)
+- **Language:** TypeScript 5.x (Strict Mode)
+- **Styling:** Tailwind CSS 4.x (or latest compatible v3.4+)
+- **Backend:** Supabase (Auth, DB)
+- **State Management (Hybrid Strategy):**
+  - **Server State:** TanStack Query v5 (@tanstack/react-query) - API 캐싱, 무한 스크롤
+  - **Client UI State:** Zustand v5 - 모달 제어, 전역 UI 설정
+- **i18n:** next-intl
+
+## 2. 상태 관리 원칙 (State Management Rules)
+
+**가장 중요한 규칙임.** 데이터의 성격에 따라 도구를 엄격히 구분한다.
+
+- **Server Data (API):**
+  - 기본적으로 **Server Components**에서 `fetch`로 데이터를 가져와 렌더링하는 것을 1순위로 한다. (초기 로딩 속도 최적화)
+  - 클라이언트 사이드 인터랙션(무한 스크롤, 실시간 필터링, 낙관적 업데이트)이 필요한 경우에만 **TanStack Query** (`useQuery`, `useMutation`)를 사용한다.
+  - `useEffect`로 API를 직접 호출하여 상태에 넣는 행위를 금지한다.
+- **Client State (UI):**
+  - 앱 전역에서 공유되는 UI 상태(로그인 모달 열림 여부, 사이드바 토글 등)는 **Zustand** Store로 관리한다.
+  - 단순한 컴포넌트 내부 상태(Form 입력값 등)는 `useState`를 사용한다.
+
+## 3. 코딩 스타일 및 원칙 (Coding Standards)
+
+- **Next.js 16 / React 19 Patterns:**
+  - Server Components가 기본이며, `use client` 지시어는 꼭 필요한 경우에만 파일 최상단에 작성한다.
+  - 데이터 변형(Form Submit 등)은 **Server Actions**를 우선 고려한다.
+  - `async/await`를 사용한 Server Components에서의 데이터 페칭을 권장한다.
+- **Styling:**
+  - Tailwind Utility Class를 우선 사용한다. (`styles.module.css` 등 별도 파일 생성 금지)
+  - 색상은 `bg-zinc-950`, `text-blue-500` 등 지정된 디자인 시스템 토큰을 준수한다.
+- **Types:**
+  - `any` 타입 사용을 엄격히 금지한다.
+  - DB 스키마 타입은 Supabase에서 생성된 타입을 `import`하여 사용한다.
+
+## 4. 폴더 구조 (Directory Structure)
+
+아래 구조를 엄격히 준수한다.
+
+### Next.js 16 App Router + next-intl 구조
+
+```
+/src
+├── app/
+│   ├── api/                      # (선택) API Routes
+│   │   └── og/                   # OG Image 생성용
+│   ├── auth/                     # 🔴 [위치 변경] locale 밖으로 이동
+│   │   └── callback/
+│   │       └── route.ts          # 구글 로그인 콜백 처리 (UI 없음)
+│   ├── [locale]/
+│   │   ├── (legal)/              # 약관 등
+│   │   ├── admin/
+│   │   ├── category/
+│   │   ├── gallery/
+│   │   ├── mbti/
+│   │   ├── tarot/
+│   │   ├── test/                 # 테스트 상세 페이지
+│   │   ├── layout.tsx
+│   │   ├── page.tsx              # 메인 페이지
+│   │   └── not-found.tsx         # [이동 추천] locale 내부로 넣으면 번역된 404 가능
+│   ├── globals.css
+│   ├── layout.tsx                # Root Layout (html, body)
+│   ├── robots.ts
+│   └── sitemap.ts
+├── components/
+│   ├── features/
+│   │   └── auth/
+│   │       ├── LoginModal.tsx    # 🟢 [신규] 로그인 모달
+│   │       └── GoogleBtn.tsx     # 🟢 [신규] 구글 로그인 버튼
+│   └── layout/
+│       └── Header.tsx            # 로그인 버튼이 있는 헤더
+├── store/                        # (기존 폴더 유지)
+│   └── useAuthStore.ts           # 🟢 [신규] 모달 상태 관리
+├── lib/
+│   └── supabase/                 # Supabase 클라이언트 설정
+├── middleware.ts                 # i18n 및 Auth 미들웨어
+```
+
+### next-intl 필수 설정
+
+1. **`next.config.ts`**:
+
+```ts
+import createNextIntlPlugin from "next-intl/plugin";
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+export default withNextIntl({
+  /* config */
+});
+```
+
+2. **`src/middleware.ts`** (프로젝트 루트가 아닌 `src/` 폴더에 위치):
+
+```ts
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
+export default createMiddleware(routing);
+export const config = {
+  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
+};
+```
+
+3. **`src/app/[locale]/layout.tsx`** (Locale 레이아웃):
+
+```ts
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
+import { routing } from "@/i18n/routing";
+
+// ⚠️ 필수: async 함수로 export
+export async function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+export default async function LocaleLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>; // ⚠️ Next.js 16: params는 Promise 타입
+}) {
+  const { locale } = await params; // ⚠️ 필수: await 사용
+  const messages = await getMessages({ locale });
+
+  return (
+    <NextIntlClientProvider messages={messages}>
+      {children}
+    </NextIntlClientProvider>
+  );
+}
+```
+
+4. **`src/app/[locale]/page.tsx`** (페이지):
+
+```ts
+import { routing } from "@/i18n/routing";
+
+// ⚠️ 필수: async 함수로 export
+export async function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>; // ⚠️ Next.js 16: params는 Promise 타입
+}) {
+  const { locale } = await params; // ⚠️ 필수: await 사용
+  // ...
+}
+```
+
+5. **루트 레이아웃 (`src/app/layout.tsx`)**:
+
+   - ⚠️ locale 파라미터를 받지 않음 (params 없음)
+   - ⚠️ html, body 태그만 포함
+   - ⚠️ 전역 설정(폰트, 메타데이터 등)만 처리
+   - ⚠️ `globals.css`는 `src/app/globals.css`에 위치하고 `import "./globals.css"`로 import
+
+6. **중요 주의사항**:
+   - ⚠️ `generateStaticParams`는 반드시 `async` 함수여야 함
+   - ⚠️ Next.js 16에서 `params`는 `Promise<{ locale: string }>` 타입이므로 `await params` 필수
+   - ⚠️ `middleware.ts`는 `src/` 폴더에 위치 (프로젝트 루트가 아님)
+   - ⚠️ `globals.css`는 `src/app/globals.css`에 위치
+   - ⚠️ 루트 레이아웃과 Locale 레이아웃을 명확히 분리 (루트는 html/body만, Locale은 NextIntlClientProvider)
+
+## 5. GIT 컨벤션 (Conventional Commits)
+
+작업 완료 후 커밋 메시지는 **한국어**로 작성한다.
+
+- `feat`: 새로운 기능 추가 (예: `feat: 주스탠드 스토어 초기 설정`)
+- `fix`: 버그 수정 (예: `fix: 무한 스크롤 중복 요청 수정`)
+- `docs`: 문서 수정 (예: `docs: README 설치 가이드 추가`)
+- `style`: 코드 포맷팅 (예: `style: Tailwind 클래스 정렬`)
+- `refactor`: 코드 리팩토링 (예: `refactor: 애니메이션 카드 컴포넌트 분리`)
+- `chore`: 설정 파일 수정, 패키지 업데이트 (예: `chore: next-intl 업데이트`)
+
+## 6. 작업 프로세스 (Workflow)
+
+AI는 작업을 시작하기 전에 다음 단계를 수행해야 한다.
+
+1. **분석 (Analyze):** `package.json`을 확인하여 Next.js 16 및 관련 라이브러리 버전을 파악한다.
+2. **계획 (Plan):** 구현할 기능의 단계를 step-by-step으로 정리한다.
+3. **구현 (Implement):** 계획에 따라 코드를 작성한다.
+   - Server Component 우선 원칙 준수
+   - Client Component는 최소화 (`use client`는 필요한 곳에만)
+   - Server Actions를 통한 데이터 변형
+4. **검토 (Review):**
+   - 상태 관리 도구(Zustand vs TanStack Query)가 적절히 사용되었는지 확인
+   - Server/Client Component 분리가 적절한지 확인
+   - TypeScript 타입 안정성 확인 (`any` 금지)
+5. **확인 (Verify):**
+   - `npm run build`를 통해 빌드 오류가 없는지 확인
+   - `npm run lint`로 코드 품질 검증
+
+## 7. 주요 패턴 예시
+
+### Server Component (기본)
+
+```tsx
+// src/app/[locale]/anime/[id]/page.tsx
+import { getAnime } from "@/lib/tmdb/api";
+
+export default async function AnimePage({
+  params,
+}: {
+  params: { id: string; locale: string };
+}) {
+  const anime = await getAnime(params.id);
+  return <AnimeDetail anime={anime} />;
+}
+```
+
+### Client Component (인터랙션 필요시)
+
+```tsx
+// src/components/features/AnimeList.tsx
+"use client";
+
+import { useInfiniteQuery } from "@tanstack/react-query";
+
+export function AnimeList() {
+  const { data, fetchNextPage } = useInfiniteQuery({
+    queryKey: ["anime"],
+    queryFn: fetchAnime,
+  });
+  // ...
+}
+```
+
+### Zustand Store (UI 상태)
+
+```tsx
+// src/stores/uiStore.ts
+import { create } from "zustand";
+
+export const useUIStore = create<UIState>((set) => ({
+  isModalOpen: false,
+  openModal: () => set({ isModalOpen: true }),
+  closeModal: () => set({ isModalOpen: false }),
+}));
+```
+
+### Server Action (데이터 변형)
+
+```tsx
+// src/actions/review.ts
+"use server";
+
+import { revalidatePath } from "next/cache";
+
+export async function createReview(formData: FormData) {
+  const review = await saveReview(formData);
+  revalidatePath("/anime/[id]");
+  return review;
+}
+```

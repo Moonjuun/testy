@@ -1,0 +1,15 @@
+## 1. Sitemap & Robots (Next.js 16 Standard)
+
+- **Dynamic Sitemap (`src/app/sitemap.ts`):**
+
+  - 정적 XML 파일을 만들지 않고, Next.js의 `sitemap.ts`를 사용한다.
+  - **DB 연동:** Supabase에서 모든 테스트 ID를 조회(`select id, updated_at`)하여 동적으로 URL을 생성한다.
+  - **다국어 적용:** 각 테스트마다 지원하는 4개 국어(`ko`, `en`, `ja`, `vi`) URL을 모두 생성하거나, `alternates` 속성을 활용한다.
+  - **Base URL:** 환경변수(`NEXT_PUBLIC_SITE_URL`)를 사용하여 절대 경로로 작성한다.
+
+- **Robots (`src/app/robots.ts`):**
+  - 모든 검색엔진(`*`)에 대해 허용(`Allow: /`)을 기본으로 한다.
+  - `sitemap` 경로를 반드시 명시한다.---
+    alwaysApply: true
+
+---
