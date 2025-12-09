@@ -61,6 +61,6 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // locale prefix 없는 루트 경로들만 대상으로 지정
-    "/((?!_next/|favicon.ico|robots.txt|ads\\.txt|sitemap\\.xml|sitemap-ko\\.xml|sitemap-en\\.xml|sitemap-ja\\.xml|sitemap-vi\\.xml|api).*)",
+    "/((?!_next/|favicon.ico|robots.txt|ads\\.txt|sitemap\\.xml|sitemap-ko\\.xml|sitemap-en\\.xml|sitemap-ja\\.xml|sitemap-vi\\.xml|api|mockServiceWorker\\.js).*)",
   ],
 };

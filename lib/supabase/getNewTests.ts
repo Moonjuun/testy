@@ -5,13 +5,27 @@ import { unstable_cache } from "next/cache";
 
 type Lang = "ko" | "en" | "ja" | "vi";
 
+const VALID_LANGUAGES: Lang[] = ["ko", "en", "ja", "vi"];
+
+// 언어 파라미터 검증 및 정규화
+function validateLanguage(language: unknown): Lang {
+  if (
+    typeof language === "string" &&
+    VALID_LANGUAGES.includes(language as Lang)
+  ) {
+    return language as Lang;
+  }
+  return "en"; // 기본값
+}
+
 // 1) 원본 쿼리(캐시 X) — 내부 전용
 async function fetchNewTestsRaw(
   language: Lang = "en",
   limit = 12
 ): Promise<NewTest[]> {
   const supabase = createClient();
-  const nameField = `name_${language}`;
+  const validatedLanguage = validateLanguage(language);
+  const nameField = `name_${validatedLanguage}`;
 
   const { data, error } = await supabase
     .from("tests")
@@ -38,7 +52,7 @@ async function fetchNewTestsRaw(
     `
     )
     .eq("is_visible", true)
-    .eq("test_translations.language", language)
+    .eq("test_translations.language", validatedLanguage)
     .order("created_at", { ascending: false })
     .limit(limit);
 
@@ -49,7 +63,9 @@ async function fetchNewTestsRaw(
 
   return data.map((test: any) => {
     const translation = Array.isArray(test.test_translations)
-      ? test.test_translations.find((t: any) => t.language === language)
+      ? test.test_translations.find(
+          (t: any) => t.language === validatedLanguage
+        )
       : null;
 
     return {
@@ -69,7 +85,7 @@ async function fetchNewTestsRaw(
         : null,
       test_translations: {
         title: translation?.title ?? "",
-        language: translation?.language ?? language,
+        language: translation?.language ?? validatedLanguage,
         description: translation?.description ?? "",
       },
     } as NewTest;
@@ -81,12 +97,17 @@ export async function getNewTests(
   language: Lang = "en",
   limit = 12
 ): Promise<NewTest[]> {
+  const validatedLanguage = validateLanguage(language);
   // 언어/limit별 캐시 키
-  const key = ["new-tests", language, String(limit)];
-  const cached = unstable_cache(() => fetchNewTestsRaw(language, limit), key, {
-    revalidate: 60 * 60, // 1시간
-    tags: [`new-tests:${language}:${limit}`],
-  });
+  const key = ["new-tests", validatedLanguage, String(limit)];
+  const cached = unstable_cache(
+    () => fetchNewTestsRaw(validatedLanguage, limit),
+    key,
+    {
+      revalidate: 60 * 60, // 1시간
+      tags: [`new-tests:${validatedLanguage}:${limit}`],
+    }
+  );
   return cached();
 }
 
