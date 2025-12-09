@@ -15,6 +15,7 @@ const nextConfig = {
         hostname: "xxlvfknsbwfjyzdlucyz.supabase.co", // Supabase Storage 이미지
       },
     ],
+    qualities: [75, 90], // Next.js 16: 허용할 이미지 품질 레벨
   },
 };
 
