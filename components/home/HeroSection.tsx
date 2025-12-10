@@ -52,20 +52,9 @@ export function HeroSection({
 
       // URL 유효성 검사
       if (!isValidImageUrl(url)) {
-        console.warn("⚠️ Hero 이미지 URL이 유효하지 않습니다:", url);
         setImageError(true);
         setImageSrc(null);
         return;
-      }
-
-      // 이미지 URL 타입 로그
-      if (url.startsWith("data:image/")) {
-        console.log("📸 Hero 이미지: base64 data URL 사용");
-      } else if (url.includes("supabase.co/storage/v1/object/public")) {
-        console.log("📸 Hero 이미지: Supabase Storage URL 사용");
-        console.log("📸 URL:", url);
-      } else {
-        console.log("📸 Hero 이미지 URL:", url.substring(0, 100) + "...");
       }
 
       setImageSrc(url);
@@ -74,17 +63,7 @@ export function HeroSection({
   }, [featuredTest?.thumbnail_url]);
 
   // 이미지 로드 실패 시 placeholder로 대체
-  const handleImageError = (
-    e: React.SyntheticEvent<HTMLImageElement, Event>
-  ) => {
-    const target = e.target as HTMLImageElement;
-    const failedUrl = target.src;
-
-    console.error("❌ Hero 이미지 로드 실패:", {
-      url: failedUrl.substring(0, 100),
-      error: "이미지 로드 실패 (402 또는 기타 에러)",
-    });
-
+  const handleImageError = () => {
     setImageError(true);
     setImageSrc(null);
   };
