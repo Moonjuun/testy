@@ -20,6 +20,7 @@ export async function getGalleryImages(
   const to = from + PAGE_SIZE - 1;
 
   // 기본 쿼리 빌더 생성
+  // 이미지가 있는 항목만 가져오기 위해 .not("result_image_url", "is", null) 추가
   let query = supabase
     .from("results")
     .select(
@@ -38,6 +39,8 @@ export async function getGalleryImages(
       result_translations!inner ( title, keywords )
     `
     )
+    .not("result_image_url", "is", null) // 이미지가 있는 항목만
+    .neq("result_image_url", "") // 빈 문자열도 제외
     .eq("tests.is_visible", true)
     .eq("tests.test_translations.language", language)
     .eq("result_translations.language", language);
@@ -75,6 +78,7 @@ export async function getGalleryImages(
       category: categoryName,
     };
   });
+  // 데이터베이스 쿼리에서 이미 필터링했으므로 추가 필터링 불필요
 }
 
 /**

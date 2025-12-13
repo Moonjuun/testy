@@ -58,7 +58,7 @@ const galleryMetadata = {
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
   const url = `https://testy.im/${locale}/gallery`;
@@ -112,7 +112,7 @@ export async function generateMetadata({
 export default async function GalleryPage({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
 
@@ -121,6 +121,7 @@ export default async function GalleryPage({
     getGalleryCategories(locale as Language),
   ]);
 
+  // 데이터베이스 쿼리에서 이미 이미지가 있는 항목만 가져오므로 추가 필터링 불필요
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       <GalleryClient

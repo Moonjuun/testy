@@ -33,6 +33,7 @@ export default function GalleryClient({
   const router = useRouter();
   const { t } = useTranslation();
 
+  // 데이터베이스 쿼리에서 이미 이미지가 있는 항목만 가져오므로 추가 필터링 불필요
   const [images, setImages] = useState<GalleryImage[]>(initialImages);
   const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [selectedCategory, setSelectedCategory] = useState<number | "all">(
@@ -71,6 +72,7 @@ export default function GalleryClient({
           page,
           selectedCategory
         );
+        // 데이터베이스 쿼리에서 이미 필터링되었으므로 그대로 사용
         setImages((prevImages) => [...prevImages, ...newImages]);
         setHasMore(newImages.length === PAGE_SIZE);
         setIsLoading(false);
@@ -91,6 +93,7 @@ export default function GalleryClient({
     setIsLoading(true);
 
     const newImages = await getGalleryImages(locale, 1, categoryId);
+    // 데이터베이스 쿼리에서 이미 필터링되었으므로 그대로 사용
     setImages(newImages);
     setHasMore(newImages.length === PAGE_SIZE);
     setIsLoading(false);
@@ -106,6 +109,7 @@ export default function GalleryClient({
 
   const handleNavigation = (direction: "prev" | "next") => {
     if (!selectedImage) return;
+    // 데이터베이스 쿼리에서 이미 필터링되었으므로 그대로 사용
     const currentIndex = images.findIndex((img) => img.id === selectedImage.id);
     let nextIndex;
     if (direction === "prev") {
