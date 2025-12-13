@@ -29,11 +29,67 @@ GOOGLE_CLOUD_PROJECT_ID=your_project_id_here
 GOOGLE_CLOUD_REGION=us-central1
 ```
 
-**참고**:
+## Google OAuth 토큰 설정 방법
 
-- 이미지 생성 기능을 사용하려면 Vertex AI 프로젝트가 필요합니다.
-- Vertex AI API는 OAuth 토큰을 사용하므로, 서비스 계정 키를 설정하거나 `gcloud auth print-access-token`을 사용해야 합니다.
-- 현재는 API 키를 Bearer 토큰으로 사용하는 실험적 방식을 시도하지만, 정식으로는 OAuth 토큰이 필요합니다.
+Vertex AI Imagen API를 사용하려면 OAuth 토큰이 필요합니다. 다음 방법 중 하나를 선택하세요:
+
+### 방법 1: 서비스 계정 키 생성 (Vercel 배포 시 권장)
+
+1. **Google Cloud Console에서 서비스 계정 생성**
+   - [Google Cloud Console](https://console.cloud.google.com/) 접속
+   - 프로젝트 선택 또는 생성
+   - "IAM 및 관리자" > "서비스 계정" 메뉴로 이동
+   - "서비스 계정 만들기" 클릭
+   - 이름 입력 (예: `testy-imagen-api`)
+   - "만들기" 클릭
+
+2. **서비스 계정에 권한 부여**
+   - 생성된 서비스 계정 클릭
+   - "권한" 탭에서 "역할 추가" 클릭
+   - 다음 역할 추가:
+     - `Vertex AI User` (필수)
+     - `Storage Object Viewer` (이미지 저장 시 필요)
+
+3. **서비스 계정 키 생성**
+   - 서비스 계정 상세 페이지에서 "키" 탭으로 이동
+   - "키 추가" > "새 키 만들기" 클릭
+   - 키 유형: "JSON" 선택
+   - "만들기" 클릭하여 JSON 파일 다운로드
+
+4. **환경 변수 설정**
+   - 다운로드한 JSON 파일의 전체 내용을 한 줄로 변환
+   - Vercel 환경 변수에 `GOOGLE_SERVICE_ACCOUNT_KEY`로 설정
+   - 또는 `.env.local` 파일에 추가 (로컬 개발 시)
+
+   **JSON을 한 줄로 변환하는 방법:**
+   ```bash
+   # macOS/Linux
+   cat service-account-key.json | jq -c
+   
+   # 또는 온라인 도구 사용
+   # https://www.freeformatter.com/json-formatter.html
+   ```
+
+   **환경 변수 예시:**
+   ```bash
+   GOOGLE_SERVICE_ACCOUNT_KEY={"type":"service_account","project_id":"...","private_key_id":"...","private_key":"...","client_email":"...","client_id":"...","auth_uri":"...","token_uri":"...","auth_provider_x509_cert_url":"...","client_x509_cert_url":"..."}
+   ```
+
+### 방법 2: 로컬 개발 환경 (Application Default Credentials)
+
+로컬 개발 환경에서만 사용 가능합니다:
+
+```bash
+# gcloud CLI 설치 후
+gcloud auth application-default login
+
+# 또는 서비스 계정 키 파일 경로 지정
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
+```
+
+**참고**: 
+- Vercel 같은 서버리스 환경에서는 방법 1 (서비스 계정 키 JSON)을 사용해야 합니다.
+- 서비스 계정 키는 민감한 정보이므로 절대 Git에 커밋하지 마세요.
 - 자세한 내용: [Vertex AI Imagen API 문서](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/imagen-api)
 
 ## 비용 최적화 (유료 모델 사용)
