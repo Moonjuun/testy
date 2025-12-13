@@ -119,3 +119,69 @@ export function isBillingError(error: any): boolean {
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+/**
+ * JSON 파싱 헬퍼 함수 (견고한 파싱)
+ * 중첩된 중괄호를 고려하여 정확한 JSON 객체 추출
+ * 마크다운 코드 블록, 추가 텍스트, 제어 문자 등을 처리
+ */
+export function parseJsonResponse(text: string): any {
+  // 1. 마크다운 코드 블록 제거
+  let cleanedText = text
+    .replace(/```json\n?/gi, "")
+    .replace(/```\n?/g, "")
+    .trim();
+
+  // 2. JSON 객체 시작 찾기
+  const firstBrace = cleanedText.indexOf("{");
+  if (firstBrace === -1) {
+    throw new Error("JSON 객체를 찾을 수 없습니다 (시작 중괄호 없음).");
+  }
+
+  // 3. 중첩된 중괄호를 고려하여 정확한 JSON 객체 추출
+  let braceCount = 0;
+  let jsonEnd = -1;
+
+  for (let i = firstBrace; i < cleanedText.length; i++) {
+    if (cleanedText[i] === "{") {
+      braceCount++;
+    } else if (cleanedText[i] === "}") {
+      braceCount--;
+      if (braceCount === 0) {
+        jsonEnd = i;
+        break;
+      }
+    }
+  }
+
+  if (jsonEnd === -1) {
+    throw new Error("JSON 객체를 찾을 수 없습니다 (끝 중괄호 없음).");
+  }
+
+  // 4. JSON 부분만 추출 (첫 번째 완전한 JSON 객체만)
+  cleanedText = cleanedText.substring(firstBrace, jsonEnd + 1);
+
+  // 5. 제어 문자 제거 (JSON 파싱을 방해하는 문자들, 단 줄바꿈과 탭은 유지)
+  cleanedText = cleanedText
+    .replace(/[\u0000-\u0008\u000B-\u000C\u000E-\u001F\u007F-\u009F]/g, "") // 제어 문자 제거 (단 \n, \r, \t는 유지)
+    .trim();
+
+  // 6. JSON 파싱 시도
+  try {
+    return JSON.parse(cleanedText);
+  } catch (parseError: any) {
+    // 파싱 실패 시 더 자세한 에러 정보 제공
+    const errorPosition = parseError.message.match(/position (\d+)/)?.[1];
+    if (errorPosition) {
+      const pos = parseInt(errorPosition);
+      const start = Math.max(0, pos - 50);
+      const end = Math.min(cleanedText.length, pos + 50);
+      const context = cleanedText.substring(start, end);
+      throw new Error(
+        `JSON 파싱 실패 (위치 ${pos}): ${parseError.message}\n` +
+          `주변 컨텍스트: ...${context}...`
+      );
+    }
+    throw parseError;
+  }
+}

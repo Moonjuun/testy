@@ -7,6 +7,7 @@ import {
   isServiceUnavailableError,
   isBillingError,
   sleep,
+  parseJsonResponse,
 } from "./utils";
 
 // Gemini API 클라이언트 초기화
@@ -99,33 +100,10 @@ JSON은 반드시 { 로 시작하고 } 로 끝나야 합니다.`;
         const response = result.response;
         const text = response.text();
 
-        // JSON 파싱 (견고한 파싱 로직)
+        // JSON 파싱 (견고한 파싱 로직 - 공유 유틸리티 사용)
         let translatedJson: TestJsonInsertData;
         try {
-          // 1. 마크다운 코드 블록 제거
-          let cleanedText = text
-            .replace(/```json\n?/gi, "")
-            .replace(/```\n?/g, "")
-            .trim();
-
-          // 2. JSON 객체 시작과 끝 찾기
-          const firstBrace = cleanedText.indexOf("{");
-          const lastBrace = cleanedText.lastIndexOf("}");
-
-          if (firstBrace === -1 || lastBrace === -1 || firstBrace >= lastBrace) {
-            throw new Error("JSON 객체를 찾을 수 없습니다.");
-          }
-
-          // 3. JSON 부분만 추출
-          cleanedText = cleanedText.substring(firstBrace, lastBrace + 1);
-
-          // 4. 제어 문자 제거 (JSON 파싱을 방해하는 문자들)
-          cleanedText = cleanedText
-            .replace(/[\u0000-\u001F\u007F-\u009F]/g, "") // 제어 문자 제거
-            .trim();
-
-          // 5. JSON 파싱
-          translatedJson = JSON.parse(cleanedText);
+          translatedJson = parseJsonResponse(text);
         } catch (parseError: any) {
           console.error(
             `${languageNames[targetLanguage]} 번역 JSON 파싱 실패:`,
