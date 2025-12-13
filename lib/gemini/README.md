@@ -29,7 +29,8 @@ GOOGLE_CLOUD_PROJECT_ID=your_project_id_here
 GOOGLE_CLOUD_REGION=us-central1
 ```
 
-**참고**: 
+**참고**:
+
 - 이미지 생성 기능을 사용하려면 Vertex AI 프로젝트가 필요합니다.
 - Vertex AI API는 OAuth 토큰을 사용하므로, 서비스 계정 키를 설정하거나 `gcloud auth print-access-token`을 사용해야 합니다.
 - 현재는 API 키를 Bearer 토큰으로 사용하는 실험적 방식을 시도하지만, 정식으로는 OAuth 토큰이 필요합니다.
@@ -93,11 +94,13 @@ GOOGLE_CLOUD_REGION=us-central1
 ### 설정 방법
 
 1. **Google Cloud 프로젝트 생성**
+
    - [Google Cloud Console](https://console.cloud.google.com/)에서 프로젝트 생성
    - Vertex AI API 활성화
    - Imagen API 활성화
 
 2. **환경 변수 설정**
+
    ```bash
    GOOGLE_CLOUD_PROJECT_ID=your_project_id
    GOOGLE_CLOUD_REGION=us-central1

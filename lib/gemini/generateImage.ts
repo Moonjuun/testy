@@ -2,12 +2,63 @@
 // Google Vertex AI Imagen API를 사용한 이미지 생성
 // 참고: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/imagen-api
 
+import { GoogleAuth } from "google-auth-library";
 import {
   extractRetryDelay,
   isQuotaExceededError,
   isBillingError,
   sleep,
 } from "./utils";
+
+/**
+ * Google OAuth 토큰 획득
+ * 서비스 계정 키 또는 Application Default Credentials 사용
+ */
+async function getAccessToken(): Promise<string | null> {
+  try {
+    // 방법 1: 서비스 계정 키 JSON이 환경 변수로 설정된 경우
+    const serviceAccountKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
+    if (serviceAccountKey) {
+      try {
+        const keyJson = JSON.parse(serviceAccountKey);
+        const auth = new GoogleAuth({
+          credentials: keyJson,
+          scopes: ["https://www.googleapis.com/auth/cloud-platform"],
+        });
+        const client = await auth.getClient();
+        const accessToken = await client.getAccessToken();
+        return accessToken?.token || null;
+      } catch (parseError) {
+        console.error("❌ GOOGLE_SERVICE_ACCOUNT_KEY JSON 파싱 실패:", parseError);
+        return null;
+      }
+    }
+
+    // 방법 2: GOOGLE_APPLICATION_CREDENTIALS 환경 변수로 파일 경로 지정
+    // (로컬 개발 환경에서만 사용 가능, Vercel에서는 사용 불가)
+    if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+      const auth = new GoogleAuth({
+        keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+        scopes: ["https://www.googleapis.com/auth/cloud-platform"],
+      });
+      const client = await auth.getClient();
+      const accessToken = await client.getAccessToken();
+      return accessToken?.token || null;
+    }
+
+    // 방법 3: Application Default Credentials (ADC) 사용
+    // gcloud auth application-default login으로 설정된 경우
+    const auth = new GoogleAuth({
+      scopes: ["https://www.googleapis.com/auth/cloud-platform"],
+    });
+    const client = await auth.getClient();
+    const accessToken = await client.getAccessToken();
+    return accessToken?.token || null;
+  } catch (error: any) {
+    console.error("❌ OAuth 토큰 획득 실패:", error.message);
+    return null;
+  }
+}
 
 /**
  * Google Vertex AI Imagen API를 사용하여 이미지 생성
@@ -60,13 +111,29 @@ export async function generateImageWithGemini(
         },
       };
 
-      // Vertex AI API는 OAuth 토큰을 사용하지만, API 키도 일부 엔드포인트에서 지원할 수 있음
-      // 실제로는 gcloud auth print-access-token을 사용하거나 서비스 계정 키를 사용해야 함
+      // Vertex AI API는 OAuth 토큰을 사용합니다
+      // 서비스 계정 키 또는 Application Default Credentials를 통해 토큰 획득
+      const accessToken = await getAccessToken();
+      
+      if (!accessToken) {
+        console.error("❌ OAuth 토큰을 획득할 수 없습니다.");
+        console.error("💡 GOOGLE_SERVICE_ACCOUNT_KEY 환경 변수를 설정하거나,");
+        console.error("💡 GOOGLE_APPLICATION_CREDENTIALS 환경 변수를 설정하세요.");
+        console.error("💡 또는 gcloud auth application-default login을 실행하세요.");
+        
+        // 마지막 시도가 아니면 재시도
+        if (attempt < MAX_ATTEMPTS - 1) {
+          await sleep(2000);
+          continue;
+        }
+        return null;
+      }
+
       const response = await fetch(imagenApiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`, // API 키를 Bearer 토큰으로 사용 (실험적)
+          "Authorization": `Bearer ${accessToken}`,
         },
         body: JSON.stringify(requestBody),
       });
