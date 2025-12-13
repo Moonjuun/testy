@@ -141,6 +141,29 @@ export interface TestJsonInsertData {
   results: TestResultItem[];
 }
 
+/**
+ * 번역에 필요한 데이터만 추출한 타입
+ * tone, theme, palette, character 등 불변 데이터는 제외
+ */
+export interface TranslationDataOnly {
+  title: string;
+  description: string;
+  questions: Array<{
+    question: string;
+    options: Array<{
+      text: string;
+      score: number; // score는 불변이지만 매핑을 위해 필요
+    }>;
+  }>;
+  results: Array<{
+    title: string;
+    description: string;
+    recommendation: TestRecommendation;
+    keywords: string[];
+    score_range: [number, number]; // 매핑을 위해 필요
+  }>;
+}
+
 /** 점심 메뉴 데이터 타입 */
 export interface LunchMenu {
   id: number;
