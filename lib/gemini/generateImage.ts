@@ -1,6 +1,6 @@
 // lib/gemini/generateImage.ts
-// Google Vertex AI Imagen API를 사용한 이미지 생성
-// 참고: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/imagen-api
+// Google Vertex AI Gemini 2.5 Flash Image를 사용한 이미지 생성
+// 참고: https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-image
 
 import { GoogleAuth } from "google-auth-library";
 import {
@@ -61,7 +61,7 @@ async function getAccessToken(): Promise<string | null> {
 }
 
 /**
- * Google Vertex AI Imagen API를 사용하여 이미지 생성
+ * Google Vertex AI Gemini 2.5 Flash Image를 사용하여 이미지 생성
  * @param prompt - 이미지 생성 프롬프트
  * @returns base64 인코딩된 이미지 데이터 (data URL 형식)
  */
@@ -79,35 +79,38 @@ export async function generateImageWithGemini(
   }
 
   // Vertex AI API는 프로젝트 ID가 필요합니다
-  // 프로젝트 ID가 없으면 API 키를 사용한 대체 엔드포인트 시도
   if (!projectId) {
-    console.warn("⚠️ GOOGLE_CLOUD_PROJECT_ID가 설정되지 않았습니다. Vertex AI API 대신 Gemini API 엔드포인트를 시도합니다.");
-    // API 키를 사용한 대체 엔드포인트 (실험적)
-    return generateImageWithApiKey(apiKey, prompt, MAX_ATTEMPTS);
+    console.error("❌ GOOGLE_CLOUD_PROJECT_ID가 설정되지 않았습니다.");
+    console.error("💡 Gemini 2.5 Flash Image는 Vertex AI API를 사용하므로 프로젝트 ID가 필요합니다.");
+    return null;
   }
 
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     try {
-      console.log(`🖼️ Vertex AI Imagen API 이미지 생성 시작 (시도 ${attempt + 1}/${MAX_ATTEMPTS}): ${prompt.substring(0, 50)}...`);
+      console.log(`🖼️ Gemini 2.5 Flash Image 이미지 생성 시작 (시도 ${attempt + 1}/${MAX_ATTEMPTS}): ${prompt.substring(0, 50)}...`);
 
-      // Vertex AI Imagen API 엔드포인트
-      // 참고: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/imagen-api
-      // 엔드포인트 형식: https://REGION-aiplatform.googleapis.com/v1/projects/PROJECT_ID/locations/REGION/publishers/google/models/MODEL_NAME:predict
-      const imagenApiUrl = `https://${region}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${region}/publishers/google/models/imagen-3.0-generate-002:predict`;
+      // Vertex AI Gemini 2.5 Flash Image API 엔드포인트
+      // 참고: https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-image
+      // 엔드포인트 형식: https://REGION-aiplatform.googleapis.com/v1/projects/PROJECT_ID/locations/REGION/publishers/google/models/MODEL_NAME:generateContent
+      const geminiImageApiUrl = `https://${region}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${region}/publishers/google/models/gemini-2.5-flash-image:generateContent`;
 
-      // Vertex AI Imagen API 요청 형식
-      // 문서 참고: instances 배열에 입력 데이터, parameters에 설정 포함
+      // Gemini 2.5 Flash Image API 요청 형식
+      // generateContent API를 사용하여 이미지 생성
       const requestBody = {
-        instances: [
+        contents: [
           {
-            prompt: prompt,
+            parts: [
+              {
+                text: `Generate an image based on this prompt: ${prompt}`,
+              },
+            ],
           },
         ],
-        parameters: {
-          sampleCount: 1, // 생성할 이미지 개수
-          aspectRatio: "1:1", // 1:1 비율
-          safetyFilterLevel: "block_some", // 안전 필터 레벨 (block_some, block_few, block_most, block_none)
-          personGeneration: "allow_adult", // 사람 생성 허용 (allow_all, allow_adult, block_all)
+        generationConfig: {
+          temperature: 0.4,
+          topK: 32,
+          topP: 1,
+          maxOutputTokens: 8192,
         },
       };
 
@@ -129,7 +132,7 @@ export async function generateImageWithGemini(
         return null;
       }
 
-      const response = await fetch(imagenApiUrl, {
+      const response = await fetch(geminiImageApiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -149,9 +152,9 @@ export async function generateImageWithGemini(
         
       // 404 에러는 모델을 찾을 수 없음을 의미
       if (response.status === 404) {
-        console.error("❌ Imagen 모델을 찾을 수 없습니다. 모델 이름을 확인하거나 Vertex AI에서 Imagen API를 활성화해야 합니다.");
-        console.error("💡 대안: 다른 Imagen 모델 버전을 시도하거나, 다른 이미지 생성 서비스를 사용하세요.");
-        console.error(`💡 사용 중인 엔드포인트: ${imagenApiUrl}`);
+        console.error("❌ Gemini 2.5 Flash Image 모델을 찾을 수 없습니다. 모델 이름을 확인하거나 Vertex AI에서 Gemini API를 활성화해야 합니다.");
+        console.error("💡 모델 이름: gemini-2.5-flash-image");
+        console.error(`💡 사용 중인 엔드포인트: ${geminiImageApiUrl}`);
         return null;
       }
 
@@ -169,48 +172,41 @@ export async function generateImageWithGemini(
 
       const data = await response.json();
 
-      // 응답에서 이미지 데이터 추출
-      // Vertex AI Imagen API 응답 구조: predictions 배열에 이미지 데이터 포함
+      // Gemini 2.5 Flash Image API 응답 구조: candidates 배열에 이미지 데이터 포함
+      // 참고: generateContent API 응답 형식
+      if (data.candidates && data.candidates.length > 0) {
+        const candidate = data.candidates[0];
+        
+        // content.parts 배열에서 이미지 데이터 찾기
+        if (candidate.content && candidate.content.parts) {
+          for (const part of candidate.content.parts) {
+            // inlineData 형식 (base64 인코딩된 이미지)
+            if (part.inlineData && part.inlineData.data) {
+              const mimeType = part.inlineData.mimeType || "image/png";
+              const imageUrl = `data:${mimeType};base64,${part.inlineData.data}`;
+              console.log(`✅ 이미지 생성 완료`);
+              return imageUrl;
+            }
+            
+            // fileData 형식 (GCS URI)
+            if (part.fileData && part.fileData.fileUri) {
+              console.log(`⚠️ 이미지가 GCS에 저장되었습니다: ${part.fileData.fileUri}`);
+              // GCS URI를 다운로드하여 base64로 변환 필요
+              // 일단 GCS URI를 반환하거나, 다운로드 로직 추가 필요
+              return null; // GCS URI는 나중에 처리
+            }
+          }
+        }
+      }
+
+      // 하위 호환성: 다른 응답 형식 시도
       if (data.predictions && data.predictions.length > 0) {
         const prediction = data.predictions[0];
-        
-        // bytesBase64Encoded 형식
         if (prediction.bytesBase64Encoded) {
           const imageUrl = `data:image/png;base64,${prediction.bytesBase64Encoded}`;
           console.log(`✅ 이미지 생성 완료`);
           return imageUrl;
         }
-        
-        // base64Encoded 형식
-        if (prediction.base64Encoded) {
-          const imageUrl = `data:image/png;base64,${prediction.base64Encoded}`;
-          console.log(`✅ 이미지 생성 완료`);
-          return imageUrl;
-        }
-        
-        // gcsUri 형식 (Google Cloud Storage URI)
-        if (prediction.gcsUri) {
-          console.log(`⚠️ 이미지가 GCS에 저장되었습니다: ${prediction.gcsUri}`);
-          // GCS URI를 다운로드하여 base64로 변환 필요
-          // 일단 GCS URI를 반환하거나, 다운로드 로직 추가 필요
-          return null; // GCS URI는 나중에 처리
-        }
-      }
-
-      // 다른 응답 형식 시도 (하위 호환성)
-      if (data.generatedImages && data.generatedImages.length > 0) {
-        const imageBase64 = data.generatedImages[0].bytesBase64Encoded;
-        if (imageBase64) {
-          const imageUrl = `data:image/png;base64,${imageBase64}`;
-          console.log(`✅ 이미지 생성 완료`);
-          return imageUrl;
-        }
-      }
-
-      if (data.image && data.image.bytesBase64Encoded) {
-        const imageUrl = `data:image/png;base64,${data.image.bytesBase64Encoded}`;
-        console.log(`✅ 이미지 생성 완료`);
-        return imageUrl;
       }
 
       // 재시도
@@ -230,7 +226,7 @@ export async function generateImageWithGemini(
 
       // 결제/빌링 에러 (403, 402) - 즉시 포기
       if (isBilling) {
-        console.error("❌ Imagen API 결제/빌링 에러");
+        console.error("❌ Gemini 2.5 Flash Image API 결제/빌링 에러");
         console.error(`에러 상세:`, error?.message || error);
         return null;
       }
@@ -250,8 +246,8 @@ export async function generateImageWithGemini(
 
       // 404 에러는 모델을 찾을 수 없음을 의미
       if (error.message?.includes("404") || error.message?.includes("not found")) {
-        console.error("❌ Imagen 4.0 모델을 찾을 수 없습니다.");
-        console.error("💡 Vertex AI에서 Imagen API를 활성화하거나, 다른 모델 버전을 시도하세요.");
+        console.error("❌ Gemini 2.5 Flash Image 모델을 찾을 수 없습니다.");
+        console.error("💡 Vertex AI에서 Gemini API를 활성화하거나, 모델 이름을 확인하세요.");
         return null;
       }
 
@@ -270,21 +266,6 @@ export async function generateImageWithGemini(
   return null;
 }
 
-/**
- * API 키를 사용한 대체 이미지 생성 (실험적)
- * Vertex AI 프로젝트 ID가 없을 때 사용
- */
-async function generateImageWithApiKey(
-  apiKey: string,
-  prompt: string,
-  maxAttempts: number
-): Promise<string | null> {
-  // API 키 기반 엔드포인트는 현재 Imagen을 지원하지 않을 수 있음
-  // 일단 null을 반환하고 나중에 다른 이미지 생성 서비스로 대체 가능
-  console.warn("⚠️ API 키 기반 Imagen API는 현재 지원되지 않습니다.");
-  console.warn("💡 Vertex AI 프로젝트 ID를 설정하거나, 다른 이미지 생성 서비스를 사용하세요.");
-  return null;
-}
 
 /**
  * 테스트 썸네일 이미지 생성

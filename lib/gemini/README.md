@@ -21,7 +21,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ### 이미지 생성용 환경 변수 (선택사항)
 
 ```bash
-# Vertex AI Imagen API 사용 시 필요
+# Vertex AI Gemini 2.5 Flash Image 사용 시 필요
 # Google Cloud 프로젝트 ID (이미지 생성에 사용)
 GOOGLE_CLOUD_PROJECT_ID=your_project_id_here
 
@@ -156,7 +156,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
 
 ### 참고사항
 
-- 이미지 생성 비용은 별도 (Vertex AI Imagen API 사용)
+- 이미지 생성 비용은 별도 (Vertex AI Gemini 2.5 Flash Image 사용)
 - 실제 토큰 사용량은 프롬프트 길이와 응답 길이에 따라 달라질 수 있음
 
 ## 이미지 생성 (Vertex AI Imagen API)
@@ -194,7 +194,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
 ### 에러 처리
 
 - **401 Unauthorized**: OAuth 토큰이 필요합니다. 서비스 계정 키를 설정하세요.
-- **404 Not Found**: Imagen 모델을 찾을 수 없습니다. Vertex AI에서 Imagen API를 활성화하세요.
+- **404 Not Found**: Gemini 2.5 Flash Image 모델을 찾을 수 없습니다. Vertex AI에서 Gemini API를 활성화하세요.
 - **400 Bad Request**: 요청 형식이 잘못되었습니다. 문서를 참고하여 요청 형식을 확인하세요.
 
 ## 유료 모델 사용 (할당량 제한 없음)
