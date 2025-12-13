@@ -1,14 +1,15 @@
 // app/[locale]/test/list/page.tsx
 import { absoluteUrl } from "@/lib/utils";
 import { TestListClient } from "./test-list-client";
+import type { Metadata } from "next";
 
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string };
-}) {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
   const { locale } = await params;
-  const origin = absoluteUrl(); // e.g. "https://testy.im"
+  const origin = absoluteUrl();
 
   const metadataByLocale = {
     ko: {
@@ -36,17 +37,41 @@ export async function generateMetadata({
     metadataByLocale.en;
 
   const url = `https://testy.im/${locale}/test/list`;
+  const ogImage = `/og-image-${locale}.png`;
 
   return {
     title: meta.title,
     description: meta.description,
+    metadataBase: new URL("https://testy.im"),
+    openGraph: {
+      title: meta.title,
+      description: meta.description,
+      url,
+      siteName: "Testy",
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: meta.title,
+        },
+      ],
+      type: "website",
+      locale: locale,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: meta.title,
+      description: meta.description,
+      images: [ogImage],
+    },
     alternates: {
       canonical: url,
       languages: {
-        ko: `${origin}/ko/test/list`,
-        en: `${origin}/en/test/list`,
-        ja: `${origin}/ja/test/list`,
-        vi: `${origin}/vi/test/list`,
+        "ko-KR": `${origin}/ko/test/list`,
+        "en-US": `${origin}/en/test/list`,
+        "ja-JP": `${origin}/ja/test/list`,
+        "vi-VN": `${origin}/vi/test/list`,
         "x-default": `${origin}/en/test/list`,
       },
     },

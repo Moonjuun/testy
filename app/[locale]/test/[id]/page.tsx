@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string; locale: string };
+  params: Promise<{ id: string; locale: string }>;
 }): Promise<Metadata> {
   const { id, locale } = await params;
   const origin = absoluteUrl();
@@ -72,10 +72,10 @@ export async function generateMetadata({
     alternates: {
       canonical: url,
       languages: {
-        ko: `${origin}/ko/test/${id}`,
-        en: `${origin}/en/test/${id}`,
-        ja: `${origin}/ja/test/${id}`,
-        vi: `${origin}/vi/test/${id}`,
+        "ko-KR": `${origin}/ko/test/${id}`,
+        "en-US": `${origin}/en/test/${id}`,
+        "ja-JP": `${origin}/ja/test/${id}`,
+        "vi-VN": `${origin}/vi/test/${id}`,
         "x-default": `${origin}/en/test/${id}`,
       },
     },
@@ -87,6 +87,8 @@ export async function generateMetadata({
       images: [
         {
           url: imageUrl,
+          width: 1200,
+          height: 630,
           alt: title,
         },
       ],
@@ -100,11 +102,10 @@ export async function generateMetadata({
   };
 }
 
-// 페이지 컴포넌트는 변경할 필요가 없습니다.
 export default async function TestPage({
   params,
 }: {
-  params: { id: string; locale: string };
+  params: Promise<{ id: string; locale: string }>;
 }) {
   const { id, locale } = await params;
 

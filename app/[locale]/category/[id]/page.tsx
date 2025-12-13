@@ -1,14 +1,15 @@
 // app/category/[id]/page.tsx
 import { CategoryTestList } from "./category-test-list";
 import { createClient } from "@/lib/supabase/client";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string; locale: string };
-}) {
+  params: Promise<{ id: string; locale: string }>;
+}): Promise<Metadata> {
   const { id, locale } = await params;
   const supabase = createClient();
 
@@ -27,11 +28,60 @@ export async function generateMetadata({
       ? data?.name_vi
       : data?.name_ko ?? id;
 
+  const metadataByLocale = {
+    ko: {
+      title: `${name} 테스트 모음 | Testy`,
+      description: `${name} 관련 심리 테스트, 성향 테스트를 한 곳에 모아봤어요.`,
+    },
+    en: {
+      title: `${name} Tests Collection | Testy`,
+      description: `Browse all ${name} related psychological and personality tests in one place.`,
+    },
+    ja: {
+      title: `${name} テスト一覧 | Testy`,
+      description: `${name}関連の心理テスト・性格テストをまとめてチェック！`,
+    },
+    vi: {
+      title: `Bộ sưu tập bài kiểm tra ${name} | Testy`,
+      description: `Tất cả các bài kiểm tra tâm lý và tính cách liên quan đến ${name} ở một nơi.`,
+    },
+  };
+
+  const meta =
+    metadataByLocale[locale as keyof typeof metadataByLocale] ||
+    metadataByLocale.en;
+
+  const url = `https://testy.im/${locale}/category/${id}`;
+  const ogImage = `/og-image-${locale}.png`;
+
   return {
-    title: `${name} 테스트 모음 | Testy`,
-    description: `${name} 관련 심리 테스트, 성향 테스트를 한 곳에 모아봤어요.`,
+    title: meta.title,
+    description: meta.description,
+    metadataBase: new URL("https://testy.im"),
+    openGraph: {
+      title: meta.title,
+      description: meta.description,
+      url,
+      siteName: "Testy",
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: meta.title,
+        },
+      ],
+      type: "website",
+      locale: locale,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: meta.title,
+      description: meta.description,
+      images: [ogImage],
+    },
     alternates: {
-      canonical: `https://testy.im/${locale}/category/${id}`,
+      canonical: url,
       languages: {
         "ko-KR": `https://testy.im/ko/category/${id}`,
         "en-US": `https://testy.im/en/category/${id}`,
@@ -42,21 +92,11 @@ export async function generateMetadata({
   };
 }
 
-interface CategoryPageProps {
-  params: {
-    id: string; // 카테고리 코드
-  };
-}
-
-/**
- * 이 페이지는 이제 매우 단순한 서버 컴포넌트입니다.
- * 주된 역할은 동적 라우트 파라미터(params.id)를 클라이언트 컴포넌트에 전달하고,
- * 데이터 로딩 및 상호작용을 처리할 클라이언트 컴포넌트를 렌더링하는 것입니다.
- */
-export default async function CategoryPage({ params }: CategoryPageProps) {
-  // params가 Promise-like 객체일 수 있으므로 await하여 안전하게 id에 접근합니다.
-  const resolvedParams = await params;
-
-  // 카테고리 ID를 클라이언트 컴포넌트에 prop으로 전달합니다.
-  return <CategoryTestList categoryId={resolvedParams.id} />;
+export default async function CategoryPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  return <CategoryTestList categoryId={id} />;
 }

@@ -2,12 +2,63 @@
 import fs from "fs";
 import path from "path";
 import ReactMarkdown from "react-markdown";
+import type { Metadata } from "next";
 
-interface Props {
-  params: { locale?: string };
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const url = `https://testy.im/${locale}/privacy`;
+
+  const metadataByLocale = {
+    ko: {
+      title: "개인정보 처리방침 | Testy",
+      description: "Testy의 개인정보 처리방침을 확인하세요.",
+    },
+    en: {
+      title: "Privacy Policy | Testy",
+      description: "Read Testy's privacy policy.",
+    },
+    ja: {
+      title: "プライバシーポリシー | Testy",
+      description: "Testyのプライバシーポリシーをご確認ください。",
+    },
+    vi: {
+      title: "Chính sách bảo mật | Testy",
+      description: "Đọc chính sách bảo mật của Testy.",
+    },
+  };
+
+  const meta =
+    metadataByLocale[locale as keyof typeof metadataByLocale] ||
+    metadataByLocale.en;
+
+  return {
+    title: meta.title,
+    description: meta.description,
+    alternates: {
+      canonical: url,
+      languages: {
+        "ko-KR": "https://testy.im/ko/privacy",
+        "en-US": "https://testy.im/en/privacy",
+        "ja-JP": "https://testy.im/ja/privacy",
+        "vi-VN": "https://testy.im/vi/privacy",
+      },
+    },
+    robots: {
+      index: false,
+      follow: true,
+    },
+  };
 }
 
-export default async function TermsPage({ params }: Props) {
+export default async function PrivacyPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
   const { locale } = await params;
 
   const filePath = path.join(

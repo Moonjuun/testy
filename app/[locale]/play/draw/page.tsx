@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
   const url = `https://testy.im/${locale}/play/draw`;
@@ -52,22 +52,33 @@ export async function generateMetadata({
     metadataByLocale[locale as keyof typeof metadataByLocale] ??
     metadataByLocale.ko;
 
+  const ogImage = `/og-image-${locale}.png`;
+
   return {
     title: meta.title,
     description: meta.description,
+    metadataBase: new URL("https://testy.im"),
     openGraph: {
       title: meta.ogTitle,
       description: meta.ogDescription,
       url: url,
       siteName: "Testy",
-
       type: "website",
       locale: locale,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: meta.ogTitle,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: meta.ogTitle,
       description: meta.ogDescription,
+      images: [ogImage],
     },
     alternates: {
       canonical: url,
@@ -82,10 +93,11 @@ export async function generateMetadata({
 }
 
 // 2. 페이지 컴포넌트가 locale 파라미터를 받을 수 있도록 수정합니다.
-export default function DrawGamePage({
+export default async function DrawGamePage({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  await params;
   return <DrawPage />;
 }

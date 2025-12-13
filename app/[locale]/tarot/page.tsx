@@ -10,7 +10,7 @@ import Tarot from "@/components/taro/Tarot";
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
   const url = `https://testy.im/${locale}/tarot`; // TODO: 실제 도메인으로 교체
@@ -62,13 +62,20 @@ export async function generateMetadata({
       siteName: "Testy",
       type: "website",
       locale,
-      // images: [{ url: "https://.../og-taro.png" }], // 필요 시 추가
+      images: [
+        {
+          url: `/og-image-${locale}.png`,
+          width: 1200,
+          height: 630,
+          alt: meta.ogTitle,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: meta.ogTitle,
       description: meta.ogDescription,
-      // images: ["https://.../og-taro.png"], // 필요 시 추가
+      images: [`/og-image-${locale}.png`],
     },
     alternates: {
       canonical: url,
@@ -86,7 +93,7 @@ export async function generateMetadata({
 export default async function TarotPage({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
 

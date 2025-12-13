@@ -1,174 +1,93 @@
 // app/[locale]/mbti/page.tsx
+import type { Metadata } from "next";
+import MbtiModeSelection from "@/components/mbti/MbtiModeSelection";
 
-"use client";
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const url = `https://testy.im/${locale}/mbti`;
 
-import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { useTranslation } from "react-i18next";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Sparkles, Zap } from "lucide-react";
-import { cn } from "@/lib/utils";
-
-export default function MbtiModeSelectionPage() {
-  const params = useParams();
-  const locale = params.locale as string;
-  const router = useRouter();
-  const { t } = useTranslation("common");
-  const [selectedMode, setSelectedMode] = useState<"basic" | "advanced" | null>(
-    null
-  );
-
-  const handleStartTest = () => {
-    if (!selectedMode) return;
-    const testCode = selectedMode === "basic" ? "basic_v1" : "original_v1";
-    router.push(`/${locale}/mbti/test?mode=${testCode}`);
+  const metadataByLocale = {
+    ko: {
+      title: "MBTI 성격 유형 검사 | Testy",
+      description:
+        "16가지 MBTI 성격 유형을 알아보는 무료 테스트. 기본 모드(40문항)와 심화 모드(100문항) 중 선택하여 자신의 성격을 탐구해보세요.",
+      ogImage: "/og-image-ko.png",
+      ogImageAlt: "MBTI 성격 유형 검사 - Testy",
+    },
+    en: {
+      title: "MBTI Personality Type Test | Testy",
+      description:
+        "Free test to discover your 16 MBTI personality types. Choose between Basic Mode (40 questions) and Advanced Mode (100 questions) to explore your personality.",
+      ogImage: "/og-image-en.png",
+      ogImageAlt: "MBTI Personality Type Test - Testy",
+    },
+    ja: {
+      title: "MBTI性格タイプ診断 | Testy",
+      description:
+        "16種類のMBTI性格タイプを調べる無料テスト。基本モード（40問）と上級モード（100問）から選んで、自分の性格を探求しましょう。",
+      ogImage: "/og-image-ja.png",
+      ogImageAlt: "MBTI性格タイプ診断 - Testy",
+    },
+    vi: {
+      title: "Kiểm tra tính cách MBTI | Testy",
+      description:
+        "Bài kiểm tra miễn phí để khám phá 16 loại tính cách MBTI. Chọn giữa Chế độ Cơ bản (40 câu hỏi) và Chế độ Nâng cao (100 câu hỏi) để khám phá tính cách của bạn.",
+      ogImage: "/og-image-vi.png",
+      ogImageAlt: "Kiểm tra tính cách MBTI - Testy",
+    },
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              {t("mbti.selectMode")}
-            </h1>
-          </div>
+  const meta =
+    metadataByLocale[locale as keyof typeof metadataByLocale] ||
+    metadataByLocale.en;
 
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            {/* 기본 모드 */}
-            <Card
-              className={cn(
-                "cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl",
-                selectedMode === "basic"
-                  ? "border-purple-500 border-2 bg-purple-50 dark:bg-purple-900/20"
-                  : "border-gray-200 dark:border-gray-700"
-              )}
-              onClick={() => setSelectedMode("basic")}
-            >
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <Zap className="w-6 h-6 text-yellow-500" />
-                  <CardTitle className="text-2xl">
-                    {t("mbti.basicMode")}
-                  </CardTitle>
-                </div>
-                <CardDescription className="text-base">
-                  {t("mbti.basicModeDescription")}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                  <p>
-                    •{" "}
-                    {locale === "ko"
-                      ? "40개의 핵심 질문"
-                      : locale === "en"
-                      ? "40 essential questions"
-                      : locale === "ja"
-                      ? "40の重要な質問"
-                      : "40 câu hỏi cốt lõi"}
-                  </p>
-                  <p>
-                    •{" "}
-                    {locale === "ko"
-                      ? "약 10-15분 소요"
-                      : locale === "en"
-                      ? "About 10-15 minutes"
-                      : locale === "ja"
-                      ? "約10-15分"
-                      : "Khoảng 10-15 phút"}
-                  </p>
-                  <p>
-                    •{" "}
-                    {locale === "ko"
-                      ? "빠른 결과 확인"
-                      : locale === "en"
-                      ? "Quick results"
-                      : locale === "ja"
-                      ? "迅速な結果"
-                      : "Kết quả nhanh"}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+  return {
+    title: meta.title,
+    description: meta.description,
+    metadataBase: new URL("https://testy.im"),
+    openGraph: {
+      title: meta.title,
+      description: meta.description,
+      url,
+      siteName: "Testy",
+      images: [
+        {
+          url: meta.ogImage,
+          width: 1200,
+          height: 630,
+          alt: meta.ogImageAlt,
+        },
+      ],
+      type: "website",
+      locale: locale,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: meta.title,
+      description: meta.description,
+      images: [meta.ogImage],
+    },
+    alternates: {
+      canonical: url,
+      languages: {
+        "ko-KR": "https://testy.im/ko/mbti",
+        "en-US": "https://testy.im/en/mbti",
+        "ja-JP": "https://testy.im/ja/mbti",
+        "vi-VN": "https://testy.im/vi/mbti",
+      },
+    },
+  };
+}
 
-            {/* 심화 모드 */}
-            <Card
-              className={cn(
-                "cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl",
-                selectedMode === "advanced"
-                  ? "border-purple-500 border-2 bg-purple-50 dark:bg-purple-900/20"
-                  : "border-gray-200 dark:border-gray-700"
-              )}
-              onClick={() => setSelectedMode("advanced")}
-            >
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <Sparkles className="w-6 h-6 text-purple-500" />
-                  <CardTitle className="text-2xl">
-                    {t("mbti.advancedMode")}
-                  </CardTitle>
-                </div>
-                <CardDescription className="text-base">
-                  {t("mbti.advancedModeDescription")}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                  <p>
-                    •{" "}
-                    {locale === "ko"
-                      ? "100개의 상세 질문"
-                      : locale === "en"
-                      ? "100 detailed questions"
-                      : locale === "ja"
-                      ? "100の詳細な質問"
-                      : "100 câu hỏi chi tiết"}
-                  </p>
-                  <p>
-                    •{" "}
-                    {locale === "ko"
-                      ? "약 25-30분 소요"
-                      : locale === "en"
-                      ? "About 25-30 minutes"
-                      : locale === "ja"
-                      ? "約25-30分"
-                      : "Khoảng 25-30 phút"}
-                  </p>
-                  <p>
-                    •{" "}
-                    {locale === "ko"
-                      ? "깊이 있는 분석"
-                      : locale === "en"
-                      ? "In-depth analysis"
-                      : locale === "ja"
-                      ? "詳細な分析"
-                      : "Phân tích sâu"}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="text-center">
-            <Button
-              onClick={handleStartTest}
-              disabled={!selectedMode}
-              size="lg"
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-6 text-lg rounded-full"
-            >
-              {t("mbti.startTest")}
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+export default async function MbtiPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  await params; // params는 사용하지 않지만 await은 필요
+  return <MbtiModeSelection />;
 }
