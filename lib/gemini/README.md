@@ -28,17 +28,35 @@ GOOGLE_CLOUD_PROJECT_ID=your_project_id_here
 # Google Cloud 리전 (기본값: us-central1)
 GOOGLE_CLOUD_REGION=us-central1
 
-# 서비스 계정 키 JSON (Vercel 환경 변수로 설정 시)
-# 방법 1: JSON 전체를 한 줄로 변환하여 설정 (권장)
+# OAuth 토큰 설정 (다음 중 하나 선택)
+# 방법 1: 직접 액세스 토큰 설정 (가장 간단, gcloud auth print-access-token 결과)
+GOOGLE_ACCESS_TOKEN=ya29.a0AfH6SMBx...
+
+# 방법 2: 서비스 계정 키 JSON (Vercel 환경 변수로 설정 시)
+# JSON 전체를 한 줄로 변환하여 설정
 GOOGLE_SERVICE_ACCOUNT_KEY={"type":"service_account","project_id":"...","private_key_id":"...","private_key":"...","client_email":"...","client_id":"...","auth_uri":"...","token_uri":"...","auth_provider_x509_cert_url":"...","client_x509_cert_url":"..."}
 
-# 방법 2: 로컬 개발 환경에서만 사용 (파일 경로)
+# 방법 3: 로컬 개발 환경에서만 사용 (파일 경로)
 GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
 ```
 
 ## Google OAuth 토큰 설정 방법
 
-Vertex AI Imagen API를 사용하려면 OAuth 토큰이 필요합니다. 다음 방법 중 하나를 선택하세요:
+Vertex AI Gemini 2.5 Flash Image를 사용하려면 OAuth 토큰이 필요합니다. 다음 방법 중 하나를 선택하세요:
+
+### 방법 0: 직접 액세스 토큰 설정 (가장 간단) ⭐
+
+`gcloud auth print-access-token`으로 얻은 토큰을 환경 변수로 설정:
+
+```bash
+# 터미널에서 토큰 획득
+gcloud auth print-access-token
+
+# 환경 변수로 설정 (.env.local 또는 Vercel 환경 변수)
+GOOGLE_ACCESS_TOKEN=ya29.a0AfH6SMBx...
+```
+
+**주의**: 액세스 토큰은 만료 시간이 있으므로 (보통 1시간), 만료되면 다시 설정해야 합니다.
 
 ### 방법 1: 서비스 계정 키 생성 (Vercel 배포 시 권장)
 

@@ -12,11 +12,19 @@ import {
 
 /**
  * Google OAuth 토큰 획득
- * 서비스 계정 키 또는 Application Default Credentials 사용
+ * 서비스 계정 키, Application Default Credentials, 또는 직접 설정된 액세스 토큰 사용
  */
 async function getAccessToken(): Promise<string | null> {
   try {
-    // 방법 1: 서비스 계정 키 JSON이 환경 변수로 설정된 경우
+    // 방법 1: 직접 설정된 액세스 토큰 (가장 간단)
+    // gcloud auth print-access-token 결과를 환경 변수로 설정
+    const directAccessToken = process.env.GOOGLE_ACCESS_TOKEN;
+    if (directAccessToken) {
+      console.log("✅ 직접 설정된 액세스 토큰 사용");
+      return directAccessToken;
+    }
+
+    // 방법 2: 서비스 계정 키 JSON이 환경 변수로 설정된 경우
     const serviceAccountKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
     if (serviceAccountKey) {
       try {
@@ -34,7 +42,7 @@ async function getAccessToken(): Promise<string | null> {
       }
     }
 
-    // 방법 2: GOOGLE_APPLICATION_CREDENTIALS 환경 변수로 파일 경로 지정
+    // 방법 3: GOOGLE_APPLICATION_CREDENTIALS 환경 변수로 파일 경로 지정
     // (로컬 개발 환경에서만 사용 가능, Vercel에서는 사용 불가)
     if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
       const auth = new GoogleAuth({
@@ -46,7 +54,7 @@ async function getAccessToken(): Promise<string | null> {
       return accessToken?.token || null;
     }
 
-    // 방법 3: Application Default Credentials (ADC) 사용
+    // 방법 4: Application Default Credentials (ADC) 사용
     // gcloud auth application-default login으로 설정된 경우
     const auth = new GoogleAuth({
       scopes: ["https://www.googleapis.com/auth/cloud-platform"],
