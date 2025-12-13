@@ -2,6 +2,11 @@
 import { createClient } from "@supabase/supabase-js";
 import { TestJsonInsertData, TranslationDataOnly } from "@/types/test";
 import { translateTestToAllLanguages } from "./generateTranslations";
+import { generateThumbnailImage, generateResultImage } from "./generateImage";
+import {
+  uploadThumbnailImageToSupabase,
+  uploadResultImageToSupabase,
+} from "./uploadImageToSupabase";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -334,6 +339,102 @@ export async function saveTestToDatabase(
     console.log(
       `✅ 다국어 번역 저장 완료: ${successCount}/4 성공 (한국어, 영어, 일본어, 베트남어)`
     );
+
+    // 4. 이미지 생성 및 업로드 (비동기, 실패해도 테스트 저장은 성공으로 처리)
+    try {
+      console.log("🖼️ 이미지 생성 및 업로드 시작...");
+
+      // 4-1. 썸네일 이미지 생성 및 업로드
+      if (testData.character?.prompt_hint) {
+        try {
+          console.log("📸 썸네일 이미지 생성 중...");
+          const thumbnailDataUrl = await generateThumbnailImage(
+            testData.character.prompt_hint
+          );
+
+          if (thumbnailDataUrl) {
+            await uploadThumbnailImageToSupabase(savedTestId, thumbnailDataUrl);
+            console.log(`✅ 썸네일 이미지 업로드 완료 (테스트 ID: ${savedTestId})`);
+          } else {
+            console.warn("⚠️ 썸네일 이미지 생성 실패 (계속 진행)");
+          }
+        } catch (thumbnailError: any) {
+          console.error("❌ 썸네일 이미지 생성/업로드 실패:", thumbnailError.message);
+          // 썸네일 실패는 무시하고 계속 진행
+        }
+      } else {
+        console.warn("⚠️ character.prompt_hint가 없어 썸네일 이미지를 생성할 수 없습니다.");
+      }
+
+      // 4-2. 결과 이미지들 생성 및 업로드 (병렬 처리)
+      if (testData.results && testData.results.length > 0) {
+        console.log(`📸 결과 이미지 생성 중 (${testData.results.length}개)...`);
+
+        // 먼저 results 테이블에서 result ID들을 조회
+        const { data: savedResults, error: resultsError } = await supabaseAdmin
+          .from("results")
+          .select("id, score_min, score_max")
+          .eq("test_id", savedTestId)
+          .order("score_min", { ascending: true });
+
+        if (resultsError || !savedResults || savedResults.length === 0) {
+          console.warn("⚠️ 저장된 결과를 찾을 수 없어 결과 이미지를 생성할 수 없습니다.");
+        } else {
+          // 각 결과의 image_prompt와 저장된 result ID를 매칭
+          const imagePromises = testData.results.map(async (result, idx) => {
+            // score_range로 매칭
+            const savedResult = savedResults.find(
+              (sr) =>
+                sr.score_min === result.score_range[0] &&
+                sr.score_max === result.score_range[1]
+            );
+
+            if (!savedResult || !result.image_prompt) {
+              console.warn(
+                `⚠️ 결과 ${idx + 1}의 이미지 프롬프트가 없거나 매칭되는 결과를 찾을 수 없습니다.`
+              );
+              return null;
+            }
+
+            try {
+              console.log(`📸 결과 이미지 ${idx + 1}/${testData.results.length} 생성 중...`);
+              const resultImageDataUrl = await generateResultImage(result.image_prompt);
+
+              if (resultImageDataUrl) {
+                await uploadResultImageToSupabase(
+                  savedResult.id,
+                  resultImageDataUrl
+                );
+                console.log(
+                  `✅ 결과 이미지 ${idx + 1} 업로드 완료 (결과 ID: ${savedResult.id})`
+                );
+                return { resultId: savedResult.id, success: true };
+              } else {
+                console.warn(`⚠️ 결과 이미지 ${idx + 1} 생성 실패`);
+                return { resultId: savedResult.id, success: false };
+              }
+            } catch (resultImageError: any) {
+              console.error(
+                `❌ 결과 이미지 ${idx + 1} 생성/업로드 실패:`,
+                resultImageError.message
+              );
+              return { resultId: savedResult.id, success: false };
+            }
+          });
+
+          const imageResults = await Promise.all(imagePromises);
+          const successImageCount = imageResults.filter((r) => r?.success).length;
+          console.log(
+            `✅ 결과 이미지 업로드 완료: ${successImageCount}/${testData.results.length}개 성공`
+          );
+        }
+      }
+
+      console.log("✅ 이미지 생성 및 업로드 프로세스 완료");
+    } catch (imageError: any) {
+      // 이미지 생성/업로드 실패는 무시하고 테스트 저장은 성공으로 처리
+      console.error("❌ 이미지 생성/업로드 중 오류 (무시됨):", imageError.message);
+    }
 
     return { success: true, testId: savedTestId };
   } catch (error: any) {

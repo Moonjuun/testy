@@ -18,13 +18,6 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ```
 
-### 선택적 환경 변수
-
-```bash
-# 레퍼런스 이미지 URL (사이트 스타일과 비슷한 이미지)
-# 이 이미지를 분석하여 유사한 스타일의 이미지를 생성합니다
-TEST_REFERENCE_IMAGE_URL=https://example.com/reference-image.png
-```
 
 ## 비용 최적화 (유료 모델 사용)
 
@@ -34,7 +27,6 @@ TEST_REFERENCE_IMAGE_URL=https://example.com/reference-image.png
   - Input: $0.10 per million tokens
   - Output: $0.40 per million tokens
 - **Gemini 2.5 Flash Image**: 이미지 생성용 모델
-- **Gemini Vision**: 레퍼런스 이미지 분석 (무료 티어 포함)
 
 ### 토큰 최적화 전략
 
@@ -78,7 +70,6 @@ TEST_REFERENCE_IMAGE_URL=https://example.com/reference-image.png
 ### 참고사항
 
 - 이미지 생성 비용은 별도 (Gemini 2.5 Flash Image 모델)
-- 레퍼런스 이미지 분석은 무료 티어 포함
 - 실제 토큰 사용량은 프롬프트 길이와 응답 길이에 따라 달라질 수 있음
 
 ## 유료 모델 사용 (할당량 제한 없음)
@@ -147,23 +138,6 @@ Error: [402 Payment Required] Payment method required
 - ⚠️ 결제 문제는 재시도로 해결되지 않습니다
 - ⚠️ 결제 미납 시 Gemini API뿐만 아니라 같은 결제 계정의 다른 GCP 서비스도 영향받을 수 있습니다
 - ⚠️ 결제 완료 후에도 서비스 재개까지 몇 분이 걸릴 수 있습니다
-
-## 레퍼런스 이미지 설정
-
-사이트 스타일과 비슷한 이미지를 생성하려면:
-
-1. **레퍼런스 이미지 준비**: 사이트의 기존 테스트 썸네일 이미지 중 하나를 선택
-2. **이미지 URL 설정**: `TEST_REFERENCE_IMAGE_URL` 환경 변수에 이미지 URL 설정
-   - Supabase Storage URL 사용 가능
-   - 공개적으로 접근 가능한 URL이어야 함
-3. **자동 분석**: Gemini Vision API가 레퍼런스 이미지를 분석하여 스타일 키워드 추출
-4. **스타일 적용**: 추출된 스타일 키워드를 Gemini 이미지 생성 프롬프트에 추가하여 유사한 스타일의 이미지 생성
-
-예시:
-
-```bash
-TEST_REFERENCE_IMAGE_URL=https://xxlvfknsbwfjyzdlucyz.supabase.co/storage/v1/object/public/thumbnail-image/test-thumbnails/mbti/3.png
-```
 
 ## 다국어 자동 번역 지원
 
