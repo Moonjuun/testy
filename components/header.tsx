@@ -182,6 +182,7 @@ export function Header({ locale }: HeaderProps) {
   const mbtiMenu = (
     <Button
       variant="ghost"
+      asChild
       className="px-4 py-2 text-[15px] font-semibold text-gray-800 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
     >
       <Link href={`/${locale}/mbti`} onClick={() => setIsMobileMenuOpen(false)}>
@@ -193,6 +194,7 @@ export function Header({ locale }: HeaderProps) {
   const tarotMenu = (
     <Button
       variant="ghost"
+      asChild
       className="px-4 py-2 text-[15px] font-semibold text-gray-800 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
     >
       <Link
@@ -207,6 +209,7 @@ export function Header({ locale }: HeaderProps) {
   const galleryMenu = (
     <Button
       variant="ghost"
+      asChild
       className="px-4 py-2 text-[15px] font-semibold text-gray-800 dark:text-gray-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
     >
       <Link
