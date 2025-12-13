@@ -144,8 +144,12 @@ export default function HomePage({
   featuredTest,
   translations,
 }: HomePageProps) {
+  // 썸네일이 있는 테스트만 필터링 (서버에서 이미 필터링되었지만 이중 체크)
+  const testsWithThumbnail = initialTests.filter(
+    (test) => test.thumbnail_url && test.thumbnail_url.trim() !== ""
+  );
   // 에디터 픽: 최신 테스트들 (최대 10개)
-  const editorPickTests = initialTests.slice(0, 10);
+  const editorPickTests = testsWithThumbnail.slice(0, 10);
 
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950">

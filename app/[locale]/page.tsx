@@ -17,14 +17,22 @@ const translations = {
 
 // 서버에서 featuredTest 선택 (매 요청마다 랜덤하게 선택)
 function selectFeaturedTest(tests: NewTest[]): NewTest | null {
-  if (tests.length === 0) return null;
+  // 썸네일이 있는 테스트만 필터링
+  const testsWithThumbnail = tests.filter(
+    (test) => test.thumbnail_url && test.thumbnail_url.trim() !== ""
+  );
+
+  if (testsWithThumbnail.length === 0) return null;
 
   // 인기 있는 테스트들(조회수 1000 이상) 중에서 우선 선택
-  const popularTests = tests.filter((test) => (test.view_count ?? 0) >= 1000);
+  const popularTests = testsWithThumbnail.filter(
+    (test) => (test.view_count ?? 0) >= 1000
+  );
 
   // 인기 테스트가 있으면 그 중에서 랜덤 선택, 없으면 전체에서 랜덤 선택
   // 서버 컴포넌트는 매 요청마다 실행되므로 새로고침할 때마다 다른 테스트가 표시됨
-  const candidates = popularTests.length > 0 ? popularTests : tests;
+  const candidates =
+    popularTests.length > 0 ? popularTests : testsWithThumbnail;
   const randomIndex = Math.floor(Math.random() * candidates.length);
   return candidates[randomIndex] || null;
 }
@@ -33,7 +41,11 @@ function selectFeaturedTest(tests: NewTest[]): NewTest | null {
 export default async function Page({ params }: { params: { locale: string } }) {
   // 2. params를 await으로 받아 구조 분해합니다.
   const { locale } = await params;
-  const initialTests = await getNewTests(locale as Language);
+  const allTests = await getNewTests(locale as Language);
+  // 썸네일이 있는 테스트만 필터링
+  const initialTests = allTests.filter(
+    (test) => test.thumbnail_url && test.thumbnail_url.trim() !== ""
+  );
   const featuredTest = selectFeaturedTest(initialTests);
   const localeTranslations =
     translations[locale as keyof typeof translations] || translations.en;

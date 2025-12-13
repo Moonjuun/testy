@@ -32,7 +32,11 @@ export function TestListClient() {
       setIsLoading(true);
       try {
         const testsData = await getAllTests(currentLangCode);
-        setInitialTests(testsData);
+        // 썸네일이 있는 테스트만 필터링
+        const testsWithThumbnail = testsData.filter(
+          (test) => test.thumbnail_url && test.thumbnail_url.trim() !== ""
+        );
+        setInitialTests(testsWithThumbnail);
       } catch (error) {
         console.error("Failed to fetch tests:", error);
       } finally {

@@ -31,7 +31,11 @@ export function CategoryTestList({ categoryId }: Props) {
       setIsLoading(true);
       try {
         const testsData = await getTestsByCategory(categoryId, currentLangCode);
-        setInitialTests(testsData);
+        // 썸네일이 있는 테스트만 필터링
+        const testsWithThumbnail = testsData.filter(
+          (test) => test.thumbnail_url && test.thumbnail_url.trim() !== ""
+        );
+        setInitialTests(testsWithThumbnail);
       } catch (error) {
         console.error("Failed to fetch category tests:", error);
       } finally {
