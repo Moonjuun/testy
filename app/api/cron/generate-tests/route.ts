@@ -51,6 +51,8 @@ export async function GET(request: NextRequest) {
         test: "test1",
         success: result1.success,
         testId: result1.testId,
+        title: test1.title,
+        categoryId: test1.category_id,
         error: result1.error,
       });
       console.log("테스트 1 저장 완료:", result1);
@@ -70,6 +72,8 @@ export async function GET(request: NextRequest) {
         test: "test2",
         success: result2.success,
         testId: result2.testId,
+        title: test2.title,
+        categoryId: test2.category_id,
         error: result2.error,
       });
       console.log("테스트 2 저장 완료:", result2);
