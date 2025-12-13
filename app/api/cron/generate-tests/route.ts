@@ -4,6 +4,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateTwoTests } from "@/lib/gemini/generateTest";
 import { saveTestToDatabase } from "@/lib/gemini/saveTestToDatabase";
+import { sendCompletionEmail } from "@/lib/email/sendCompletionEmail";
 
 /**
  * Vercel Cron Job 설정:
@@ -87,6 +88,11 @@ export async function GET(request: NextRequest) {
       successCount > 0
         ? `테스트 자동 생성 완료 (성공: ${successCount}/2)`
         : "테스트 자동 생성 실패";
+
+    // 이메일 발송 (비동기, 실패해도 응답은 정상 반환)
+    sendCompletionEmail(results, successCount, 2).catch((emailError) => {
+      console.error("이메일 발송 실패 (무시됨):", emailError);
+    });
 
     return NextResponse.json(
       {

@@ -100,8 +100,9 @@ async function generateTopic(
   retryCount: number = 1
 ): Promise<Partial<TestJsonInsertData> | null> {
   const maxRetries = 2;
+  const MAX_ATTEMPTS = 5; // 무한 루프 방지: 최대 5번 시도
 
-  for (let attempt = 0; attempt <= retryCount; attempt++) {
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     try {
       const prompt = TopicPrompt;
       const result = await model.generateContent(prompt);
@@ -148,6 +149,12 @@ async function generateTopic(
         }
       }
 
+      // 무한 루프 방지: MAX_ATTEMPTS를 초과하면 포기
+      if (attempt >= MAX_ATTEMPTS - 1) {
+        console.error(`❌ 최대 재시도 횟수 초과 (${MAX_ATTEMPTS}번)`);
+        return null;
+      }
+
       if (attempt < retryCount && attempt < maxRetries) {
         console.log(`🔄 재시도 대기 중... (2초)`);
         await sleep(2000);
@@ -171,8 +178,9 @@ async function generateQuestions(
   retryCount: number = 1
 ): Promise<TestJsonInsertData["questions"] | null> {
   const maxRetries = 2;
+  const MAX_ATTEMPTS = 5; // 무한 루프 방지: 최대 5번 시도
 
-  for (let attempt = 0; attempt <= retryCount; attempt++) {
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     try {
       const prompt = QuestionsPrompt.replace("{{TITLE}}", topic.title || "")
         .replace("{{DESCRIPTION}}", topic.description || "")
@@ -218,6 +226,12 @@ async function generateQuestions(
         error.message
       );
 
+      // 무한 루프 방지: MAX_ATTEMPTS를 초과하면 포기
+      if (attempt >= MAX_ATTEMPTS - 1) {
+        console.error(`❌ 최대 재시도 횟수 초과 (${MAX_ATTEMPTS}번)`);
+        return null;
+      }
+
       if (attempt < retryCount && attempt < maxRetries) {
         console.log(`🔄 재시도 대기 중... (2초)`);
         await sleep(2000);
@@ -242,9 +256,10 @@ async function generateResults(
   retryCount: number = 1
 ): Promise<TestJsonInsertData["results"] | null> {
   const maxRetries = 2;
+  const MAX_ATTEMPTS = 5; // 무한 루프 방지: 최대 5번 시도
   const maxScore = questionCount * 4; // 각 질문당 최대 4점 가정
 
-  for (let attempt = 0; attempt <= retryCount; attempt++) {
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     try {
       const prompt = ResultsPrompt.replace("{{TITLE}}", topic.title || "")
         .replace("{{QUESTION_COUNT}}", String(questionCount))
@@ -295,6 +310,12 @@ async function generateResults(
         `❌ 결과 생성 실패 (시도 ${attempt + 1}/${retryCount + 1}):`,
         error.message
       );
+
+      // 무한 루프 방지: MAX_ATTEMPTS를 초과하면 포기
+      if (attempt >= MAX_ATTEMPTS - 1) {
+        console.error(`❌ 최대 재시도 횟수 초과 (${MAX_ATTEMPTS}번)`);
+        return null;
+      }
 
       if (attempt < retryCount && attempt < maxRetries) {
         console.log(`🔄 재시도 대기 중... (2초)`);
@@ -396,8 +417,16 @@ export async function generateTestWithGemini(
   retryCount: number = 1
 ): Promise<TestJsonInsertData | null> {
   const maxRetries = 2;
+  const MAX_ATTEMPTS = 5; // 무한 루프 방지: 최대 5번 시도
+  const MAX_EXECUTION_TIME = 5 * 60 * 1000; // 최대 실행 시간: 5분
+  const startTime = Date.now();
 
-  for (let attempt = 0; attempt <= retryCount; attempt++) {
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+    // 실행 시간 체크
+    if (Date.now() - startTime > MAX_EXECUTION_TIME) {
+      console.error(`❌ 최대 실행 시간 초과 (${MAX_EXECUTION_TIME / 1000}초)`);
+      return null;
+    }
     for (const modelName of models) {
       try {
         const genAI = getGeminiClient();
@@ -480,12 +509,20 @@ export async function generateTwoTests(): Promise<
   [TestJsonInsertData | null, TestJsonInsertData | null]
 > {
   const validCategoryIds = [1, 2, 3, 4, 5, 6, 7, 8];
+  const MAX_TOTAL_TIME = 10 * 60 * 1000; // 전체 최대 실행 시간: 10분
+  const startTime = Date.now();
 
   // 첫 번째 테스트: 랜덤 카테고리
   const category1 =
     validCategoryIds[Math.floor(Math.random() * validCategoryIds.length)];
   console.log(`📝 첫 번째 테스트 생성 시작 (카테고리: ${category1})`);
   let test1 = await generateTestWithGeminiForCategory(category1);
+  
+  // 타임아웃 체크
+  if (Date.now() - startTime > MAX_TOTAL_TIME) {
+    console.error(`❌ 전체 최대 실행 시간 초과 (${MAX_TOTAL_TIME / 1000}초)`);
+    return [test1, null];
+  }
 
   if (!test1) {
     console.error(
@@ -499,6 +536,12 @@ export async function generateTwoTests(): Promise<
   );
 
   await sleep(2000);
+
+  // 타임아웃 체크
+  if (Date.now() - startTime > MAX_TOTAL_TIME) {
+    console.error(`❌ 전체 최대 실행 시간 초과 (${MAX_TOTAL_TIME / 1000}초)`);
+    return [test1, null];
+  }
 
   // 두 번째 테스트: 첫 번째와 다른 카테고리
   const remainingCategories = validCategoryIds.filter((id) => id !== category1);
@@ -517,8 +560,16 @@ async function generateTestWithGeminiForCategory(
   categoryId: number
 ): Promise<TestJsonInsertData | null> {
   const maxRetries = 2;
+  const MAX_ATTEMPTS = 5; // 무한 루프 방지: 최대 5번 시도
+  const MAX_EXECUTION_TIME = 5 * 60 * 1000; // 최대 실행 시간: 5분
+  const startTime = Date.now();
 
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+    // 실행 시간 체크
+    if (Date.now() - startTime > MAX_EXECUTION_TIME) {
+      console.error(`❌ 최대 실행 시간 초과 (${MAX_EXECUTION_TIME / 1000}초)`);
+      return null;
+    }
     for (const modelName of models) {
       try {
         const genAI = getGeminiClient();
