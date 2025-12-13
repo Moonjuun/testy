@@ -135,18 +135,46 @@ JSON은 반드시 { 로 시작하고 } 로 끝나야 합니다.`;
           // 질문과 결과는 번역된 것을 사용하되, 구조는 유지
           questions: translatedJson.questions || testData.questions,
           results:
-            translatedJson.results?.map((result, idx) => ({
-              ...result,
-              // 이미지 URL은 원본 유지 (나중에 생성될 수 있음)
-              result_image_url: testData.results[idx]?.result_image_url || null,
-              // image_prompt는 영어로 유지
-              image_prompt:
-                testData.results[idx]?.image_prompt || result.image_prompt,
-              // score_range는 원본 유지
-              score_range:
-                testData.results[idx]?.score_range || result.score_range,
-            })) || testData.results,
+            translatedJson.results?.map((result, idx) => {
+              // 원본 결과 데이터 가져오기 (score_range, image_prompt 등)
+              const originalResult = testData.results[idx];
+              
+              return {
+                ...result,
+                // 이미지 URL은 원본 유지 (나중에 생성될 수 있음)
+                result_image_url: originalResult?.result_image_url || null,
+                // image_prompt는 영어로 유지
+                image_prompt: originalResult?.image_prompt || result.image_prompt,
+                // score_range는 반드시 원본에서 가져오기 (번역된 데이터에 없을 수 있음)
+                score_range: originalResult?.score_range || result.score_range || [0, 0],
+              };
+            }) || testData.results,
         };
+
+        // ✅ score_range 검증: 모든 결과에 score_range가 있는지 확인
+        if (finalTranslatedData.results) {
+          const missingScoreRanges = finalTranslatedData.results
+            .map((r, idx) => (!r.score_range || r.score_range.length !== 2 ? idx : null))
+            .filter((idx) => idx !== null);
+          
+          if (missingScoreRanges.length > 0) {
+            console.warn(
+              `⚠️ 번역된 데이터에 score_range가 없는 결과가 있습니다: ${missingScoreRanges.join(", ")}`
+            );
+            // 원본 데이터에서 score_range 복원 시도
+            finalTranslatedData.results.forEach((result, idx) => {
+              if (!result.score_range || result.score_range.length !== 2) {
+                const originalScoreRange = testData.results[idx]?.score_range;
+                if (originalScoreRange && originalScoreRange.length === 2) {
+                  result.score_range = originalScoreRange;
+                  console.log(`✅ 결과 ${idx + 1}의 score_range를 원본에서 복원했습니다.`);
+                } else {
+                  console.error(`❌ 결과 ${idx + 1}의 score_range를 복원할 수 없습니다.`);
+                }
+              }
+            });
+          }
+        }
 
         console.log(
           `✅ ${languageNames[targetLanguage]} 번역 완료: "${finalTranslatedData.title}"`
