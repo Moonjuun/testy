@@ -43,7 +43,14 @@ export async function sendCompletionEmail(
     const successTests = results.filter((r) => r.success);
     const failedTests = results.filter((r) => !r.success);
 
-    const emailSubject = `✅ 테스트 자동 생성 완료 (${successCount}/${totalCount})`;
+    // 오늘 날짜 포맷팅 (YYYY-MM-DD)
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const today = `${year}-${month}-${day}`;
+
+    const emailSubject = `✅ 테스트 자동 생성 완료 [${today}] (${successCount}/${totalCount})`;
     
     const emailBodyText = `
 테스트 자동 생성이 완료되었습니다.
