@@ -21,7 +21,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ### 이미지 생성용 환경 변수 (선택사항)
 
 ```bash
-# Vertex AI Gemini 2.5 Flash Image 사용 시 필요
+# Vertex AI Imagen 4.0 사용 시 필요
 # Google Cloud 프로젝트 ID (이미지 생성에 사용)
 GOOGLE_CLOUD_PROJECT_ID=your_project_id_here
 
@@ -42,7 +42,7 @@ GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
 
 ## Google OAuth 토큰 설정 방법
 
-Vertex AI Gemini 2.5 Flash Image를 사용하려면 OAuth 토큰이 필요합니다. 다음 방법 중 하나를 선택하세요:
+Vertex AI Imagen 4.0을 사용하려면 OAuth 토큰이 필요합니다. 다음 방법 중 하나를 선택하세요:
 
 ### 방법 0: 직접 액세스 토큰 설정 (가장 간단) ⭐
 
@@ -174,10 +174,10 @@ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
 
 ### 참고사항
 
-- 이미지 생성 비용은 별도 (Vertex AI Gemini 2.5 Flash Image 사용)
+- 이미지 생성 비용은 별도 (Vertex AI Imagen 4.0 사용)
 - 실제 토큰 사용량은 프롬프트 길이와 응답 길이에 따라 달라질 수 있음
 
-## 이미지 생성 (Vertex AI Gemini 2.5 Flash Image)
+## 이미지 생성 (Vertex AI Imagen 4.0)
 
 ### 설정 방법
 
@@ -201,19 +201,19 @@ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
 
 ### 사용 모델
 
-- **Gemini 2.5 Flash Image**: 이미지 생성용 모델
-  - 참고: [Gemini 2.5 Flash Image 문서](https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-image)
-  - 가격: [Vertex AI 가격 책정](https://cloud.google.com/vertex-ai/generative-ai/pricing?hl=ko#gemini-models-3) 참고
+- **Imagen 4.0 Generate 001**: 이미지 생성용 모델
+  - 참고: [Vertex AI Imagen API 문서](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/imagen-api)
+  - 가격: [Vertex AI 가격 책정](https://cloud.google.com/vertex-ai/generative-ai/pricing?hl=ko) 참고
 
 ### 이미지 생성 비용
 
-- 이미지 생성 비용은 Vertex AI Gemini 2.5 Flash Image 가격 정책을 따릅니다
-- 자세한 가격 정보는 [Vertex AI 가격 책정](https://cloud.google.com/vertex-ai/generative-ai/pricing?hl=ko#gemini-models-3) 참고
+- 이미지 생성 비용은 Vertex AI Imagen 4.0 가격 정책을 따릅니다
+- 자세한 가격 정보는 [Vertex AI 가격 책정](https://cloud.google.com/vertex-ai/generative-ai/pricing?hl=ko) 참고
 
 ### 에러 처리
 
-- **401 Unauthorized**: OAuth 토큰이 필요합니다. 서비스 계정 키를 설정하세요.
-- **404 Not Found**: Gemini 2.5 Flash Image 모델을 찾을 수 없습니다. Vertex AI에서 Gemini API를 활성화하세요.
+- **401 Unauthorized**: OAuth 토큰이 필요합니다. GOOGLE_ACCESS_TOKEN 또는 서비스 계정 키를 설정하세요.
+- **404 Not Found**: Imagen 4.0 모델을 찾을 수 없습니다. Vertex AI에서 Imagen API를 활성화하세요.
 - **400 Bad Request**: 요청 형식이 잘못되었습니다. 문서를 참고하여 요청 형식을 확인하세요.
 
 ## 유료 모델 사용 (할당량 제한 없음)
