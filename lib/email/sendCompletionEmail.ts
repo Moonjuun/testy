@@ -8,6 +8,11 @@ interface TestResult {
   title?: string;
   categoryId?: number;
   error?: string;
+  imageGeneration?: {
+    thumbnailSuccess: boolean;
+    resultImagesSuccess: number;
+    resultImagesTotal: number;
+  };
 }
 
 // 카테고리 ID를 이름으로 변환
@@ -63,10 +68,14 @@ ${successTests.length > 0 ? `
 ✅ 성공한 테스트:
 ${successTests
   .map(
-    (r, idx) =>
-      `  ${idx + 1}. 테스트 ID: ${r.testId || "N/A"}
+    (r, idx) => {
+      const imageInfo = r.imageGeneration
+        ? `     - 이미지: 썸네일 ${r.imageGeneration.thumbnailSuccess ? "✅" : "❌"}, 결과 ${r.imageGeneration.resultImagesSuccess}/${r.imageGeneration.resultImagesTotal}개 성공`
+        : "";
+      return `  ${idx + 1}. 테스트 ID: ${r.testId || "N/A"}
      - 주제: ${r.title || "제목 없음"}
-     - 카테고리: ${getCategoryName(r.categoryId)}`
+     - 카테고리: ${getCategoryName(r.categoryId)}${imageInfo}`;
+    }
   )
   .join("\n")}
 ` : ""}
@@ -112,12 +121,18 @@ ${failedTests.map((r, idx) => `  ${idx + 1}. ${r.test}: ${r.error || "알 수 �
       <h3>✅ 성공한 테스트</h3>
       ${successTests
         .map(
-          (r, idx) => `
+          (r, idx) => {
+            const imageInfo = r.imageGeneration
+              ? `<div class="test-category">이미지: 썸네일 ${r.imageGeneration.thumbnailSuccess ? "✅" : "❌"}, 결과 ${r.imageGeneration.resultImagesSuccess}/${r.imageGeneration.resultImagesTotal}개 성공</div>`
+              : "";
+            return `
       <div class="test-item">
         <div class="test-id">${idx + 1}. 테스트 ID: ${r.testId || "N/A"}</div>
         <div class="test-title">주제: ${r.title || "제목 없음"}</div>
         <div class="test-category">카테고리: ${getCategoryName(r.categoryId)}</div>
-      </div>`
+        ${imageInfo}
+      </div>`;
+          }
         )
         .join("")}
     </div>

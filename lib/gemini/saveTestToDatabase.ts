@@ -212,7 +212,16 @@ async function saveTranslationEfficient(
  */
 export async function saveTestToDatabase(
   testData: TestJsonInsertData
-): Promise<{ success: boolean; testId?: number; error?: string }> {
+): Promise<{
+  success: boolean;
+  testId?: number;
+  error?: string;
+  imageGeneration?: {
+    thumbnailSuccess: boolean;
+    resultImagesSuccess: number;
+    resultImagesTotal: number;
+  };
+}> {
   let savedTestId: number | null = null;
 
   try {
@@ -341,6 +350,10 @@ export async function saveTestToDatabase(
     );
 
     // 4. 이미지 생성 및 업로드 (비동기, 실패해도 테스트 저장은 성공으로 처리)
+    let thumbnailSuccess = false;
+    let resultImagesSuccess = 0;
+    let resultImagesTotal = 0;
+
     try {
       console.log("🖼️ 이미지 생성 및 업로드 시작...");
 
@@ -355,6 +368,7 @@ export async function saveTestToDatabase(
           if (thumbnailDataUrl) {
             await uploadThumbnailImageToSupabase(savedTestId, thumbnailDataUrl);
             console.log(`✅ 썸네일 이미지 업로드 완료 (테스트 ID: ${savedTestId})`);
+            thumbnailSuccess = true;
           } else {
             console.warn("⚠️ 썸네일 이미지 생성 실패 (계속 진행)");
           }
@@ -380,6 +394,8 @@ export async function saveTestToDatabase(
         if (resultsError || !savedResults || savedResults.length === 0) {
           console.warn("⚠️ 저장된 결과를 찾을 수 없어 결과 이미지를 생성할 수 없습니다.");
         } else {
+          resultImagesTotal = testData.results.length;
+          
           // 각 결과의 image_prompt와 저장된 result ID를 매칭
           const imagePromises = testData.results.map(async (result, idx) => {
             // score_range로 매칭
@@ -423,9 +439,9 @@ export async function saveTestToDatabase(
           });
 
           const imageResults = await Promise.all(imagePromises);
-          const successImageCount = imageResults.filter((r) => r?.success).length;
+          resultImagesSuccess = imageResults.filter((r) => r?.success).length;
           console.log(
-            `✅ 결과 이미지 업로드 완료: ${successImageCount}/${testData.results.length}개 성공`
+            `✅ 결과 이미지 업로드 완료: ${resultImagesSuccess}/${resultImagesTotal}개 성공`
           );
         }
       }
@@ -436,7 +452,15 @@ export async function saveTestToDatabase(
       console.error("❌ 이미지 생성/업로드 중 오류 (무시됨):", imageError.message);
     }
 
-    return { success: true, testId: savedTestId };
+    return {
+      success: true,
+      testId: savedTestId,
+      imageGeneration: {
+        thumbnailSuccess,
+        resultImagesSuccess,
+        resultImagesTotal,
+      },
+    };
   } catch (error: any) {
     console.error("❌ 테스트 저장 중 오류:", error);
 

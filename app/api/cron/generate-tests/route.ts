@@ -54,6 +54,7 @@ export async function GET(request: NextRequest) {
         title: test1.title,
         categoryId: test1.category_id,
         error: result1.error,
+        imageGeneration: result1.imageGeneration,
       });
       console.log("테스트 1 저장 완료:", result1);
     } else {
@@ -75,6 +76,7 @@ export async function GET(request: NextRequest) {
         title: test2.title,
         categoryId: test2.category_id,
         error: result2.error,
+        imageGeneration: result2.imageGeneration,
       });
       console.log("테스트 2 저장 완료:", result2);
     } else {
