@@ -159,7 +159,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
 - 이미지 생성 비용은 별도 (Vertex AI Gemini 2.5 Flash Image 사용)
 - 실제 토큰 사용량은 프롬프트 길이와 응답 길이에 따라 달라질 수 있음
 
-## 이미지 생성 (Vertex AI Imagen API)
+## 이미지 생성 (Vertex AI Gemini 2.5 Flash Image)
 
 ### 설정 방법
 
@@ -167,7 +167,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
 
    - [Google Cloud Console](https://console.cloud.google.com/)에서 프로젝트 생성
    - Vertex AI API 활성화
-   - Imagen API 활성화
+   - 결제 계정 설정 (필수)
 
 2. **환경 변수 설정**
 
@@ -179,17 +179,18 @@ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
 3. **인증 설정**
    - Vertex AI API는 OAuth 토큰을 사용합니다
    - 서비스 계정 키를 설정하거나 `gcloud auth print-access-token` 사용
-   - 현재는 API 키를 Bearer 토큰으로 사용하는 실험적 방식을 시도합니다
+   - 자세한 내용은 위의 "Google OAuth 토큰 설정 방법" 섹션 참고
 
 ### 사용 모델
 
-- **Imagen 3.0 Generate 002**: 이미지 생성용 모델
-  - 참고: [Vertex AI Imagen API 문서](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/imagen-api)
+- **Gemini 2.5 Flash Image**: 이미지 생성용 모델
+  - 참고: [Gemini 2.5 Flash Image 문서](https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-image)
+  - 가격: [Vertex AI 가격 책정](https://cloud.google.com/vertex-ai/generative-ai/pricing?hl=ko#gemini-models-3) 참고
 
 ### 이미지 생성 비용
 
-- 이미지 생성 비용은 Vertex AI Imagen API 가격 정책을 따릅니다
-- 자세한 가격 정보는 [Vertex AI 가격 책정](https://cloud.google.com/vertex-ai/pricing) 참고
+- 이미지 생성 비용은 Vertex AI Gemini 2.5 Flash Image 가격 정책을 따릅니다
+- 자세한 가격 정보는 [Vertex AI 가격 책정](https://cloud.google.com/vertex-ai/generative-ai/pricing?hl=ko#gemini-models-3) 참고
 
 ### 에러 처리
 
