@@ -29,21 +29,33 @@ export async function generateImageWithGemini(
       console.log(`🖼️ Imagen 4.0 API 이미지 생성 시작 (시도 ${attempt + 1}/${MAX_ATTEMPTS}): ${prompt.substring(0, 50)}...`);
 
       // Imagen 4.0 API 엔드포인트
-      // 참고: Imagen API는 Vertex AI를 통해 제공되며, REST API를 통해 호출 가능
+      // 참고: Imagen API는 Vertex AI를 통해 제공되며, instances/parameters 형식 사용
       const imagenApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`;
+
+      // Vertex AI Imagen API 요청 형식
+      // instances 배열에 입력 데이터, parameters에 설정 포함
+      const requestBody = {
+        instances: [
+          {
+            prompt: prompt,
+          },
+        ],
+        parameters: {
+          sampleCount: 1, // 생성할 이미지 개수
+          aspectRatio: "1:1", // 1:1 비율
+          safetySetting: {
+            method: "BLOCK_SOME", // 안전 필터 레벨
+          },
+          personGeneration: "ALLOW_ALL", // 사람 생성 허용
+        },
+      };
 
       const response = await fetch(imagenApiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          prompt: prompt,
-          number_of_images: 1,
-          aspect_ratio: "1:1", // 1:1 비율
-          safety_filter_level: "block_some", // 안전 필터 레벨
-          person_generation: "allow_all", // 사람 생성 허용
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -68,7 +80,34 @@ export async function generateImageWithGemini(
       const data = await response.json();
 
       // 응답에서 이미지 데이터 추출
-      // Imagen API 응답 구조에 따라 조정 필요
+      // Vertex AI Imagen API 응답 구조: predictions 배열에 이미지 데이터 포함
+      if (data.predictions && data.predictions.length > 0) {
+        const prediction = data.predictions[0];
+        
+        // bytesBase64Encoded 형식
+        if (prediction.bytesBase64Encoded) {
+          const imageUrl = `data:image/png;base64,${prediction.bytesBase64Encoded}`;
+          console.log(`✅ 이미지 생성 완료`);
+          return imageUrl;
+        }
+        
+        // base64Encoded 형식
+        if (prediction.base64Encoded) {
+          const imageUrl = `data:image/png;base64,${prediction.base64Encoded}`;
+          console.log(`✅ 이미지 생성 완료`);
+          return imageUrl;
+        }
+        
+        // gcsUri 형식 (Google Cloud Storage URI)
+        if (prediction.gcsUri) {
+          console.log(`⚠️ 이미지가 GCS에 저장되었습니다: ${prediction.gcsUri}`);
+          // GCS URI를 다운로드하여 base64로 변환 필요
+          // 일단 GCS URI를 반환하거나, 다운로드 로직 추가 필요
+          return null; // GCS URI는 나중에 처리
+        }
+      }
+
+      // 다른 응답 형식 시도 (하위 호환성)
       if (data.generatedImages && data.generatedImages.length > 0) {
         const imageBase64 = data.generatedImages[0].bytesBase64Encoded;
         if (imageBase64) {
@@ -78,21 +117,10 @@ export async function generateImageWithGemini(
         }
       }
 
-      // 다른 응답 형식 시도
       if (data.image && data.image.bytesBase64Encoded) {
         const imageUrl = `data:image/png;base64,${data.image.bytesBase64Encoded}`;
         console.log(`✅ 이미지 생성 완료`);
         return imageUrl;
-      }
-
-      // predictions 형식 시도 (일부 API 버전)
-      if (data.predictions && data.predictions.length > 0) {
-        const prediction = data.predictions[0];
-        if (prediction.bytesBase64Encoded) {
-          const imageUrl = `data:image/png;base64,${prediction.bytesBase64Encoded}`;
-          console.log(`✅ 이미지 생성 완료`);
-          return imageUrl;
-        }
       }
 
       // 재시도
