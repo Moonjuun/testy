@@ -176,7 +176,15 @@ export const TopicPrompt = `
 
 [tone/theme/palette/character]
 - 다양하고 창의적으로 작성
-- character.prompt_hint는 이미지 생성용 자연어 프롬프트
+- character.prompt_hint는 썸네일 이미지 생성용 자연어 프롬프트로 다음 구조를 따라 영어로 작성 (상세하고 구체적으로):
+  * 인물 묘사: 나이, 성별, 헤어스타일, 옷차림 등 구체적으로
+  * 배경 설정: 장소, 시간대(낮/밤), 환경 등
+  * 포즈와 액션: 손동작, 자세, 행동 등
+  * 감정 표현: 표정, 분위기 (surprise, joy, calm 등)
+  * 조명 효과: 배경 조명, 그림자, 깊이감 등
+  * 스타일: anime, illustration 등
+  * 비율: --ar 1:1
+  예시: "a young woman with long brown hair, wearing an off-white shirt and jeans, stands in the middle of a field of purple flowers at night. she has her hands outstretched, as if she is catching bubbles or lights floating above her. her expression is one of surprise and joy. the background lighting casts soft shadows on her face and figure, creating depth. in the style of anime. --ar 1:1"
 
 ⚠️ 유치한 주제 절대 금지. 성인/청소년 대상 심리적 깊이 있는 주제만 생성.
 
@@ -254,7 +262,15 @@ export const ResultsPrompt = `
 - 점수 범위: 0~{{MAX_SCORE}}, 겹치지 않게
 - description: 600~1000byte, **강조** 사용
 - recommendation: 실용적이고 구체적으로
-- image_prompt: 영어, 2D 스타일, 1:1 비율
+- image_prompt: 다음 구조를 따라 영어로 작성 (상세하고 구체적으로):
+  * 인물 묘사: 나이, 성별, 헤어스타일, 옷차림 등 구체적으로
+  * 배경 설정: 장소, 시간대(낮/밤), 환경 등
+  * 포즈와 액션: 손동작, 자세, 행동 등
+  * 감정 표현: 표정, 분위기 (surprise, joy, calm 등)
+  * 조명 효과: 배경 조명, 그림자, 깊이감 등
+  * 스타일: anime, illustration 등
+  * 비율: --ar 1:1
+  예시: "a young woman with long brown hair, wearing an off-white shirt and jeans, stands in the middle of a field of purple flowers at night. she has her hands outstretched, as if she is catching bubbles or lights floating above her. her expression is one of surprise and joy. the background lighting casts soft shadows on her face and figure, creating depth. in the style of anime. --ar 1:1"
 - 센스 있고 유머있는 결과
 
 ⚠️ 중요: 반드시 유효한 JSON만 반환하세요. 마크다운 코드 블록, 추가 설명, 주석 없이 순수 JSON만 반환해야 합니다.
@@ -461,10 +477,16 @@ export const ResultPrompt = `
   - 해당 결과를 요약하는 2~4개의 키워드
   - 배열 형태이며 해시태그 없이 단어만 사용
 
-4. \`image_prompt\`는 다음 구조로 작성합니다:
-  - 영어로 작성하고, 직관적이고 심플
+4. \`image_prompt\`는 다음 구조를 따라 영어로 작성합니다 (상세하고 구체적으로):
+  - 인물 묘사: 나이, 성별, 헤어스타일, 옷차림 등 구체적으로
+  - 배경 설정: 장소, 시간대(낮/밤), 환경 등
+  - 포즈와 액션: 손동작, 자세, 행동 등
+  - 감정 표현: 표정, 분위기 (surprise, joy, calm 등)
+  - 조명 효과: 배경 조명, 그림자, 깊이감 등
+  - 스타일: anime, illustration 등
+  - 비율: --ar 1:1
   - 웃긴 이미지가 필요할 땐 남자로, 웬만하면 여자로 프롬프트 만들것
-  - 1:1 비율로 만들 것
+  예시: "a young woman with long brown hair, wearing an off-white shirt and jeans, stands in the middle of a field of purple flowers at night. she has her hands outstretched, as if she is catching bubbles or lights floating above her. her expression is one of surprise and joy. the background lighting casts soft shadows on her face and figure, creating depth. in the style of anime. --ar 1:1"
 `;
 
 export const tarotPrompt = `
