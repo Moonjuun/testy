@@ -18,6 +18,22 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ```
 
+### 이미지 생성용 환경 변수 (선택사항)
+
+```bash
+# Vertex AI Imagen API 사용 시 필요
+# Google Cloud 프로젝트 ID (이미지 생성에 사용)
+GOOGLE_CLOUD_PROJECT_ID=your_project_id_here
+
+# Google Cloud 리전 (기본값: us-central1)
+GOOGLE_CLOUD_REGION=us-central1
+```
+
+**참고**: 
+- 이미지 생성 기능을 사용하려면 Vertex AI 프로젝트가 필요합니다.
+- Vertex AI API는 OAuth 토큰을 사용하므로, 서비스 계정 키를 설정하거나 `gcloud auth print-access-token`을 사용해야 합니다.
+- 현재는 API 키를 Bearer 토큰으로 사용하는 실험적 방식을 시도하지만, 정식으로는 OAuth 토큰이 필요합니다.
+- 자세한 내용: [Vertex AI Imagen API 문서](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/imagen-api)
 
 ## 비용 최적화 (유료 모델 사용)
 
@@ -69,8 +85,44 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
 ### 참고사항
 
-- 이미지 생성 비용은 별도 (Gemini 2.5 Flash Image 모델)
+- 이미지 생성 비용은 별도 (Vertex AI Imagen API 사용)
 - 실제 토큰 사용량은 프롬프트 길이와 응답 길이에 따라 달라질 수 있음
+
+## 이미지 생성 (Vertex AI Imagen API)
+
+### 설정 방법
+
+1. **Google Cloud 프로젝트 생성**
+   - [Google Cloud Console](https://console.cloud.google.com/)에서 프로젝트 생성
+   - Vertex AI API 활성화
+   - Imagen API 활성화
+
+2. **환경 변수 설정**
+   ```bash
+   GOOGLE_CLOUD_PROJECT_ID=your_project_id
+   GOOGLE_CLOUD_REGION=us-central1
+   ```
+
+3. **인증 설정**
+   - Vertex AI API는 OAuth 토큰을 사용합니다
+   - 서비스 계정 키를 설정하거나 `gcloud auth print-access-token` 사용
+   - 현재는 API 키를 Bearer 토큰으로 사용하는 실험적 방식을 시도합니다
+
+### 사용 모델
+
+- **Imagen 3.0 Generate 002**: 이미지 생성용 모델
+  - 참고: [Vertex AI Imagen API 문서](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/imagen-api)
+
+### 이미지 생성 비용
+
+- 이미지 생성 비용은 Vertex AI Imagen API 가격 정책을 따릅니다
+- 자세한 가격 정보는 [Vertex AI 가격 책정](https://cloud.google.com/vertex-ai/pricing) 참고
+
+### 에러 처리
+
+- **401 Unauthorized**: OAuth 토큰이 필요합니다. 서비스 계정 키를 설정하세요.
+- **404 Not Found**: Imagen 모델을 찾을 수 없습니다. Vertex AI에서 Imagen API를 활성화하세요.
+- **400 Bad Request**: 요청 형식이 잘못되었습니다. 문서를 참고하여 요청 형식을 확인하세요.
 
 ## 유료 모델 사용 (할당량 제한 없음)
 
@@ -306,11 +358,13 @@ RESEND_API_KEY=re_xxxxxxxxxxxxx
 **안전장치:**
 
 1. **최대 재시도 횟수 제한**: 각 단계별 최대 5번까지만 재시도
+
    - 주제 생성: 최대 5번
    - 질문 생성: 최대 5번
    - 결과 생성: 최대 5번
 
-2. **최대 실행 시간 제한**: 
+2. **최대 실행 시간 제한**:
+
    - 단일 테스트 생성: 최대 5분
    - 전체 프로세스 (2개 테스트): 최대 10분
 
