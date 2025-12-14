@@ -8,7 +8,8 @@ import Script from "next/script";
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Testy - Tarot, MBTI, Personality Tests",
-    description: "Explore yourself with fun quizzes, tarot readings, and personality tests.",
+    description:
+      "Explore yourself with fun quizzes, tarot readings, and personality tests.",
     metadataBase: new URL("https://testy.im"),
     alternates: {
       languages: {
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-ZLT3VML0DW"
+          strategy="afterInteractive"
         />
         <Script
           id="ga-init"
@@ -42,15 +44,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           }}
           strategy="afterInteractive"
         />
-
-        {/* Google Adsense */}
+      </head>
+      <body>
+        {/* Google Adsense - body 안에 배치하여 data-nscript 에러 방지 */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6915584561138880"
           crossOrigin="anonymous"
+          strategy="afterInteractive"
         />
-      </head>
-      <body>{children}</body>
+        {children}
+      </body>
     </html>
   );
 }

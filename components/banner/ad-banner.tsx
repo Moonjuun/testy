@@ -19,9 +19,11 @@ export function AdBanner({ type, size, slot }: AdBannerProps) {
 
   useEffect(() => {
     const tryPushAds = (retryCount = 0) => {
-      // 최대 20번 재시도
-      if (retryCount > 20) {
-        console.warn("AdSense: Max retries reached");
+      // 최대 30번 재시도 (더 여유있게)
+      if (retryCount > 30) {
+        if (process.env.NODE_ENV === "development") {
+          console.warn("AdSense: Max retries reached");
+        }
         return;
       }
 
