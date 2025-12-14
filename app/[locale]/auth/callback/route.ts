@@ -4,14 +4,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { locale: string } }
+  { params }: { params: Promise<{ locale: string }> }
 ) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  let locale = await params;
+  const { locale } = await params;
 
   // 로그인 후 돌아갈 경로는 현재 언어('vi', 'ja' 등)의 홈페이지입니다.
-  const next = `/${locale.locale}`;
+  const next = `/${locale}`;
 
   if (code) {
     const supabase = await createClientForServer();
@@ -22,7 +22,5 @@ export async function GET(
     }
   }
 
-  return NextResponse.redirect(
-    `${origin}/${params.locale}/auth/auth-code-error`
-  );
+  return NextResponse.redirect(`${origin}/${locale}/auth/auth-code-error`);
 }
