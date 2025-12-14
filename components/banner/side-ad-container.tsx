@@ -42,14 +42,20 @@ export function SideAdContainer({ position, slot }: SideAdContainerProps) {
 
   return (
     <div
-      className="relative h-full bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20"
-      style={{ minHeight: "100vh" }}
+      className="sticky top-20 self-start h-screen overflow-y-auto"
+      style={{
+        maxHeight: "calc(100vh - 5rem)",
+      }}
     >
       <div
         data-ad-position={position}
-        className={`sticky top-20 p-4 transition-opacity duration-300 ${
+        className={`p-4 transition-opacity duration-300 ${
           isVisible ? "opacity-100" : "opacity-50"
         }`}
+        style={{
+          width: "100%",
+          minHeight: "600px",
+        }}
       >
         <AdBanner type="side" size="300x600" slot={slot} />
       </div>

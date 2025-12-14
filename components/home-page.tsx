@@ -9,7 +9,6 @@ import { MBTICollectionSection } from "@/components/home/MBTICollectionSection";
 import { EditorPickSection } from "@/components/home/EditorPickSection";
 import { InlineAdBanner } from "@/components/banner/inline-ad-banner";
 import { MobileAdBanner } from "@/components/banner/mobile-ad-banner";
-import { DisplayHorizontalAd } from "@/components/banner/display-horizontal-ad";
 import { DisplayVerticalAd } from "@/components/banner/display-vertical-ad";
 import { AD_SLOTS } from "@/constants/ads";
 
@@ -182,9 +181,6 @@ export default function HomePage({
       ) : (
         <HeroSkeleton />
       )}
-
-      {/* 디스플레이 수평형 광고: 히어로 배너 아래 */}
-      <DisplayHorizontalAd />
 
       {/* Section B: 퀵 서클 */}
       <QuickCircleSection locale={locale} translations={translations} />

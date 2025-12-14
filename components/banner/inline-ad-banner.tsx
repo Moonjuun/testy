@@ -457,7 +457,12 @@ export function InlineAdBanner({
                   setIsLoaded(true);
                 }, 5000);
               } catch (pushError) {
-                console.error("AdSense push error:", pushError);
+                // 403 에러는 개발 환경이나 정책 문제일 수 있으므로 조용히 처리
+                if (process.env.NODE_ENV === "development") {
+                  console.warn("AdSense push error (dev mode):", pushError);
+                } else {
+                  console.error("AdSense push error:", pushError);
+                }
                 setIsLoaded(true);
               }
             };
