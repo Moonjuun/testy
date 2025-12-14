@@ -44,10 +44,14 @@ function extractTranslationData(
  */
 /**
  * 번역 데이터 검증
+ * @param translationData - 검증할 번역 데이터
+ * @param language - 언어 코드
+ * @param originalTestData - 원본 테스트 데이터 (score_range 복원용, 선택사항)
  */
 function validateTranslationData(
   translationData: TranslationDataOnly,
-  language: string
+  language: string,
+  originalTestData?: TestJsonInsertData
 ): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
 
@@ -64,7 +68,7 @@ function validateTranslationData(
     errors.push(`${language}: 설명이 없습니다.`);
   }
 
-  // 질문 검증
+  // 질문 검증 (최소 1개 이상)
   if (!translationData.questions || translationData.questions.length === 0) {
     errors.push(`${language}: 질문이 없습니다.`);
   } else {
@@ -72,27 +76,42 @@ function validateTranslationData(
       if (!q.question || q.question.trim().length === 0) {
         errors.push(`${language}: 질문 ${idx + 1}의 내용이 없습니다.`);
       }
+      // 선택지 개수 검증 (최소 2개 이상)
       if (!q.options || q.options.length < 2) {
         errors.push(
-          `${language}: 질문 ${idx + 1}의 선택지가 부족합니다. (최소 2개 필요)`
+          `${language}: 질문 ${idx + 1}의 선택지가 부족합니다. (현재: ${
+            q.options?.length || 0
+          }개, 최소 2개 필요)`
+        );
+      }
+      // 선택지가 1개만 있는 경우 명확한 에러 메시지
+      if (q.options && q.options.length === 1) {
+        errors.push(
+          `${language}: 질문 ${
+            idx + 1
+          }의 선택지가 1개만 있습니다. 최소 2개 이상 필요합니다.`
         );
       }
       q.options?.forEach((opt, optIdx) => {
         if (!opt.text || opt.text.trim().length === 0) {
           errors.push(
-            `${language}: 질문 ${idx + 1}의 선택지 ${optIdx + 1}의 내용이 없습니다.`
+            `${language}: 질문 ${idx + 1}의 선택지 ${
+              optIdx + 1
+            }의 내용이 없습니다.`
           );
         }
         if (typeof opt.score !== "number") {
           errors.push(
-            `${language}: 질문 ${idx + 1}의 선택지 ${optIdx + 1}의 점수가 유효하지 않습니다.`
+            `${language}: 질문 ${idx + 1}의 선택지 ${
+              optIdx + 1
+            }의 점수가 유효하지 않습니다.`
           );
         }
       });
     });
   }
 
-  // 결과 검증
+  // 결과 검증 (score_range 복원 시도)
   if (!translationData.results || translationData.results.length === 0) {
     errors.push(`${language}: 결과가 없습니다.`);
   } else {
@@ -103,11 +122,31 @@ function validateTranslationData(
       if (!r.description || r.description.trim().length === 0) {
         errors.push(`${language}: 결과 ${idx + 1}의 설명이 없습니다.`);
       }
+
+      // score_range 검증 및 복원
       if (!r.score_range || r.score_range.length !== 2) {
-        errors.push(
-          `${language}: 결과 ${idx + 1}의 점수 범위가 유효하지 않습니다.`
-        );
+        // 원본 데이터에서 score_range 복원 시도
+        if (originalTestData?.results?.[idx]?.score_range) {
+          const originalScoreRange = originalTestData.results[idx].score_range;
+          if (originalScoreRange && originalScoreRange.length === 2) {
+            r.score_range = originalScoreRange;
+            console.log(
+              `✅ ${language}: 결과 ${
+                idx + 1
+              }의 score_range를 원본에서 복원했습니다.`
+            );
+          } else {
+            errors.push(
+              `${language}: 결과 ${idx + 1}의 점수 범위가 유효하지 않습니다.`
+            );
+          }
+        } else {
+          errors.push(
+            `${language}: 결과 ${idx + 1}의 점수 범위가 유효하지 않습니다.`
+          );
+        }
       }
+
       if (!r.recommendation) {
         errors.push(`${language}: 결과 ${idx + 1}의 추천 정보가 없습니다.`);
       }
@@ -123,7 +162,8 @@ function validateTranslationData(
 async function saveTranslationEfficient(
   translationData: TestJsonInsertData | null,
   language: "ko" | "en" | "ja" | "vi",
-  testId: number
+  testId: number,
+  originalTestData?: TestJsonInsertData
 ): Promise<{ language: string; success: boolean; error?: string }> {
   if (!translationData) {
     console.warn(`⚠️ ${language.toUpperCase()} 번역 생성 실패`);
@@ -142,8 +182,12 @@ async function saveTranslationEfficient(
     // ✅ 번역에 필요한 데이터만 추출
     const translationOnly = extractTranslationData(translationData);
 
-    // ✅ 데이터 검증
-    const validation = validateTranslationData(translationOnly, language);
+    // ✅ 데이터 검증 (원본 데이터를 전달하여 score_range 복원 가능)
+    const validation = validateTranslationData(
+      translationOnly,
+      language,
+      originalTestData || translationData
+    );
     if (!validation.valid) {
       const errorMessage = `데이터 검증 실패: ${validation.errors.join(", ")}`;
       console.error(`❌ ${language.toUpperCase()} ${errorMessage}`);
@@ -302,10 +346,10 @@ export async function saveTestToDatabase(
     // 3. 다국어 번역 병렬 저장 (한국어 포함, 모든 언어 동일 함수 사용)
     console.log("💾 다국어 번역 저장 시작...");
     const translationResults = await Promise.all([
-      saveTranslationEfficient(testData, "ko", savedTestId),
-      saveTranslationEfficient(translations.en, "en", savedTestId),
-      saveTranslationEfficient(translations.ja, "ja", savedTestId),
-      saveTranslationEfficient(translations.vi, "vi", savedTestId),
+      saveTranslationEfficient(testData, "ko", savedTestId, testData),
+      saveTranslationEfficient(translations.en, "en", savedTestId, testData),
+      saveTranslationEfficient(translations.ja, "ja", savedTestId, testData),
+      saveTranslationEfficient(translations.vi, "vi", savedTestId, testData),
     ]);
 
     // ✅ 모든 번역 저장이 성공했는지 확인
@@ -367,17 +411,24 @@ export async function saveTestToDatabase(
 
           if (thumbnailDataUrl) {
             await uploadThumbnailImageToSupabase(savedTestId, thumbnailDataUrl);
-            console.log(`✅ 썸네일 이미지 업로드 완료 (테스트 ID: ${savedTestId})`);
+            console.log(
+              `✅ 썸네일 이미지 업로드 완료 (테스트 ID: ${savedTestId})`
+            );
             thumbnailSuccess = true;
           } else {
             console.warn("⚠️ 썸네일 이미지 생성 실패 (계속 진행)");
           }
         } catch (thumbnailError: any) {
-          console.error("❌ 썸네일 이미지 생성/업로드 실패:", thumbnailError.message);
+          console.error(
+            "❌ 썸네일 이미지 생성/업로드 실패:",
+            thumbnailError.message
+          );
           // 썸네일 실패는 무시하고 계속 진행
         }
       } else {
-        console.warn("⚠️ character.prompt_hint가 없어 썸네일 이미지를 생성할 수 없습니다.");
+        console.warn(
+          "⚠️ character.prompt_hint가 없어 썸네일 이미지를 생성할 수 없습니다."
+        );
       }
 
       // 4-2. 결과 이미지들 생성 및 업로드 (병렬 처리)
@@ -392,10 +443,12 @@ export async function saveTestToDatabase(
           .order("score_min", { ascending: true });
 
         if (resultsError || !savedResults || savedResults.length === 0) {
-          console.warn("⚠️ 저장된 결과를 찾을 수 없어 결과 이미지를 생성할 수 없습니다.");
+          console.warn(
+            "⚠️ 저장된 결과를 찾을 수 없어 결과 이미지를 생성할 수 없습니다."
+          );
         } else {
           resultImagesTotal = testData.results.length;
-          
+
           // 각 결과의 image_prompt와 저장된 result ID를 매칭
           const imagePromises = testData.results.map(async (result, idx) => {
             // score_range로 매칭
@@ -407,14 +460,22 @@ export async function saveTestToDatabase(
 
             if (!savedResult || !result.image_prompt) {
               console.warn(
-                `⚠️ 결과 ${idx + 1}의 이미지 프롬프트가 없거나 매칭되는 결과를 찾을 수 없습니다.`
+                `⚠️ 결과 ${
+                  idx + 1
+                }의 이미지 프롬프트가 없거나 매칭되는 결과를 찾을 수 없습니다.`
               );
               return null;
             }
 
             try {
-              console.log(`📸 결과 이미지 ${idx + 1}/${testData.results.length} 생성 중...`);
-              const resultImageDataUrl = await generateResultImage(result.image_prompt);
+              console.log(
+                `📸 결과 이미지 ${idx + 1}/${
+                  testData.results.length
+                } 생성 중...`
+              );
+              const resultImageDataUrl = await generateResultImage(
+                result.image_prompt
+              );
 
               if (resultImageDataUrl) {
                 await uploadResultImageToSupabase(
@@ -422,7 +483,9 @@ export async function saveTestToDatabase(
                   resultImageDataUrl
                 );
                 console.log(
-                  `✅ 결과 이미지 ${idx + 1} 업로드 완료 (결과 ID: ${savedResult.id})`
+                  `✅ 결과 이미지 ${idx + 1} 업로드 완료 (결과 ID: ${
+                    savedResult.id
+                  })`
                 );
                 return { resultId: savedResult.id, success: true };
               } else {
@@ -449,7 +512,10 @@ export async function saveTestToDatabase(
       console.log("✅ 이미지 생성 및 업로드 프로세스 완료");
     } catch (imageError: any) {
       // 이미지 생성/업로드 실패는 무시하고 테스트 저장은 성공으로 처리
-      console.error("❌ 이미지 생성/업로드 중 오류 (무시됨):", imageError.message);
+      console.error(
+        "❌ 이미지 생성/업로드 중 오류 (무시됨):",
+        imageError.message
+      );
     }
 
     return {

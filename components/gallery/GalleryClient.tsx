@@ -175,7 +175,8 @@ export default function GalleryClient({
             size="sm"
             className="bg-white/90 text-gray-900 hover:bg-white"
           >
-            <ExternalLink className="w-4 h-4 mr-2" /> {t("gallery.viewDetails")}
+            <ExternalLink className="w-4 h-4 mr-2" />{" "}
+            {isClient ? t("gallery.viewDetails") : "View Details"}
           </Button>
         </div>
       </div>
@@ -365,10 +366,12 @@ export default function GalleryClient({
           <div className="text-center py-16 col-span-full">
             <div className="text-6xl mb-4">🎨</div>
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              {t("gallery.noImages")}
+              {isClient ? t("gallery.noImages") : "No Images"}
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              {t("gallery.selectAnotherCategory")}
+              {isClient
+                ? t("gallery.selectAnotherCategory")
+                : "Select another category"}
             </p>
           </div>
         )}

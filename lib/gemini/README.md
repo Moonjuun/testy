@@ -400,23 +400,33 @@ Error: [402 Payment Required] Payment method required
 ```
 
 - **스케줄**: 매일 23시 (UTC 기준)
-- **경로**: `/api/cron/generate-tests`
+- **경로**: `/api/cron/generate-tests` (⚠️ 보안: CRON_SECRET 인증 필수)
 - **생성 개수**: 매일 2개 (서로 다른 카테고리)
 
-## 수동 실행 (테스트용)
+## ⚠️ 보안 주의사항
 
-개발 환경에서 수동으로 테스트하려면:
+**이 API 엔드포인트는 비용이 발생하므로 반드시 보호되어야 합니다:**
+
+1. **CRON_SECRET 필수 설정**: 프로덕션 환경에서는 반드시 `CRON_SECRET` 환경 변수를 설정하세요.
+2. **인증 필수**: 모든 요청은 `Authorization: Bearer <CRON_SECRET>` 헤더가 필요합니다.
+3. **Vercel Cron Job**: Vercel Cron Job은 자동으로 인증 헤더를 추가합니다.
+4. **수동 호출 금지**: 프로덕션 환경에서는 수동 호출을 피하고, Vercel Cron Job만 사용하세요.
+
+## 수동 실행 (개발 환경 전용)
+
+⚠️ **주의**: 개발 환경에서만 사용하세요. 프로덕션에서는 Vercel Cron Job만 사용해야 합니다.
 
 ```bash
 curl -X GET "http://localhost:3000/api/cron/generate-tests" \
   -H "Authorization: Bearer your_cron_secret"
 ```
 
-또는 브라우저에서 직접 호출 (인증 제거 후):
+**보안 체크리스트:**
 
-```typescript
-// 개발용: 인증 체크 제거 가능
-```
+- ✅ `CRON_SECRET` 환경 변수가 설정되어 있는지 확인
+- ✅ 프로덕션에서는 Vercel Cron Job만 사용
+- ✅ API 엔드포인트 URL을 공개하지 않기
+- ✅ 인증 없이 호출 가능한 상태가 아닌지 확인
 
 ## 이메일 알림
 

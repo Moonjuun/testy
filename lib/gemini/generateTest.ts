@@ -135,7 +135,7 @@ async function generateQuestions(
         throw parseError;
       }
 
-      // 검증
+      // 검증 (최소 10개 이상)
       if (!questionsData.questions || questionsData.questions.length < 10) {
         throw new Error(
           `질문 수가 부족합니다. (현재: ${
@@ -145,10 +145,18 @@ async function generateQuestions(
       }
 
       questionsData.questions.forEach((q: any, idx: number) => {
-        if (!q.options || q.options.length < 2 || q.options.length > 4) {
+        // 선택지 개수 검증 (최소 2개, 최대 4개)
+        if (!q.options || q.options.length < 2) {
           throw new Error(
-            `질문 ${idx + 1}: 선택지는 2~4개여야 합니다. (현재: ${
+            `질문 ${idx + 1}: 선택지는 최소 2개 이상이어야 합니다. (현재: ${
               q.options?.length || 0
+            }개)`
+          );
+        }
+        if (q.options.length > 4) {
+          throw new Error(
+            `질문 ${idx + 1}: 선택지는 최대 4개까지 가능합니다. (현재: ${
+              q.options.length
             }개)`
           );
         }

@@ -17,14 +17,39 @@ import { sendCompletionEmail } from "@/lib/email/sendCompletionEmail";
  * }
  */
 export async function GET(request: NextRequest) {
-  // Vercel Cron Job 인증 확인 (프로덕션에서만)
-  if (process.env.NODE_ENV === "production") {
-    const authHeader = request.headers.get("authorization");
-    const cronSecret = process.env.CRON_SECRET;
+  // ⚠️ 보안: CRON_SECRET 인증 필수 (프로덕션 및 개발 환경 모두)
+  const cronSecret = process.env.CRON_SECRET;
+  const authHeader = request.headers.get("authorization");
 
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  // CRON_SECRET이 설정되지 않은 경우 경고
+  if (!cronSecret) {
+    console.error("⚠️ 보안 경고: CRON_SECRET 환경 변수가 설정되지 않았습니다.");
+    console.error(
+      "💡 이 API는 비용이 발생하므로 반드시 CRON_SECRET을 설정하세요."
+    );
+    // 프로덕션에서는 CRON_SECRET이 없으면 거부
+    if (process.env.NODE_ENV === "production") {
+      return NextResponse.json(
+        {
+          error:
+            "CRON_SECRET이 설정되지 않았습니다. 보안을 위해 이 엔드포인트는 비활성화됩니다.",
+        },
+        { status: 500 }
+      );
+    }
+  }
+
+  // 인증 확인
+  if (cronSecret) {
+    if (authHeader !== `Bearer ${cronSecret}`) {
+      console.warn("⚠️ 인증 실패: 잘못된 CRON_SECRET");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+  } else {
+    // 개발 환경에서도 CRON_SECRET이 없으면 경고
+    console.warn(
+      "⚠️ 개발 환경: CRON_SECRET이 없어 인증을 건너뜁니다. 프로덕션에서는 반드시 설정하세요."
+    );
   }
 
   // 환경 변수 확인
