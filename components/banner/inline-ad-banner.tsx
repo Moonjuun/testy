@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 
 interface InlineAdBannerProps {
-  size: "728x90" | "336x280" | "320x100" | "300x250";
+  size: "728x90" | "336x280" | "336x330" | "320x100" | "300x250";
   slot: string;
   className?: string;
   showSkeleton?: boolean;
@@ -22,6 +22,7 @@ export function InlineAdBanner({
   const dimensions = {
     "728x90": { width: 728, height: 90 },
     "336x280": { width: 336, height: 280 },
+    "336x330": { width: 336, height: 330 },
     "320x100": { width: 320, height: 100 },
     "300x250": { width: 300, height: 250 },
   };
@@ -58,8 +59,9 @@ export function InlineAdBanner({
   useEffect(() => {
     if (!isVisible) return;
 
-    // 화면 크기 체크: 데스크탑에서만 광고 초기화 (728x90, 336x280는 데스크탑 전용)
-    const isDesktopSize = size === "728x90" || size === "336x280";
+    // 화면 크기 체크: 데스크탑에서만 광고 초기화 (728x90, 336x280, 336x330는 데스크탑 전용)
+    const isDesktopSize =
+      size === "728x90" || size === "336x280" || size === "336x330";
     if (
       isDesktopSize &&
       typeof window !== "undefined" &&
@@ -510,13 +512,15 @@ export function InlineAdBanner({
           }}
         >
           <div
-            className="relative bg-zinc-50 dark:bg-zinc-900 rounded-xl p-4 md:p-6 border border-zinc-200 dark:border-zinc-800"
+            className="relative bg-zinc-50 dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800"
             style={{
               width: size.startsWith("728") ? "100%" : `${width}px`,
               maxWidth: `${width}px`,
               minWidth: size.startsWith("728") ? "100%" : `${width}px`,
+              height: `${height}px`,
               minHeight: `${height}px`,
               display: "block",
+              padding: 0, // 테두리와 정확히 맞추기 위해 padding 제거
             }}
           >
             {/* 스켈레톤 UI (로딩 중) */}
@@ -548,11 +552,13 @@ export function InlineAdBanner({
                 className="adsbygoogle"
                 style={{
                   display: "block",
-                  width: size.startsWith("728") ? "100%" : `${width}px`,
+                  width: `${width}px`,
                   maxWidth: `${width}px`,
-                  minWidth: size.startsWith("728") ? "100%" : `${width}px`,
+                  minWidth: `${width}px`,
                   height: `${height}px`,
                   minHeight: `${height}px`,
+                  margin: 0,
+                  padding: 0,
                 }}
                 data-ad-client="ca-pub-6915584561138880"
                 data-ad-slot={slot}
