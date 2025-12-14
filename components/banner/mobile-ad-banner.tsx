@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { AD_SLOTS } from "@/constants/ads";
 
 interface MobileAdBannerProps {
   type: "inline" | "sticky-bottom" | "sticky-top";
@@ -21,17 +22,17 @@ export function MobileAdBanner({
     "320x50": {
       width: 320,
       height: 50,
-      slot: "5251424654", // ✅ 슬롯 ID 지정
+      slot: AD_SLOTS.MOBILE_320x50, // ⚠️ 320x50 전용 슬롯 필요
     },
     "320x100": {
       width: 320,
       height: 100,
-      slot: "5251424654",
+      slot: AD_SLOTS.MOBILE_320x100, // ⚠️ 320x100 전용 슬롯 필요
     },
     "300x250": {
       width: 300,
       height: 250,
-      slot: "5251424654",
+      slot: AD_SLOTS.MOBILE_300x250, // ⚠️ 300x250 전용 슬롯 필요
     },
   };
 

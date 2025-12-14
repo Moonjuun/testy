@@ -72,7 +72,7 @@ export default function Tarot({ locale }: { locale: string }) {
           {isDesktop && (
             <InlineAdBanner
               size="728x90"
-              slot={AD_SLOTS.DESKTOP_INLINE}
+              slot={AD_SLOTS.DESKTOP_728x90}
               className=""
             />
           )}

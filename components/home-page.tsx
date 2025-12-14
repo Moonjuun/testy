@@ -193,7 +193,7 @@ export default function HomePage({
       {isDesktop && (
         <InlineAdBanner
           size="728x90"
-          slot={AD_SLOTS.DESKTOP_INLINE}
+          slot={AD_SLOTS.DESKTOP_728x90}
           className=""
         />
       )}
@@ -208,7 +208,7 @@ export default function HomePage({
       {isDesktop && (
         <InlineAdBanner
           size="336x280"
-          slot={AD_SLOTS.DESKTOP_INLINE}
+          slot={AD_SLOTS.DESKTOP_336x280}
           className=""
         />
       )}
@@ -231,7 +231,7 @@ export default function HomePage({
       {isDesktop && (
         <InlineAdBanner
           size="728x90"
-          slot={AD_SLOTS.DESKTOP_INLINE}
+          slot={AD_SLOTS.DESKTOP_728x90}
           className=""
         />
       )}

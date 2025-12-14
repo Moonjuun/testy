@@ -353,7 +353,7 @@ export default function TarotChoosePage() {
           {isDesktop && (
             <InlineAdBanner
               size="336x280"
-              slot={AD_SLOTS.DESKTOP_INLINE}
+              slot={AD_SLOTS.DESKTOP_336x280}
               className=""
             />
           )}

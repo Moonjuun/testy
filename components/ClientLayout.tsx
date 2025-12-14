@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/contexts/theme-context";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { SideAdContainer } from "@/components/banner/side-ad-container";
+import { AD_SLOTS } from "@/constants/ads";
 import type { User } from "@supabase/supabase-js";
 import { useUserStore } from "@/store/useUserStore";
 import { useEffect } from "react";
@@ -54,7 +55,10 @@ export default function ClientLayout({
               {!isAdminPage && (
                 // ⬇️ 1280px(xl)에서는 숨기고, 1536px(2xl)부터만 노출
                 <div className="hidden 2xl:block w-80 flex-shrink-0">
-                  <SideAdContainer position="left" slot="5251424654" />
+                  <SideAdContainer
+                    position="left"
+                    slot={AD_SLOTS.SIDE_LEFT_300x600}
+                  />
                 </div>
               )}
 
@@ -63,7 +67,10 @@ export default function ClientLayout({
               {!isAdminPage && (
                 // ⬇️ 오른쪽도 동일하게 2xl부터만 노출
                 <div className="hidden 2xl:block w-80 flex-shrink-0">
-                  <SideAdContainer position="right" slot="2714274112" />
+                  <SideAdContainer
+                    position="right"
+                    slot={AD_SLOTS.SIDE_RIGHT_300x600}
+                  />
                 </div>
               )}
             </div>
