@@ -9,4 +9,8 @@ export const AD_SLOTS = {
   MOBILE_INLINE: "5251424654",
   // 모바일 하단 고정 배너 (320x50)
   MOBILE_STICKY: "5251424654",
+  // 디스플레이 수평형 (반응형)
+  DISPLAY_HORIZONTAL: "8905831266",
+  // 디스플레이 수직형 (반응형)
+  DISPLAY_VERTICAL: "6826269318",
 } as const;

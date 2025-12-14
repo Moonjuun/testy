@@ -9,6 +9,8 @@ import { MBTICollectionSection } from "@/components/home/MBTICollectionSection";
 import { EditorPickSection } from "@/components/home/EditorPickSection";
 import { InlineAdBanner } from "@/components/banner/inline-ad-banner";
 import { MobileAdBanner } from "@/components/banner/mobile-ad-banner";
+import { DisplayHorizontalAd } from "@/components/banner/display-horizontal-ad";
+import { DisplayVerticalAd } from "@/components/banner/display-vertical-ad";
 import { AD_SLOTS } from "@/constants/ads";
 
 interface HomePageProps {
@@ -181,6 +183,9 @@ export default function HomePage({
         <HeroSkeleton />
       )}
 
+      {/* 디스플레이 수평형 광고: 히어로 배너 아래 */}
+      <DisplayHorizontalAd />
+
       {/* Section B: 퀵 서클 */}
       <QuickCircleSection locale={locale} translations={translations} />
 
@@ -236,6 +241,9 @@ export default function HomePage({
       )}
       {/* 모바일: 320x100 배너 */}
       <MobileAdBanner type="inline" size="320x100" className="xl:hidden" />
+
+      {/* 디스플레이 수직형 광고: 페이지 하단 */}
+      <DisplayVerticalAd />
 
       {/* 광고 6: 모바일 - 하단 고정 배너 (푸터 전에 숨김) */}
       <MobileAdBanner
