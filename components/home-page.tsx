@@ -1,11 +1,15 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { NewTest } from "@/types/test";
 import { HeroSection } from "@/components/home/HeroSection";
 import { QuickCircleSection } from "@/components/home/QuickCircleSection";
 import { MysticZoneSection } from "@/components/home/MysticZoneSection";
 import { MBTICollectionSection } from "@/components/home/MBTICollectionSection";
 import { EditorPickSection } from "@/components/home/EditorPickSection";
+import { InlineAdBanner } from "@/components/banner/inline-ad-banner";
+import { MobileAdBanner } from "@/components/banner/mobile-ad-banner";
+import { AD_SLOTS } from "@/constants/ads";
 
 interface HomePageProps {
   locale: string;
@@ -144,6 +148,19 @@ export default function HomePage({
   featuredTest,
   translations,
 }: HomePageProps) {
+  // 데스크탑 여부 체크 (클라이언트 사이드에서만)
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1280);
+    };
+
+    checkDesktop();
+    window.addEventListener("resize", checkDesktop);
+    return () => window.removeEventListener("resize", checkDesktop);
+  }, []);
+
   // 썸네일이 있는 테스트만 필터링 (서버에서 이미 필터링되었지만 이중 체크)
   const testsWithThumbnail = initialTests.filter(
     (test) => test.thumbnail_url && test.thumbnail_url.trim() !== ""
@@ -170,8 +187,32 @@ export default function HomePage({
       {/* Section C: 미스틱 존 타로 */}
       <MysticZoneSection locale={locale} translations={translations} />
 
+      {/* 광고 1: 미스틱 존과 MBTI 컬렉션 사이 */}
+      {/* 데스크탑: 728x90 배너 */}
+      {isDesktop && (
+        <InlineAdBanner
+          size="728x90"
+          slot={AD_SLOTS.DESKTOP_INLINE}
+          className=""
+        />
+      )}
+      {/* 모바일: 320x100 배너 */}
+      <MobileAdBanner type="inline" size="320x100" className="xl:hidden" />
+
       {/* Section D: MBTI 컬렉션 */}
       <MBTICollectionSection locale={locale} translations={translations} />
+
+      {/* 광고 2: MBTI 컬렉션과 에디터 픽 사이 */}
+      {/* 데스크탑: 336x280 사각형 */}
+      {isDesktop && (
+        <InlineAdBanner
+          size="336x280"
+          slot={AD_SLOTS.DESKTOP_INLINE}
+          className=""
+        />
+      )}
+      {/* 모바일: 300x250 사각형 */}
+      <MobileAdBanner type="inline" size="300x250" className="xl:hidden" />
 
       {/* Section E: 에디터 픽 */}
       {editorPickTests.length > 0 ? (
@@ -183,6 +224,25 @@ export default function HomePage({
       ) : (
         <EditorPickSkeleton />
       )}
+
+      {/* 광고 3: 에디터 픽 이후 (마지막 콘텐츠 섹션 다음) */}
+      {/* 데스크탑: 728x90 배너 */}
+      {isDesktop && (
+        <InlineAdBanner
+          size="728x90"
+          slot={AD_SLOTS.DESKTOP_INLINE}
+          className=""
+        />
+      )}
+      {/* 모바일: 320x100 배너 */}
+      <MobileAdBanner type="inline" size="320x100" className="xl:hidden" />
+
+      {/* 광고 6: 모바일 - 하단 고정 배너 (푸터 전에 숨김) */}
+      <MobileAdBanner
+        type="sticky-bottom"
+        size="320x50"
+        className="xl:hidden"
+      />
     </div>
   );
 }

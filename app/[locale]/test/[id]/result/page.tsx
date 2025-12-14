@@ -34,6 +34,9 @@ import { Language } from "@/store/useLanguageStore";
 import { saveUserTestResult } from "@/lib/supabase/saveUserTestResult";
 import { useUserStore } from "@/store/useUserStore";
 import { incrementTestResultCount } from "@/lib/supabase/incrementTestResultCount";
+import { MobileAdBanner } from "@/components/banner/mobile-ad-banner";
+import { InlineAdBanner } from "@/components/banner/inline-ad-banner";
+import { AD_SLOTS } from "@/constants/ads";
 
 export default function ResultPage({
   params,
@@ -48,6 +51,7 @@ export default function ResultPage({
   const { id, locale } = use(params);
   const { result, clearResult } = useTestResultStore();
   const [relatedTests, setRelatedTests] = useState<RelatedTest[]>([]);
+  const [isDesktop, setIsDesktop] = useState(false);
   const language = useLanguageStore((state) => state.currentLanguage);
   const setLanguage = useLanguageStore((state) => state.setLanguage);
   const customAlert = useAlert();
@@ -113,6 +117,17 @@ export default function ResultPage({
     if (result) {
       incrementTestResultCount(result.result_id);
     }
+  }, []);
+
+  // 데스크탑 여부 체크
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1280);
+    };
+
+    checkDesktop();
+    window.addEventListener("resize", checkDesktop);
+    return () => window.removeEventListener("resize", checkDesktop);
   }, []);
 
   // 공유 기능을 처리하는 함수입니다.
@@ -417,6 +432,18 @@ export default function ResultPage({
             </CardContent>
           </Card>
 
+          {/* 광고: 관련 테스트 추천 섹션 아래 */}
+          {/* 데스크탑: 336x280 사각형 */}
+          {isDesktop && (
+            <InlineAdBanner
+              size="336x280"
+              slot={AD_SLOTS.DESKTOP_INLINE}
+              className=""
+            />
+          )}
+          {/* 모바일: 300x250 사각형 */}
+          <MobileAdBanner type="inline" size="300x250" className="xl:hidden" />
+
           {/* 하단 버튼 */}
           <div className="flex flex-row flex-wrap gap-4 justify-center">
             <Button
@@ -437,6 +464,13 @@ export default function ResultPage({
               {t("resultPage.goHome")}
             </Button>
           </div>
+
+          {/* 모바일 하단 고정 배너 */}
+          <MobileAdBanner
+            type="sticky-bottom"
+            size="320x50"
+            className="xl:hidden"
+          />
         </div>
       </div>
 

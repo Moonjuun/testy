@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { DragHint } from "@/components/taro/DragHint";
 import { useTranslation } from "react-i18next";
+import { MobileAdBanner } from "@/components/banner/mobile-ad-banner";
+import { InlineAdBanner } from "@/components/banner/inline-ad-banner";
+import { AD_SLOTS } from "@/constants/ads";
 
 // 78장 전체 덱
 const fullTarotDeck = Array.from({ length: 78 }, (_, i) => ({
@@ -39,6 +42,7 @@ export default function TarotChoosePage() {
   const [radius, setRadius] = useState(450);
   const [isMobile, setIsMobile] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   const shuffledDeck = useMemo(() => shuffle(fullTarotDeck), []);
 
@@ -70,6 +74,17 @@ export default function TarotChoosePage() {
     window.addEventListener("resize", updateLayout);
     updateLayout();
     return () => window.removeEventListener("resize", updateLayout);
+  }, []);
+
+  // 데스크탑 여부 체크
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1280);
+    };
+
+    checkDesktop();
+    window.addEventListener("resize", checkDesktop);
+    return () => window.removeEventListener("resize", checkDesktop);
   }, []);
 
   const handleBack = () => {
@@ -330,6 +345,29 @@ export default function TarotChoosePage() {
           </div>
         </div>
       </div>
+
+      {/* 광고: 카드 선택 영역 아래 (결과 버튼이 나타난 후) */}
+      {canProceedToResults() && (
+        <div className="flex-shrink-0 w-full">
+          {/* 데스크탑: 336x280 사각형 */}
+          {isDesktop && (
+            <InlineAdBanner
+              size="336x280"
+              slot={AD_SLOTS.DESKTOP_INLINE}
+              className=""
+            />
+          )}
+          {/* 모바일: 300x250 사각형 */}
+          <MobileAdBanner type="inline" size="300x250" className="xl:hidden" />
+        </div>
+      )}
+
+      {/* 모바일 하단 고정 배너 */}
+      <MobileAdBanner
+        type="sticky-bottom"
+        size="320x50"
+        className="xl:hidden"
+      />
     </div>
   );
 }

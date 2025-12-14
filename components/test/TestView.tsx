@@ -10,6 +10,8 @@ import { Progress } from "@/components/ui/progress";
 import { useTestResultStore } from "@/store/testResultStore";
 
 import { MobileAdBanner } from "@/components/banner/mobile-ad-banner";
+import { InlineAdBanner } from "@/components/banner/inline-ad-banner";
+import { AD_SLOTS } from "@/constants/ads";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { TestData } from "@/types/test";
@@ -26,14 +28,34 @@ export default function TestView({ initialTestData, testId, locale }: Props) {
   const router = useRouter();
   const setResult = useTestResultStore((state) => state.setResult);
   const [showContent, setShowContent] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const { t } = useTranslation("common");
 
+  // 클라이언트 마운트 확인 (Hydration 에러 방지)
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
     const timer = setTimeout(() => {
       setShowContent(true);
     }, 1000);
 
     return () => clearTimeout(timer);
+  }, [isMounted]);
+
+  // 데스크탑 여부 체크
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1280);
+    };
+
+    checkDesktop();
+    window.addEventListener("resize", checkDesktop);
+    return () => window.removeEventListener("resize", checkDesktop);
   }, []);
 
   const {
@@ -74,7 +96,8 @@ export default function TestView({ initialTestData, testId, locale }: Props) {
     }
   }, []);
 
-  if (!showContent) {
+  // 클라이언트에서만 로딩 화면 표시 (Hydration 에러 방지)
+  if (!isMounted || !showContent) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
         <div className="w-24 h-24 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 animate-pulse flex items-center justify-center shadow-xl">
@@ -93,9 +116,11 @@ export default function TestView({ initialTestData, testId, locale }: Props) {
             ></path>
           </svg>
         </div>
-        <p className="mt-8 text-xl font-semibold text-gray-700 dark:text-gray-300">
-          {t("testView.loading")}
-        </p>
+        {isMounted && (
+          <p className="mt-8 text-xl font-semibold text-gray-700 dark:text-gray-300">
+            {t("testView.loading")}
+          </p>
+        )}
       </div>
     );
   }
@@ -205,7 +230,29 @@ export default function TestView({ initialTestData, testId, locale }: Props) {
                 </Button>
               </div>
             </div>
-            <MobileAdBanner type="inline" size="300x250" className="mt-8" />
+
+            {/* 광고: 선택지와 버튼 아래 (테스트 집중도를 해치지 않도록 한 곳만 배치) */}
+            {/* 데스크탑: 336x280 사각형 */}
+            {isDesktop && (
+              <InlineAdBanner
+                size="336x280"
+                slot={AD_SLOTS.DESKTOP_INLINE}
+                className="mt-8"
+              />
+            )}
+            {/* 모바일: 300x250 사각형 */}
+            <MobileAdBanner
+              type="inline"
+              size="300x250"
+              className="mt-8 xl:hidden"
+            />
+
+            {/* 모바일 하단 고정 배너 */}
+            <MobileAdBanner
+              type="sticky-bottom"
+              size="320x50"
+              className="xl:hidden"
+            />
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 import Link from "next/link";
@@ -8,6 +8,9 @@ import TarotCard3D from "@/components/taro/TarotCard3D";
 import CardDetailModal from "@/components/taro/CardDetailModal";
 import { TarotCard } from "@/types/tarot/tarot";
 import { useTranslation } from "react-i18next";
+import { MobileAdBanner } from "@/components/banner/mobile-ad-banner";
+import { InlineAdBanner } from "@/components/banner/inline-ad-banner";
+import { AD_SLOTS } from "@/constants/ads";
 
 type CardSpread = "single" | "three" | "five";
 
@@ -40,10 +43,22 @@ export default function ResultTarotClient({
 
   const [openModal, setOpenModal] = useState(false);
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   const activeCard = activeIdx !== null ? fetchedCards[activeIdx] : null;
   const activeLabel = activeIdx !== null ? positions[activeIdx] : undefined;
   const activeCardId = activeCard ? activeCard.id : 0;
+
+  // 데스크탑 여부 체크
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1280);
+    };
+
+    checkDesktop();
+    window.addEventListener("resize", checkDesktop);
+    return () => window.removeEventListener("resize", checkDesktop);
+  }, []);
 
   const handleOpenCard = (i: number) => {
     setActiveIdx(i);
@@ -112,7 +127,26 @@ export default function ResultTarotClient({
             </Link>
           </Button>
         </div>
+
+        {/* 광고: 새 읽기 버튼 아래 */}
+        {/* 데스크탑: 336x280 사각형 */}
+        {isDesktop && (
+          <InlineAdBanner
+            size="336x280"
+            slot={AD_SLOTS.DESKTOP_INLINE}
+            className=""
+          />
+        )}
+        {/* 모바일: 300x250 사각형 */}
+        <MobileAdBanner type="inline" size="300x250" className="xl:hidden" />
       </div>
+
+      {/* 모바일 하단 고정 배너 */}
+      <MobileAdBanner
+        type="sticky-bottom"
+        size="320x50"
+        className="xl:hidden"
+      />
 
       <CardDetailModal
         open={openModal}

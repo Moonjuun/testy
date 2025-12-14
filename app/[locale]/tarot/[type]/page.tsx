@@ -1,7 +1,7 @@
 // app/[locale]/tarot/[type]/choose/page.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,6 +9,9 @@ import { categories, subcategories } from "@/constants/tarot/TarotConstants";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
+import { MobileAdBanner } from "@/components/banner/mobile-ad-banner";
+import { InlineAdBanner } from "@/components/banner/inline-ad-banner";
+import { AD_SLOTS } from "@/constants/ads";
 
 export default function TarotTypePage() {
   const router = useRouter();
@@ -20,6 +23,18 @@ export default function TarotTypePage() {
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(
     null
   );
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  // 데스크탑 여부 체크
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1280);
+    };
+
+    checkDesktop();
+    window.addEventListener("resize", checkDesktop);
+    return () => window.removeEventListener("resize", checkDesktop);
+  }, []);
 
   const currentCategory = categories.find((c) => c.id === type);
 
@@ -163,7 +178,26 @@ export default function TarotTypePage() {
             {t("tarot.typePage.start", { defaultValue: "카드 뽑기 시작하기" })}
           </Button>
         </div>
+
+        {/* 광고: 버튼 아래 */}
+        {/* 데스크탑: 336x280 사각형 */}
+        {isDesktop && (
+          <InlineAdBanner
+            size="336x280"
+            slot={AD_SLOTS.DESKTOP_INLINE}
+            className=""
+          />
+        )}
+        {/* 모바일: 300x250 사각형 */}
+        <MobileAdBanner type="inline" size="300x250" className="xl:hidden" />
       </div>
+
+      {/* 모바일 하단 고정 배너 */}
+      <MobileAdBanner
+        type="sticky-bottom"
+        size="320x50"
+        className="xl:hidden"
+      />
     </div>
   );
 }
