@@ -120,16 +120,28 @@ export async function GET(request: NextRequest) {
         ? `테스트 자동 생성 완료 (성공: ${successCount}/2)`
         : "테스트 자동 생성 실패";
 
-    // 이메일 발송 (비동기, 실패해도 응답은 정상 반환)
-    sendCompletionEmail(results, successCount, 2).catch((emailError) => {
-      console.error("이메일 발송 실패 (무시됨):", emailError);
-    });
+    // 이메일 발송 (await로 완료 대기 - Vercel Cron Job에서 함수 종료 전에 완료되도록)
+    let emailResult = {
+      success: false,
+      error: undefined as string | undefined,
+    };
+    try {
+      emailResult = await sendCompletionEmail(results, successCount, 2);
+      if (!emailResult.success) {
+        console.error("이메일 발송 실패:", emailResult.error);
+      }
+    } catch (emailError: any) {
+      console.error("이메일 발송 중 예외 발생:", emailError);
+      emailResult = { success: false, error: emailError.message };
+    }
 
     return NextResponse.json(
       {
         success: successCount > 0,
         message,
         results,
+        emailSent: emailResult.success,
+        emailError: emailResult.error,
         warning: hasQuotaError
           ? "일부 테스트 생성이 실패했습니다. Gemini API 할당량을 확인하세요."
           : undefined,
