@@ -247,12 +247,6 @@ export default function TestView({ initialTestData, testId, locale }: Props) {
               className="mt-8 xl:hidden"
             />
 
-            {/* 모바일 하단 고정 배너 */}
-            <MobileAdBanner
-              type="sticky-bottom"
-              size="320x50"
-              className="xl:hidden"
-            />
           </div>
         </div>
       </div>

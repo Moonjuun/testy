@@ -141,12 +141,6 @@ export default function ResultTarotClient({
         <MobileAdBanner type="inline" size="300x250" className="xl:hidden" />
       </div>
 
-      {/* 모바일 하단 고정 배너 */}
-      <MobileAdBanner
-        type="sticky-bottom"
-        size="320x50"
-        className="xl:hidden"
-      />
 
       <CardDetailModal
         open={openModal}

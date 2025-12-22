@@ -240,13 +240,6 @@ export default function HomePage({
 
       {/* 디스플레이 수직형 광고: 페이지 하단 */}
       <DisplayVerticalAd />
-
-      {/* 광고 6: 모바일 - 하단 고정 배너 (푸터 전에 숨김) */}
-      <MobileAdBanner
-        type="sticky-bottom"
-        size="320x50"
-        className="xl:hidden"
-      />
     </div>
   );
 }
