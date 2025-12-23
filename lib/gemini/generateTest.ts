@@ -500,7 +500,7 @@ export async function generateTwoTests(): Promise<
 /**
  * 특정 카테고리로 테스트 생성
  */
-async function generateTestWithGeminiForCategory(
+export async function generateTestWithGeminiForCategory(
   categoryId: number
 ): Promise<TestJsonInsertData | null> {
   const maxRetries = 2;

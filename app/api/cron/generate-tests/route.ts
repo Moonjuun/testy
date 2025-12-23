@@ -1,8 +1,8 @@
 // app/api/cron/generate-tests/route.ts
-// Vercel Cron Job: 매일 23시에 테스트 2개 자동 생성
+// Vercel Cron Job: 매일 23시에 테스트 1개 자동 생성
 
 import { NextRequest, NextResponse } from "next/server";
-import { generateTwoTests } from "@/lib/gemini/generateTest";
+import { generateTestWithGeminiForCategory } from "@/lib/gemini/generateTest";
 import { saveTestToDatabase } from "@/lib/gemini/saveTestToDatabase";
 import { sendCompletionEmail } from "@/lib/email/sendCompletionEmail";
 
@@ -63,50 +63,35 @@ export async function GET(request: NextRequest) {
   try {
     console.log("테스트 자동 생성 시작:", new Date().toISOString());
 
-    // 2개의 테스트 생성
-    const [test1, test2] = await generateTwoTests();
+    // 랜덤 카테고리 선택 (1-8)
+    const validCategoryIds = [1, 2, 3, 4, 5, 6, 7, 8];
+    const randomCategory =
+      validCategoryIds[Math.floor(Math.random() * validCategoryIds.length)];
+
+    console.log(`📝 테스트 생성 시작 (카테고리: ${randomCategory})`);
+
+    // 1개의 테스트 생성
+    const test = await generateTestWithGeminiForCategory(randomCategory);
 
     const results = [];
     let hasQuotaError = false;
 
-    // 첫 번째 테스트 저장
-    if (test1) {
-      const result1 = await saveTestToDatabase(test1);
+    // 테스트 저장
+    if (test) {
+      const result = await saveTestToDatabase(test);
       results.push({
         test: "test1",
-        success: result1.success,
-        testId: result1.testId,
-        title: test1.title,
-        categoryId: test1.category_id,
-        error: result1.error,
-        imageGeneration: result1.imageGeneration,
+        success: result.success,
+        testId: result.testId,
+        title: test.title,
+        categoryId: test.category_id,
+        error: result.error,
+        imageGeneration: result.imageGeneration,
       });
-      console.log("테스트 1 저장 완료:", result1);
+      console.log("테스트 저장 완료:", result);
     } else {
       results.push({
         test: "test1",
-        success: false,
-        error: "테스트 생성 실패 (할당량 초과 또는 API 오류 가능)",
-      });
-      hasQuotaError = true;
-    }
-
-    // 두 번째 테스트 저장
-    if (test2) {
-      const result2 = await saveTestToDatabase(test2);
-      results.push({
-        test: "test2",
-        success: result2.success,
-        testId: result2.testId,
-        title: test2.title,
-        categoryId: test2.category_id,
-        error: result2.error,
-        imageGeneration: result2.imageGeneration,
-      });
-      console.log("테스트 2 저장 완료:", result2);
-    } else {
-      results.push({
-        test: "test2",
         success: false,
         error: "테스트 생성 실패 (할당량 초과 또는 API 오류 가능)",
       });
@@ -117,7 +102,7 @@ export async function GET(request: NextRequest) {
     const successCount = results.filter((r) => r.success).length;
     const message =
       successCount > 0
-        ? `테스트 자동 생성 완료 (성공: ${successCount}/2)`
+        ? `테스트 자동 생성 완료 (성공: ${successCount}/1)`
         : "테스트 자동 생성 실패";
 
     // 이메일 발송 (await로 완료 대기 - Vercel Cron Job에서 함수 종료 전에 완료되도록)
@@ -126,7 +111,7 @@ export async function GET(request: NextRequest) {
       error: undefined as string | undefined,
     };
     try {
-      emailResult = await sendCompletionEmail(results, successCount, 2);
+      emailResult = await sendCompletionEmail(results, successCount, 1);
       if (!emailResult.success) {
         console.error("이메일 발송 실패:", emailResult.error);
       }
